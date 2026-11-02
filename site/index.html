@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Bookings | FunctionFindr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="logo" href="#" aria-label="FunctionFindr home">function<span>findr</span><sup>™</sup></a>
+  <nav class="site-nav" aria-label="Main">
+    <a class="nav-link is-active" href="#">Venues</a>
+    <a class="nav-link" href="#">Sign up</a>
+    <a class="nav-link" href="#">Log in</a>
+    <a class="btn-outline" href="#">LIST YOUR VENUE <span class="arrow" aria-hidden="true">→</span></a>
+    <a class="btn-solid" href="#">BOOK A SPACE <span class="arrow" aria-hidden="true">→</span></a>
+  </nav>
+</header>
+
+<main class="page">
+  <h1>My Bookings</h1>
+  <section id="booking" aria-label="Booking summary"></section>
+
+  <section class="details" aria-labelledby="details-title">
+    <div class="details-head">
+      <button type="button" id="details-toggle" class="chevron" aria-expanded="true" aria-controls="details-body" aria-label="Show or hide event details">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div>
+        <h2 id="details-title">EVENT DETAILS</h2>
+        <p class="details-note">Must be completed 10 days prior to your event.</p>
+        <p class="details-note">Once selected you can change as many times as you want up until 10 days prior to your event.</p>
+      </div>
+    </div>
+
+    <div id="details-body">
+      <form id="event-form" class="details-grid" novalidate>
+        <div id="form-col" class="form-col"></div>
+        <aside id="panel-col" class="panel-col" aria-label="Menus"></aside>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <a class="logo logo-stacked" href="#" aria-label="FunctionFindr home">function<span>findr</span></a>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="#">How it works</a>
+      <a href="#">About Us</a>
+      <a class="footer-email" href="#">info@functionfindr.com</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <nav aria-label="Legal"><a href="#">Privacy</a><a href="#">Terms of Use</a></nav>
+    <span>@2026 Info All Rights Reserved</span>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

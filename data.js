@@ -6,11 +6,14 @@ window.FF_DATA = {
     addressLines: ["1 Example Street,", "Yarraville"],
     space: "Function Room",
     dateLines: ["Saturday", "20th September 2026"],
+    finaliseBy: "10/09/2026", // TODO(confirm): 10 calendar days before the event date.
     time: "6.30 pm",
+    endTime: "11.00 pm",
     guests: 80,
     layout: "Standing",
     eventName: "Sam’s 40th Birthday",
     contact: "Sam Sample",
+    contactOnNight: "Alex Sample",
     phone: "0491 570 156", // ACMA reserved fictional number
     email: "sam.sample@example.com",
   },
@@ -69,18 +72,6 @@ window.FF_DATA = {
     { id: "music", lines: ["Play your own music"] },
     { id: "dj", lines: ["DJ"] },
   ],
-
-  facilities: [
-    { id: "av", label: "AV Equipment: TV, Projector, Screen, Microphone, Speakers" },
-    { id: "dance", label: "Dance Floor" },
-    { id: "wifi", label: "Wi-Fi Access" },
-    { id: "air", label: "Air Conditioning/Heating" },
-    { id: "tables", label: "High and Low Tables" },
-  ],
-
-  // Struck through in the mockup: shown as not available at this space.
-  accessibility: ["Wheelchair friendly toilets", "Lift access", "Wheelchair accessible"],
-  flexibility: ["Free Cancellation up to 10 days prior", "Flexible date changes"],
 
   // All prices are integer cents, null means not offered or not supplied.
   barTab: {
@@ -256,20 +247,5 @@ window.FF_DATA = {
         ] },
       ],
     },
-  },
-
-  // The selections drawn in the mockup, used until the organiser changes something.
-  initial: {
-    dishes: {
-      rice: ["regular", "gluten free", "vegan"],
-      crostini: [], karaage: [], skewers: [], sausage: [],
-      pizza: ["regular", "vegan"],
-    },
-    antipasto: "meat",
-    drinks: ["peroni", "souki", "sample", "black", "cascade", "xpa", "pale",
-      "cuvee", "prosecco", "chandon", "ssb", "riesling", "bastard", "lala", "dreams",
-      "tellurose", "rameau", "jack", "annie", "rsc"],
-    allTap: true,
-    spirits: "yes",
   },
 };

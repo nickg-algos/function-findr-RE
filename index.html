@@ -22,25 +22,17 @@
 </header>
 
 <main class="page">
-  <h1>My Bookings</h1>
   <section id="booking" aria-label="Booking summary"></section>
 
-  <section class="details" aria-labelledby="details-title">
-    <div class="details-head">
-      <button type="button" id="details-toggle" class="chevron" aria-expanded="true" aria-controls="details-body" aria-label="Show or hide event details">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <div>
-        <h2 id="details-title">EVENT DETAILS</h2>
-        <p class="details-note">Must be completed 10 days prior to your event.</p>
-        <p class="details-note">Once selected you can change as many times as you want up until 10 days prior to your event.</p>
-      </div>
-    </div>
-
+  <section class="details" aria-label="Event details">
     <div id="details-body">
-      <form id="event-form" class="details-grid" novalidate>
-        <div id="form-col" class="form-col"></div>
-        <aside id="panel-col" class="panel-col" aria-label="Menus"></aside>
+      <form id="event-form" novalidate>
+        <div id="cards" class="cards"></div>
+        <div class="form-foot">
+          <p class="terms">Please refer to all <a href="#"><u>Terms &amp; Conditions</u></a>.</p>
+          <p id="checklist-pill" role="status"></p>
+        </div>
+        <p class="save-state" id="save-state" role="status"></p>
       </form>
     </div>
   </section>
@@ -61,6 +53,7 @@
   </div>
 </footer>
 
+<script src="shared.js"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>

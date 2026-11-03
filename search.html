@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Find a venue | FunctionFindr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="search.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="logo" href="#" aria-label="FunctionFindr home">function<span>findr</span><sup>™</sup></a>
+  <nav class="site-nav" aria-label="Main">
+    <a class="nav-link is-active" href="#">Venues</a>
+    <a class="nav-link" href="#">Sign up</a>
+    <a class="nav-link" href="#">Log in</a>
+    <a class="btn-outline" href="#">LIST YOUR VENUE <span class="arrow" aria-hidden="true">→</span></a>
+    <a class="btn-solid" href="#">BOOK A SPACE <span class="arrow" aria-hidden="true">→</span></a>
+  </nav>
+</header>
+
+<main class="s-page">
+  <h1 class="sr-only">Find a function venue</h1>
+  <div class="s-layout">
+    <div class="s-results">
+      <div class="s-bar-wrap">
+        <form class="s-bar" id="search-form" role="search" aria-label="Search venues" novalidate>
+          <div class="s-fields">
+            <div class="s-field">
+              <label for="s-date">Date:</label>
+              <input id="s-date" type="date">
+            </div>
+            <div class="s-field s-time">
+              <div><label for="s-start">Start Time:</label><select id="s-start"></select></div>
+              <div><label for="s-end">End Time:</label><select id="s-end"></select></div>
+            </div>
+            <div class="s-field">
+              <label for="s-guests">No. of Guests:</label>
+              <input id="s-guests" type="number" inputmode="numeric" min="1" step="1" placeholder="Any">
+            </div>
+            <div class="s-field">
+              <label for="s-price">Price:</label>
+              <select id="s-price">
+                <option value="">Any</option>
+                <option value="1">Up to $</option>
+                <option value="2">Up to $$</option>
+                <option value="3">Up to $$$</option>
+                <option value="4">Up to $$$$</option>
+              </select>
+            </div>
+            <button type="button" class="s-field s-filter-btn" id="filter-open" aria-expanded="false" aria-controls="filter-panel">
+              <span class="s-filter-name s-field-name">Filter: <svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span id="filter-value">Any</span>
+            </button>
+            <button type="submit" class="s-go" aria-label="Search venues"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+          <p class="s-msg" id="search-msg" role="alert"></p>
+        </form>
+
+        <div class="f-panel" id="filter-panel" role="dialog" aria-label="More filters" hidden>
+          <div class="f-head">More filters<button type="button" class="f-close" id="filter-close" aria-label="Close filters">×</button></div>
+          <div class="f-scroll" id="filter-groups"></div>
+          <div class="f-foot">
+            <button type="button" class="f-clear" id="filter-clear">Clear</button>
+            <button type="button" class="f-show" id="show-results"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="r-bar">
+        <p id="result-count" role="status"></p>
+        <div class="r-sort">
+          <label for="sort">Sort by:</label>
+          <select id="sort">
+            <option value="distance">Distance</option>
+            <option value="priceLow">Price: low to high</option>
+            <option value="priceHigh">Price: high to low</option>
+            <option value="rating">Rating</option>
+            <option value="capacity">Capacity</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="r-empty" id="no-results" hidden>
+        <p>No venues fit that search. Try a different date, fewer filters, or see what else is available below.</p>
+        <button type="button" class="s-outline" id="clear-all">Clear search</button>
+      </div>
+      <div class="v-grid" id="results"></div>
+      <div class="r-more"><button type="button" class="s-outline" id="show-more">Show more venues</button></div>
+
+      <section class="also" id="also-section" aria-labelledby="also-title">
+        <h2 id="also-title">Also available…</h2>
+        <div class="v-grid" id="also"></div>
+      </section>
+    </div>
+
+    <button type="button" class="s-outline map-toggle" id="map-toggle" aria-expanded="false" aria-controls="map-column">Show map</button>
+    <aside class="map-col" id="map-column" aria-label="Map of venues">
+      <div class="map-box">
+        <img src="assets/map.jpg" alt="Map of Melbourne's inner west and bayside suburbs">
+        <div id="map-pins"></div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<section class="band" aria-labelledby="trust-title">
+  <div class="band-inner">
+    <h2 id="trust-title">Trusted by Melbourne’s top venues</h2>
+    <div class="logo-row" id="logos"></div>
+  </div>
+</section>
+
+<section class="band band-dark" aria-labelledby="reviews-title">
+  <div class="band-inner">
+    <div class="reviews-head">
+      <h2 id="reviews-title">What people say</h2>
+      <div class="review-arrows">
+        <button type="button" class="review-arrow" data-review-step="-1" aria-label="Previous reviews">←</button>
+        <button type="button" class="review-arrow" data-review-step="1" aria-label="Next reviews">→</button>
+      </div>
+    </div>
+    <div class="review-track" id="reviews" tabindex="0" aria-label="Reviews"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <a class="logo logo-stacked" href="#" aria-label="FunctionFindr home">function<span>findr</span></a>
+    <nav class="footer-nav s-footer-nav" aria-label="Footer">
+      <a href="#">How it works</a>
+      <a href="#">About Us</a>
+      <a href="#">Company</a>
+      <a href="#">Blog</a>
+      <a class="footer-email" href="#">info@functionfindr.com</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <nav aria-label="Legal"><a href="#">Privacy</a><a href="#">Terms of Use</a><a href="#">Security</a><a href="#">Cookies</a></nav>
+    <span>@2026 Info All Rights Reserved</span>
+  </div>
+</footer>
+
+<dialog class="wish-box" id="wish-box" aria-labelledby="wish-title">
+  <button type="button" class="f-close" id="wish-close" aria-label="Close My Wishlist">×</button>
+  <h2 id="wish-title">My Wishlist</h2>
+  <p class="wish-lead">Choose a frame to save <strong id="wish-venue"></strong> into.</p>
+  <div class="w-frames" id="wish-frames"></div>
+  <form class="wish-create" id="wish-create" novalidate hidden>
+    <label for="wish-name">Name your new wishlist:</label>
+    <div class="wish-create-row">
+      <input id="wish-name" type="text" maxlength="60" placeholder="e.g. Sam’s 30th birthday">
+      <button type="submit" class="f-show">Create and save</button>
+    </div>
+    <p class="s-msg" id="wish-msg" role="alert"></p>
+  </form>
+</dialog>
+<p class="wish-toast" id="wish-toast" role="status" hidden></p>
+
+<script src="shared.js"></script>
+<script src="search-data.js"></script>
+<script src="search.js"></script>
+</body>
+</html>

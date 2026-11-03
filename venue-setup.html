@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set up food and beverage | FunctionFindr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="venue-setup.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="logo" href="#" aria-label="FunctionFindr home">function<span>findr</span><sup>™</sup></a>
+  <nav class="site-nav" aria-label="Main">
+    <a class="nav-link" href="#">Sign up</a>
+    <a class="nav-link" href="#">Log in</a>
+    <a class="btn-solid" href="#">LIST YOUR VENUE <span class="arrow" aria-hidden="true">→</span></a>
+  </nav>
+</header>
+
+<main class="vs-main">
+  <div class="vs-card">
+    <h1 id="setup-intro"></h1>
+    <form id="setup-form" novalidate>
+      <section class="vs-group" aria-labelledby="food-title">
+        <h2 id="food-title"><button type="button" class="sec-head vs-group-head" data-section-toggle="food" aria-expanded="true" aria-controls="food-fold">
+          <span class="card-title">Food Options:</span>
+          <span class="card-sum" data-section-sum="food"></span>
+          <svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button></h2>
+        <div class="fold is-open" id="food-fold"><div class="fold-inner"><div id="food-list"></div></div></div>
+      </section>
+      <section class="vs-group" aria-labelledby="bev-title">
+        <h2 id="bev-title"><button type="button" class="sec-head vs-group-head" data-section-toggle="bev" aria-expanded="true" aria-controls="bev-fold">
+          <span class="card-title">Beverage Options:</span>
+          <span class="card-sum" data-section-sum="bev"></span>
+          <svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button></h2>
+        <div class="fold is-open" id="bev-fold"><div class="fold-inner"><div id="bev-list"></div></div></div>
+      </section>
+      <div class="vs-actions">
+        <button type="button" class="vs-btn">PREVIEW FUNCTION LISTING</button>
+        <button type="button" class="vs-btn is-solid">ADD ANOTHER SPACE <svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+      <p class="vs-terms"><a href="#">Disclaimer and T&amp;C’s</a></p>
+      <p class="save-state" id="save-state" role="status"></p>
+    </form>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <a class="logo logo-stacked" href="#" aria-label="FunctionFindr home">function<span>findr</span></a>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="#">How it works</a>
+      <a href="#">About Us</a>
+      <a class="footer-email" href="#">info@functionfindr.com</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <nav aria-label="Legal"><a href="#">Privacy</a><a href="#">Terms of Use</a></nav>
+    <span>@2026 Info All Rights Reserved</span>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script src="venue-setup-data.js"></script>
+<script src="venue-setup.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# Stay on your Mac, never published
+*.pdf
+CLAUDE.md

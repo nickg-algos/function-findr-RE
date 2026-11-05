@@ -38,7 +38,7 @@
       <div class="cal-controls">
         <label class="sr-only" for="cal-filter">Function space</label>
         <select class="cal-select" id="cal-filter"></select>
-        <button type="button" class="cal-add">Add booking</button>
+        <button type="button" class="cal-add" id="cal-add" aria-haspopup="dialog">Add booking</button>
       </div>
       <div class="cal-tabs" role="group" aria-label="Sort bookings">
         <button type="button" data-view="date">By date</button>
@@ -53,7 +53,34 @@
   </main>
 </div>
 
+<dialog class="bk-box" id="bk-box" aria-labelledby="bk-heading">
+  <form id="bk-form" novalidate>
+    <h2 id="bk-heading">Edit Booking</h2>
+    <div class="bk-grid">
+      <div class="bk-details">
+        <div id="bk-fields"></div>
+      </div>
+      <section class="bk-check" aria-labelledby="bk-check-title">
+        <div class="bk-check-head">
+          <h3 id="bk-check-title">Customer checklist</h3>
+          <p class="bk-check-sum" id="bk-check-sum"></p>
+        </div>
+        <p class="bk-lead" id="bk-lead"></p>
+        <ol class="bk-steps" id="bk-steps"></ol>
+      </section>
+      <div class="bk-actions">
+        <button type="submit" class="bk-save" id="bk-save">Save Changes</button>
+        <button type="button" class="bk-cancel" id="bk-cancel">Cancel Function</button>
+        <p class="bk-cancel-note" id="bk-cancel-note" role="status"></p>
+      </div>
+    </div>
+    <button type="button" class="bk-close" id="bk-close" aria-label="Close">&times;</button>
+  </form>
+</dialog>
+<p class="cal-toast" id="cal-toast" role="status" hidden></p>
+
 <script src="shared.js"></script>
+<script src="data.js"></script>
 <script src="calendar-data.js"></script>
 <script src="calendar.js"></script>
 </body>

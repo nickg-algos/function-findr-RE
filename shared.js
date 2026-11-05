@@ -13,6 +13,7 @@ window.FF_SHARED = (function () {
     { href: "search.html", label: "p2 Venue Search" },
     { href: "index.html", label: "p14 My Bookings" },
     { href: "venue-setup.html", label: "p19 Venue Food & Beverage" },
+    { href: "calendar.html", label: "p23 Booking Calendar" },
   ];
 
   function renderDevTabs() {
@@ -26,5 +27,15 @@ window.FF_SHARED = (function () {
   }
   document.addEventListener("DOMContentLoaded", renderDevTabs);
 
-  return { esc, money, parseCents };
+  const CHECKLIST_KEY = "ff.checklistStatus.v1";
+  const checklistSteps = [
+    { id: "function", label: "Function Details" },
+    { id: "food", label: "Food Packages" },
+    { id: "dietary", label: "Dietary Accommodations" },
+    { id: "bev", label: "Beverage Options" },
+    { id: "additional", label: "Additional" },
+    { id: "notes", label: "Notes for the venue" },
+  ];
+
+  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps };
 })();

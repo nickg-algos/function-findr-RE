@@ -408,6 +408,23 @@
     const pill = $("#checklist-pill");
     const wasComplete = pill.childElementCount > 0;
     if (reached !== wasComplete) pill.innerHTML = reached ? `<button type="button" class="pill">${tickIcon}Checklist complete - SUBMIT</button>` : "";
+    publishChecklist();
+  }
+
+  // Lets the venue's booking calendar show this customer's progress. A stand-in for a real backend.
+  function publishChecklist() {
+    const finished = (list) => list.filter((p) => {
+      if (!state.pkg[p.id]) return false;
+      const { done, total } = pkgProgress(p.id);
+      return done >= total;
+    }).map((p) => p.label);
+    const status = {
+      done: steps.filter(stepDone),
+      items: [...(stepDone("food") ? finished(D.foodPackages) : []), ...(stepDone("bev") ? finished(D.beveragePackages) : [])],
+    };
+    try {
+      localStorage.setItem(window.FF_SHARED.CHECKLIST_KEY, JSON.stringify(status));
+    } catch (e) { /* the page still works without storage */ }
   }
 
   /* ---------- Short status text on rows and section headers ---------- */

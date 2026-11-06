@@ -14,6 +14,7 @@ window.FF_SHARED = (function () {
     { href: "index.html", label: "p14 My Bookings" },
     { href: "venue-setup.html", label: "p19 Venue Food & Beverage" },
     { href: "calendar.html", label: "p23 Booking Calendar" },
+    { href: "dashboard.html", label: "Venue Dashboard (no mockup)" },
   ];
 
   function renderDevTabs() {
@@ -37,5 +38,33 @@ window.FF_SHARED = (function () {
     { id: "notes", label: "Notes for the venue" },
   ];
 
-  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps };
+  const tickIcon = '<svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.500l3.200 3.200L13 4.800" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // Whether a booking's checklist answers (the `sel` shape in calendar-data.js) finish a step.
+  // Function Details isn't covered: it depends on the booking details, which each page checks itself.
+  function selStepDone(id, sel) {
+    if (id === "food" || id === "bev") return sel[id].length > 0;
+    if (sel.none[id]) return true;
+    return id === "notes" ? !!sel.notes.trim() : sel[id].length > 0;
+  }
+
+  // The customer's checklist in miniature: same steps, ticks and filling line as My Bookings.
+  function miniChecklist(done) {
+    const isDone = (s) => done.includes(s.id);
+    const firstOpen = checklistSteps.findIndex((s) => !isDone(s));
+    const reached = firstOpen === -1 ? checklistSteps.length : firstOpen;
+    const count = checklistSteps.filter(isDone).length;
+    const left = checklistSteps.filter((s) => !isDone(s)).map((s) => s.label);
+    const summary = left.length ? `Checklist ${count} of ${checklistSteps.length} done. Still to do: ${left.join(", ")}.` : "Checklist complete.";
+    const marks = checklistSteps.map((s, i) => `${i ? `<span class="mini-line${i <= reached ? " is-filled" : ""}"></span>` : ""}<span class="mini-box${isDone(s) ? " is-done" : ""}" title="${esc(s.label)}: ${isDone(s) ? "done" : "to do"}">${isDone(s) ? tickIcon : ""}</span>`).join("");
+    let text = `<p class="mini-text is-complete">Checklist complete</p>`;
+    if (left.length) {
+      const state = count > 1 ? `${count} of ${checklistSteps.length} done` : "Not started";
+      text = `<p class="mini-text">${state}<br>Next: ${esc(left[0])}</p>`;
+    }
+    return `<div class="mini"><div class="mini-track" role="img" aria-label="${esc(summary)}">${marks}</div>${text}</div>`;
+  }
+
+
+  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist };
 })();

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard | FunctionFindr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="venue-shell.css">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<div class="cal-shell">
+  <aside class="cal-side">
+    <div class="cal-side-inner">
+      <a class="logo" href="#" aria-label="FunctionFindr home">function<span>findr</span><sup>™</sup></a>
+      <nav class="cal-nav" aria-label="Venue dashboard">
+        <a href="dashboard.html" aria-current="page"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round"><path d="M2 7h28M2 16h28M2 25h28"/><circle cx="20" cy="7" r="2" fill="#d0702f"/><circle cx="9" cy="16" r="2" fill="#d0702f"/><circle cx="16" cy="25" r="2" fill="#d0702f"/></svg>Dashboard</a>
+        <a href="calendar.html"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300"><rect x="3" y="6" width="23" height="21" rx="4"/><path d="M3 13h23M10 3v6M19 3v6M9 18h2M15 18h2M9 23h2"/><circle cx="25" cy="24" r="5.500" fill="#c35d27"/><path d="M22.800 24l1.700 1.700 3-3.200"/></svg>Bookings</a>
+        <a href="#"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300"><path d="M2 6h28M2 8.500h28M4 8.500V27M28 8.500V27M2 27h28M4 17h24M8 17v10M14 17v10M18 17v10M24 17v10"/><path d="M12 17v-3a4 4 0 0 1 8 0v3"/></svg>Function spaces</a>
+        <a href="#"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300"><circle cx="16" cy="16" r="5"/><path d="M14 3h4l.800 3.800 2.600 1.100 3.300-2.100 2.800 2.800-2.100 3.300 1.100 2.600L30 14v4l-3.500.800-1.100 2.600 2.100 3.300-2.800 2.800-3.300-2.100-2.600 1.100L18 29h-4l-.800-3.500-2.600-1.100-3.300 2.100-2.800-2.800 2.100-3.300-1.100-2.600L2 18v-4l3.500-.800 1.100-2.600-2.100-3.300 2.800-2.800 3.300 2.100 2.600-1.100z"/></svg>Settings</a>
+        <a href="#"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round"><path d="M16 4c7 0 12 4.800 12 11s-5 11-12 11c-1.700 0-3.300-.3-4.800-.8L5 27l1.900-5.100C5 19.900 4 17.600 4 15 4 8.800 9 4 16 4z"/><path d="M11 12h10M11 16h10M11 20h7"/></svg>FAQ’s</a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="cal-main">
+    <div class="cal-top">
+      <span class="cal-crumb">The Sample Hotel</span>
+      <div class="cal-tools">
+        <button type="button" class="cal-icon" aria-label="Messages"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l19-3 2 13-13 2-5 4 .5-3.500L5 17.800z"/><path d="M7.500 8.500l11-1.700M8 12l11-1.700"/><path d="M26 12l3 1 1 11-2.500.500.500 4-4.500-3.500-8 .500-1-3"/></svg></button>
+        <button type="button" class="cal-icon cal-avatar" aria-label="The Sample Hotel account">SH</button>
+      </div>
+    </div>
+    <div class="cal-body">
+      <div class="db-title">
+        <div>
+          <h1>Dashboard</h1>
+          <p class="db-lead">How your functions are tracking.</p>
+        </div>
+        <div class="db-actions" id="db-actions">
+          <button type="button" class="db-btn" id="db-customise" aria-pressed="false">Customise</button>
+        </div>
+      </div>
+
+      <div class="db-edit-bar" id="db-edit-bar" hidden>
+        <p>Drag a widget by its handle to move it, pick S, M or L to change its size, or remove it.</p>
+        <div class="db-edit-btns">
+          <button type="button" class="db-btn db-btn-ghost" id="db-reset">Reset layout</button>
+          <button type="button" class="db-btn" id="db-add" aria-haspopup="dialog">Add widget</button>
+          <button type="button" class="db-btn db-btn-solid" id="db-done">Done</button>
+        </div>
+      </div>
+
+      <div class="db-filters" role="group" aria-label="Date range for every widget">
+        <span class="db-filters-label">Showing</span>
+        <div class="db-seg" id="db-period"></div>
+        <span class="db-range" id="db-range"></span>
+      </div>
+
+      <div class="db-grid" id="db-grid"></div>
+      <p class="sr-only" id="db-live" aria-live="polite"></p>
+    </div>
+  </main>
+</div>
+
+<dialog class="db-box" id="db-box" aria-labelledby="db-box-title">
+  <h2 id="db-box-title">Add a widget</h2>
+  <p class="db-box-lead" id="db-box-lead"></p>
+  <ul class="db-catalogue" id="db-catalogue"></ul>
+  <button type="button" class="db-close" id="db-box-close" aria-label="Close">&times;</button>
+</dialog>
+<div class="db-tip" id="db-tip" hidden></div>
+
+<script src="shared.js"></script>
+<script src="calendar-data.js"></script>
+<script src="dashboard-data.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 
   const D = window.FF_CALENDAR;
   const P = window.FF_DATA; // The customer's checklist options, from My Bookings.
-  const { esc, CHECKLIST_KEY, checklistSteps } = window.FF_SHARED;
+  const { esc, CHECKLIST_KEY, checklistSteps, tickIcon, miniChecklist, selStepDone } = window.FF_SHARED;
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
@@ -11,7 +11,6 @@
   let spaceFilter = "";
   let nextId = D.bookings.length + 1;
 
-  const tickIcon = '<svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.500l3.200 3.200L13 4.800" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const chevron = '<svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   /* ---------- Dates and times ---------- */
@@ -78,9 +77,7 @@
   function stepDone(id, d) {
     const s = d.sel;
     if (id === "function") return Object.keys(problems(d)).length === 0;
-    if (id === "food" || id === "bev") return s[id].length > 0;
-    if (s.none[id]) return true;
-    return id === "notes" ? !!s.notes.trim() : s[id].length > 0;
+    return selStepDone(id, s);
   }
 
   // A live booking's checklist comes from the My Bookings page; the rest are filled in here.
@@ -102,23 +99,6 @@
   }
 
   /* ---------- Calendar ---------- */
-
-  // The customer's checklist in miniature: same steps, ticks and filling line as My Bookings.
-  function miniChecklist(done) {
-    const isDone = (s) => done.includes(s.id);
-    const firstOpen = checklistSteps.findIndex((s) => !isDone(s));
-    const reached = firstOpen === -1 ? checklistSteps.length : firstOpen;
-    const count = checklistSteps.filter(isDone).length;
-    const left = checklistSteps.filter((s) => !isDone(s)).map((s) => s.label);
-    const summary = left.length ? `Checklist ${count} of ${checklistSteps.length} done. Still to do: ${left.join(", ")}.` : "Checklist complete.";
-    const marks = checklistSteps.map((s, i) => `${i ? `<span class="mini-line${i <= reached ? " is-filled" : ""}"></span>` : ""}<span class="mini-box${isDone(s) ? " is-done" : ""}" title="${esc(s.label)}: ${isDone(s) ? "done" : "to do"}">${isDone(s) ? tickIcon : ""}</span>`).join("");
-    let text = `<p class="mini-text is-complete">Checklist complete</p>`;
-    if (left.length) {
-      const state = count > 1 ? `${count} of ${checklistSteps.length} done` : "Not started";
-      text = `<p class="mini-text">${state}<br>Next: ${esc(left[0])}</p>`;
-    }
-    return `<div class="mini"><div class="mini-track" role="img" aria-label="${esc(summary)}">${marks}</div>${text}</div>`;
-  }
 
   const spaceName = (id) => (D.spaces.find((s) => s.id === id) || { name: "" }).name;
 

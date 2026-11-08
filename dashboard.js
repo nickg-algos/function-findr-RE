@@ -16,11 +16,7 @@
 
   const SIZE_NAMES = { s: "Small", m: "Medium", l: "Large" };
   const WIDGETS = {
-    revenueTile: { title: "Function revenue", desc: "Total from functions in the period, inc. GST, against the period before.", sizes: ["s", "m"] },
     functionsTile: { title: "Functions held", desc: "How many functions you ran, against the period before.", sizes: ["s", "m"] },
-    spendTile: { title: "Average spend per function", desc: "Revenue divided by functions, inc. GST.", sizes: ["s", "m"] },
-    conversionTile: { title: "Enquiries that booked", desc: "The share of enquiries that became a confirmed function.", sizes: ["s", "m"] },
-    revenue: { title: "Monthly function revenue", sub: "Inc. GST", desc: "Columns of revenue for each month.", sizes: ["m", "l"], table: true },
     functions: { title: "Functions per month", sub: "Against the same months a year earlier", desc: "A line graph of functions held, with last year for comparison.", sizes: ["m", "l"], table: true },
     todo: { title: "To do", desc: "Your own list. Tick things off as you go.", sizes: ["s", "m", "l"] },
     checklists: { title: "Customer checklists", sub: "Bookings still filling theirs in", desc: "Which customers haven’t finished their checklist, and where they’re up to.", sizes: ["m", "l"] },
@@ -28,8 +24,7 @@
     days: { title: "Busiest days", sub: "Functions by day of the week", desc: "Which days your functions fall on.", sizes: ["m", "l"], table: true },
   };
   const DEFAULT_LAYOUT = [
-    { id: "revenueTile", size: "s" }, { id: "functionsTile", size: "s" }, { id: "spendTile", size: "s" }, { id: "conversionTile", size: "s" },
-    { id: "revenue", size: "m" }, { id: "functions", size: "m" },
+    { id: "functionsTile", size: "m" }, { id: "functions", size: "m" },
     { id: "todo", size: "m" }, { id: "checklists", size: "m" },
   ];
   const PERIODS = [3, 6, 12];
@@ -83,11 +78,6 @@
     const out = [];
     for (let v = 0; v <= Math.ceil(max / step) * step + step / 1e6; v += step) out.push(Math.round(v * 1000) / 1000);
     return out;
-  }
-  function compactDollars(cents) {
-    const d = cents / 100;
-    if (d >= 1000) return `$${String(Math.round(d / 100) / 10).replace(/\.0$/, "")}K`;
-    return `$${Math.round(d)}`;
   }
 
   /* ---------- Tooltip (one for the page) ---------- */
@@ -310,38 +300,10 @@
   const longDate = (iso) => `${ordinal(Number(iso.slice(8, 10)))} ${MONTHS[Number(iso.slice(5, 7)) - 1]} ${iso.slice(0, 4)}`;
 
   const draw = {
-    revenueTile(el) {
-      const cur = months(state.period);
-      const prev = months(state.period, state.period);
-      tile(el, { value: dollars(sum(cur, "revenueCents")), cur: sum(cur, "revenueCents"), prev: sum(prev, "revenueCents"), series: cur.map((m) => m.revenueCents), fmtPoint: dollars });
-    },
     functionsTile(el) {
       const cur = months(state.period);
       const prev = months(state.period, state.period);
       tile(el, { value: String(sum(cur, "functions")), cur: sum(cur, "functions"), prev: sum(prev, "functions"), series: cur.map((m) => m.functions), fmtPoint: String });
-    },
-    spendTile(el) {
-      const avg = (list) => sum(list, "revenueCents") / sum(list, "functions");
-      const cur = months(state.period);
-      tile(el, { value: dollars(avg(cur)), cur: avg(cur), prev: avg(months(state.period, state.period)), series: cur.map((m) => m.revenueCents / m.functions), fmtPoint: dollars });
-    },
-    conversionTile(el) {
-      const rate = (list) => sum(list, "functions") / sum(list, "enquiries");
-      const cur = months(state.period);
-      tile(el, { value: `${Math.round(rate(cur) * 100)}%`, cur: rate(cur), prev: rate(months(state.period, state.period)), series: cur.map((m) => m.functions / m.enquiries), fmtPoint: (v) => `${Math.round(v * 100)}%` });
-    },
-    revenue(el, asTable) {
-      const cur = months(state.period);
-      if (asTable) {
-        el.innerHTML = table("Monthly function revenue", ["Month", "Revenue", "Functions"], cur.map((m) => [monthName(m), dollars(m.revenueCents), String(m.functions)]));
-        return;
-      }
-      drawColumns(el, {
-        labels: cur.map(shortMonth), titles: cur.map(monthName), values: cur.map((m) => m.revenueCents),
-        fmt: dollars, fmtAxis: compactDollars,
-        label: `Monthly function revenue, ${monthName(cur[0])} to ${monthName(cur[cur.length - 1])}. Latest month ${dollars(cur[cur.length - 1].revenueCents)}. Use the arrow keys to read each month.`,
-        rowsFor: (i) => [{ value: dollars(cur[i].revenueCents), name: "revenue", color: ORANGE, key: "rect" }, { value: String(cur[i].functions), name: "functions" }],
-      });
     },
     functions(el, asTable) {
       const cur = months(state.period);
@@ -435,7 +397,7 @@
     const w = Math.round(en.contentRect.width);
     if (widths.get(en.target) === w) return;
     widths.set(en.target, w);
-    if (section && ["revenue", "functions", "days"].includes(section.dataset.id) && !tables.has(section.dataset.id)) drawWidget(section);
+    if (section && ["functions", "days"].includes(section.dataset.id) && !tables.has(section.dataset.id)) drawWidget(section);
   }));
 
   function render() {
@@ -559,7 +521,7 @@
       save();
       flip(() => { section.dataset.size = w.size; });
       $$(".dw-size", section).forEach((b) => b.setAttribute("aria-pressed", String(b === sizeBtn)));
-      if (!["revenue", "functions", "days"].includes(id)) drawWidget(section);
+      if (!["functions", "days"].includes(id)) drawWidget(section);
       live(`${titleOf(id)} is now ${SIZE_NAMES[w.size].toLowerCase()}.`);
       return;
     }

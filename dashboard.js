@@ -37,12 +37,17 @@
       const s = JSON.parse(localStorage.getItem(STORE_KEY));
       if (s && Array.isArray(s.layout)) {
         s.layout = s.layout.filter((w) => WIDGETS[w.id] && WIDGETS[w.id].sizes.includes(w.size));
+        // Functions held used to start small. Bring older saved layouts up once; after that the size buttons decide.
+        if (!s.functionsTileGrown) {
+          s.layout.forEach((w) => { if (w.id === "functionsTile" && w.size === "s") w.size = "m"; });
+          s.functionsTileGrown = true;
+        }
         return s;
       }
     } catch (e) { /* nothing saved, or storage blocked */ }
     return null;
   }
-  const state = load() || { layout: copy(DEFAULT_LAYOUT), period: 12, todos: copy(DD.todos) };
+  const state = load() || { layout: copy(DEFAULT_LAYOUT), period: 12, todos: copy(DD.todos), functionsTileGrown: true };
   if (!PERIODS.includes(state.period)) state.period = 12;
   if (!Array.isArray(state.todos)) state.todos = copy(DD.todos);
   function save() {
@@ -275,7 +280,7 @@
     let spark = "";
     if (el.closest(".dw").dataset.size === "m" && series) {
       const W = 200;
-      const H = 36;
+      const H = 165; // matches .db-spark in dashboard.css
       const max = Math.max(...series);
       const min = Math.min(...series);
       const x = (i) => 4 + ((W - 8) * i) / (series.length - 1);

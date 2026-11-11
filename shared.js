@@ -29,7 +29,7 @@ window.FF_SHARED = (function () {
     { p: 13, title: "Booking confirmed", href: "confirmed.html" },
     { p: 14, title: "My Bookings: choose event details", href: "my-bookings.html" },
     { p: 15, title: "List your venue", href: "list-venue.html" },
-    { p: 16, title: "Venue sign-up" },
+    { p: 16, title: "Venue sign-up", href: "get-started.html" },
     { p: 17, title: "90 days free" },
     { p: 18, title: "Function space setup" },
     { p: 19, title: "Food and beverage setup", href: "venue-setup.html" },

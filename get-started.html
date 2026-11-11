@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get started | FunctionFindr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="get-started.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="logo" href="index.html" aria-label="FunctionFindr home">function<span>findr</span><sup>™</sup></a>
+  <nav class="site-nav" aria-label="Main">
+    <a class="nav-link" href="get-started.html" aria-current="page">Sign up</a>
+    <a class="nav-link" href="mockup.html?p=3">Log in</a>
+    <a class="btn-solid" href="list-venue.html">LIST YOUR VENUE <span class="arrow" aria-hidden="true">→</span></a>
+  </nav>
+</header>
+
+<main class="gs">
+  <form class="gs-card" id="signup" novalidate aria-labelledby="gs-title">
+    <h1 id="gs-title">Get started</h1>
+    <p class="gs-demo">Demo only: accounts aren’t set up yet, so nothing here is sent anywhere. Fields marked <span class="gs-req" aria-hidden="true">*</span> are required.</p>
+
+    <div class="gs-grid">
+      <div class="gs-field">
+        <label for="g-name">Full name <span class="gs-req" aria-hidden="true">*</span></label>
+        <input id="g-name" type="text" autocomplete="name" maxlength="80" aria-required="true" aria-describedby="g-name-msg">
+        <p class="gs-err" id="g-name-msg"></p>
+      </div>
+      <div class="gs-field">
+        <label for="g-email">Email Address <span class="gs-req" aria-hidden="true">*</span></label>
+        <input id="g-email" type="email" autocomplete="email" inputmode="email" aria-required="true" aria-describedby="g-email-msg">
+        <p class="gs-err" id="g-email-msg"></p>
+      </div>
+      <!-- TODO(confirm): the mockup doesn't mark username or password as required, which an account would need. -->
+      <div class="gs-field">
+        <label for="g-username">Username</label>
+        <input id="g-username" type="text" autocomplete="username" maxlength="40">
+      </div>
+      <div class="gs-field">
+        <label for="g-password">Password</label>
+        <input id="g-password" type="password" autocomplete="new-password">
+      </div>
+      <div class="gs-field">
+        <label for="g-venue">Venue Name <span class="gs-req" aria-hidden="true">*</span></label>
+        <input id="g-venue" type="text" autocomplete="organization" maxlength="80" aria-required="true" aria-describedby="g-venue-msg">
+        <p class="gs-err" id="g-venue-msg"></p>
+      </div>
+      <!-- Not in the mockup: CLAUDE.md §6 asks every venue for an ABN, with its format checked. -->
+      <div class="gs-field">
+        <label for="g-abn">ABN <span class="gs-req" aria-hidden="true">*</span></label>
+        <input id="g-abn" type="text" inputmode="numeric" maxlength="14" aria-required="true" aria-describedby="g-abn-hint g-abn-msg">
+        <p class="gs-hint" id="g-abn-hint">Your 11-digit Australian Business Number.</p>
+        <p class="gs-err" id="g-abn-msg"></p>
+      </div>
+      <div class="gs-field gs-wide">
+        <label for="g-address">Venue Address <span class="gs-req" aria-hidden="true">*</span></label>
+        <input id="g-address" type="text" autocomplete="street-address" maxlength="160" aria-required="true" aria-describedby="g-address-msg">
+        <p class="gs-err" id="g-address-msg"></p>
+      </div>
+      <div class="gs-field">
+        <label for="g-menu">Describe Your Menu <span class="gs-eg">eg Modern Australian</span> <span class="gs-req" aria-hidden="true">*</span></label>
+        <input id="g-menu" type="text" maxlength="60" aria-required="true" aria-describedby="g-menu-msg">
+        <p class="gs-err" id="g-menu-msg"></p>
+      </div>
+      <div class="gs-field">
+        <label for="g-type">Describe Your Venue Type <span class="gs-eg">eg Gastro Pub</span> <span class="gs-req" aria-hidden="true">*</span></label>
+        <input id="g-type" type="text" maxlength="60" aria-required="true" aria-describedby="g-type-msg">
+        <p class="gs-err" id="g-type-msg"></p>
+      </div>
+      <div class="gs-field gs-wide">
+        <label for="g-about">In 2–3 sentences, describe your venue, the types of events you host, and what makes it a great place to hold a function.</label>
+        <p class="gs-hint" id="g-about-hint">Include your location, atmosphere, types of events you host, and what makes your venue unique.</p>
+        <textarea id="g-about" rows="4" maxlength="800" aria-describedby="g-about-hint"></textarea>
+      </div>
+      <div class="gs-field gs-wide">
+        <span class="gs-label" id="g-photo-title">Images</span>
+        <p class="gs-hint">Add a single street view photo of your venue <span class="gs-req" aria-hidden="true">*</span></p>
+        <label class="gs-photo" id="g-photo-box" for="g-photo">
+          <span class="gs-photo-preview" id="g-photo-preview"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.500a2 2 0 0 1 2-2h4l2-3h8l2 3h4a2 2 0 0 1 2 2V24a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="16" cy="16.500" r="5"/><circle cx="24" cy="12" r=".8" fill="currentColor"/></svg></span>
+          <span class="gs-photo-label" id="g-photo-label">Choose a photo</span>
+        </label>
+        <input id="g-photo" class="gs-file" type="file" accept="image/jpeg,image/png,image/webp" aria-labelledby="g-photo-title g-photo-label" aria-describedby="g-photo-msg">
+        <p class="gs-err" id="g-photo-msg"></p>
+      </div>
+    </div>
+
+    <label class="check gs-consent"><input type="checkbox" id="g-marketing"><span>Send me news, events, promotions and the monthly newsletter from FunctionFindr. You can unsubscribe at any time.</span></label>
+    <button type="submit" class="gs-go">Continue <span>(No charge)</span></button>
+    <p class="gs-small">By clicking continue you agree to our <a href="#">Privacy Policy</a>.</p>
+  </form>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <a class="logo logo-stacked" href="index.html" aria-label="FunctionFindr home">function<span>findr</span></a>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="#">How it works</a>
+      <a href="#">About Us</a>
+      <a class="footer-email" href="mailto:info@functionfindr.com">info@functionfindr.com</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <nav aria-label="Legal"><a href="#">Privacy</a><a href="#">Terms of Use</a></nav>
+    <span>@2026 Info All Rights Reserved</span>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script src="get-started.js"></script>
+</body>
+</html>

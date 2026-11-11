@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your free trial | FunctionFindr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="get-started.css">
+<link rel="stylesheet" href="trial.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="logo" href="index.html" aria-label="FunctionFindr home">function<span>findr</span><sup>™</sup></a>
+  <nav class="site-nav" aria-label="Main">
+    <a class="nav-link" href="get-started.html">Sign up</a>
+    <a class="nav-link" href="mockup.html?p=3">Log in</a>
+    <a class="btn-solid" href="list-venue.html">LIST YOUR VENUE <span class="arrow" aria-hidden="true">→</span></a>
+  </nav>
+</header>
+
+<main class="gs">
+  <form class="gs-card tr" id="trial" novalidate autocomplete="off" aria-labelledby="tr-title">
+    <img class="tr-hero" src="assets/hero.jpg" alt="" width="1920" height="820">
+    <h1 id="tr-title">Enjoy full access to FunctionFindr <br>for <span data-trial-days></span> days, completely free.</h1>
+
+    <section class="tr-included" aria-labelledby="inc-title">
+      <h2 id="inc-title">What’s Included</h2>
+      <ul>
+        <li><strong>List Your Function Spaces</strong> Showcase your venue and function spaces to thousands of event organisers.</li>
+        <li><strong>Receive Bookings Online, Anytime</strong> Accept enquiries and bookings 24/7, even while you’re busy running your venue.</li>
+        <li><strong>Manage &amp; Track Your Bookings</strong> Keep all your function enquiries, bookings and customer details in one place.</li>
+        <li><strong>Increase Your Venue Exposure</strong> Be discovered by people actively searching for function venues.</li>
+        <li><strong>Simple Monthly Pricing</strong> No lock-in contracts and no hidden fees.</li>
+      </ul>
+    </section>
+
+    <div class="tr-terms-row">
+      <section class="tr-terms" aria-labelledby="terms-title">
+        <h2 id="terms-title">Terms &amp; Conditions:</h2>
+        <ul id="tr-terms"></ul>
+      </section>
+      <a class="tr-callback" href="mailto:info@functionfindr.com?subject=Please%20call%20me%20back%20about%20FunctionFindr">
+        <span class="tr-callback-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><path d="M4 28l5.500-15.500 10 10z"/><path d="M7.500 18.500l6 6M15 8.500c1-2 0-4-1.500-4.500M19.500 12.500c2.500-1.500 5-1 6.500.500M18 10l4-5M25 18l3-1M21 7l1-3M24 11l4-2"/></svg></span>
+        <span class="tr-callback-text">Have questions on how it works? Request a call back.</span>
+      </a>
+    </div>
+
+    <h2 class="tr-billing-title">Billing Details</h2>
+    <p class="gs-demo tr-demo">Demo only: nothing is charged and card details aren’t saved or sent anywhere. Try 4242 4242 4242 4242 with any future expiry.</p>
+    <div class="tr-billing">
+      <section class="tr-summary" aria-labelledby="sum-title">
+        <h3 id="sum-title">Order Summary</h3>
+        <p class="tr-trial-line"><svg class="tr-tick" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.500 8.500l3.500 4L13.500 2.500" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span><strong><span data-trial-days></span> day trial</strong> (New customers only)<br>You won’t be charged until the completion of the FREE <span data-trial-days></span> day trial.</span>
+          <strong class="tr-free">FREE</strong></p>
+
+        <fieldset class="tr-cycle">
+          <legend>Select a Billing Cycle</legend>
+          <p>Choose how often you would like to be billed. You can change the frequency of your billing cycle later.</p>
+          <div id="tr-plans"></div>
+          <p class="tr-err" id="tr-plan-msg"></p>
+        </fieldset>
+        <p class="tr-footnote" id="tr-footnote"></p>
+
+        <div class="tr-promo">
+          <label for="t-promo">Promo Code</label>
+          <div class="tr-promo-row"><input id="t-promo" type="text" placeholder="Enter code" maxlength="20" aria-describedby="t-promo-msg"><button type="button" class="tr-apply" id="t-apply">Apply</button></div>
+          <p class="tr-promo-msg" id="t-promo-msg" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="tr-card" aria-label="Card details">
+        <div class="tr-field"><label for="c-number">Card number</label><input id="c-number" type="text" inputmode="numeric" maxlength="23" placeholder="1234 5678 9012 3456" aria-describedby="c-number-msg"><p class="tr-err" id="c-number-msg"></p></div>
+        <div class="tr-field"><label for="c-name">Name on card</label><input id="c-name" type="text" maxlength="80" aria-describedby="c-name-msg"><p class="tr-err" id="c-name-msg"></p></div>
+        <div class="tr-pair">
+          <div class="tr-field"><label for="c-expiry">Expiry date</label><input id="c-expiry" type="text" inputmode="numeric" maxlength="5" placeholder="MM/YY" aria-describedby="c-expiry-msg"><p class="tr-err" id="c-expiry-msg"></p></div>
+          <div class="tr-field"><label for="c-cvc">CVC</label><input id="c-cvc" type="text" inputmode="numeric" maxlength="4" placeholder="123" aria-describedby="c-cvc-msg"><p class="tr-err" id="c-cvc-msg"></p></div>
+        </div>
+        <p class="tr-legal">By clicking sign-up and continue you agree to our <a href="#">Privacy Policy</a>.</p>
+        <p class="tr-legal">You may cancel the <span data-trial-days></span>-day free trial at any time, as well as your monthly or yearly subscription, in line with our <a href="#">Cancellation Policy</a>.</p>
+        <label class="check tr-consent"><input type="checkbox" id="t-marketing"><span>Send me news, events, promotions and newsletters from FunctionFindr. You can unsubscribe at any time.</span></label>
+      </section>
+    </div>
+
+    <div class="tr-actions">
+      <a class="tr-back" href="get-started.html" aria-label="Back to Get started"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M14 8H3M7.500 3.500L3 8l4.500 4.500" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <div class="tr-go-wrap">
+        <button type="submit" class="tr-go">Sign-up and continue</button>
+        <p>You won’t be charged now</p>
+      </div>
+    </div>
+  </form>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <a class="logo logo-stacked" href="index.html" aria-label="FunctionFindr home">function<span>findr</span></a>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="#">How it works</a>
+      <a href="#">About Us</a>
+      <a class="footer-email" href="mailto:info@functionfindr.com">info@functionfindr.com</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <nav aria-label="Legal"><a href="#">Privacy</a><a href="#">Terms of Use</a></nav>
+    <span>@2026 Info All Rights Reserved</span>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script src="billing-data.js"></script>
+<script src="card.js"></script>
+<script src="trial.js"></script>
+</body>
+</html>

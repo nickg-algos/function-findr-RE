@@ -95,47 +95,15 @@
       </section>
     </div>`;
 
-  /* ---------- Card checks (format only; nothing is charged) ---------- */
+  /* ---------- Card checks (format only, in card.js; nothing is charged) ---------- */
 
   const el = (id) => $(`#c-${id}`);
-  const digits = (v) => v.replace(/\D/g, "");
-  const luhn = (num) => {
-    let sum = 0;
-    for (let i = 0; i < num.length; i++) {
-      let d = Number(num[num.length - 1 - i]);
-      if (i % 2) { d *= 2; if (d > 9) d -= 9; }
-      sum += d;
-    }
-    return sum % 10 === 0;
-  };
-  el("number").addEventListener("input", (e) => { e.target.value = digits(e.target.value).slice(0, 19).replace(/(\d{4})(?=\d)/g, "$1 "); });
-  el("expiry").addEventListener("input", (e) => {
-    const d = digits(e.target.value).slice(0, 4);
-    e.target.value = d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
-  });
-  el("cvc").addEventListener("input", (e) => { e.target.value = digits(e.target.value).slice(0, 4); });
-
-  function expiryProblem(v) {
-    const m = v.match(/^(\d{2})\/(\d{2})$/);
-    if (!m) return "Please enter the expiry as MM/YY.";
-    const month = Number(m[1]);
-    const year = 2000 + Number(m[2]);
-    if (month < 1 || month > 12) return "Please enter a month from 01 to 12.";
-    const now = new Date();
-    if (year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth() + 1)) return "This card has expired.";
-    return "";
-  }
+  window.FF_CARD.tidy(el("number"), el("expiry"), el("cvc"));
 
   $("#pay-form").addEventListener("submit", (e) => {
     e.preventDefault();
     $("#c-result").textContent = "";
-    const number = digits(el("number").value);
-    const checks = [
-      ["number", !number ? "Please enter the card number." : number.length < 13 || !luhn(number) ? "Please check the card number." : ""],
-      ["name", el("name").value.trim() ? "" : "Please enter the name on the card."],
-      ["expiry", el("expiry").value ? expiryProblem(el("expiry").value) : "Please enter the expiry date."],
-      ["cvc", /^\d{3,4}$/.test(el("cvc").value) ? "" : "Please enter the 3 or 4 digit code on the back of the card."],
-    ];
+    const checks = window.FF_CARD.problems({ number: el("number").value, name: el("name").value, expiry: el("expiry").value, cvc: el("cvc").value });
     const bad = checks.filter(([id, text]) => {
       $(`#c-${id}-msg`).textContent = text;
       el(id).toggleAttribute("aria-invalid", !!text);

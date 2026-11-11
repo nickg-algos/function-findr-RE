@@ -89,7 +89,7 @@
     try { sessionStorage.setItem(KEY, JSON.stringify(details)); } catch (err) {
       try { sessionStorage.setItem(KEY, JSON.stringify({ ...details, photo: null })); } catch (err2) { /* carry on without it */ }
     }
-    location.href = "mockup.html?p=17"; // TODO: page 17's own address once it's built
+    location.href = "trial.html";
   });
 
   document.addEventListener("click", (e) => { if (e.target.closest('a[href="#"]')) e.preventDefault(); });

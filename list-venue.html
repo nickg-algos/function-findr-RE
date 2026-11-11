@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>List your venue | FunctionFindr</title>
+<meta name="description" content="List your function spaces on FunctionFindr: accept bookings 24/7, manage everything in one place and track your bookings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="list-venue.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="logo" href="index.html" aria-label="FunctionFindr home">function<span>findr</span><sup>™</sup></a>
+  <nav class="site-nav" aria-label="Main">
+    <a class="nav-link" href="search.html">Venues</a>
+    <a class="nav-link" href="mockup.html?p=16">Sign up</a>
+    <a class="nav-link" href="mockup.html?p=3">Log in</a>
+    <a class="btn-outline" href="list-venue.html" aria-current="page">LIST YOUR VENUE <span class="arrow" aria-hidden="true">→</span></a>
+    <a class="btn-solid" href="search.html">BOOK A SPACE <span class="arrow" aria-hidden="true">→</span></a>
+  </nav>
+</header>
+
+<main>
+  <section class="lv-hero" aria-labelledby="lv-title">
+    <p class="lv-kicker">Are you a venue?</p>
+    <h1 id="lv-title">Meet your new Function Manager</h1>
+    <ul class="lv-ticks">
+      <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.500 8.500l3.500 4L13.500 2.500" fill="none" stroke="currentColor" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"/></svg>Accept bookings 24/7</li>
+      <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.500 8.500l3.500 4L13.500 2.500" fill="none" stroke="currentColor" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"/></svg>Centralise your system management</li>
+      <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.500 8.500l3.500 4L13.500 2.500" fill="none" stroke="currentColor" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"/></svg>Track your bookings</li>
+    </ul>
+    <!-- TODO(confirm): the 90-day free trial is the mockup's offer; CLAUDE.md §5 hasn't settled pricing. -->
+    <a class="lv-cta" href="mockup.html?p=16">Start your free 90 day trial <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.500L13.500 8 9 12.500" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </section>
+
+  <section class="lv-how" aria-labelledby="how-title">
+    <div class="lv-inner">
+      <h2 class="sr-only" id="how-title">How FunctionFindr works for venues</h2>
+      <div class="lv-brand" aria-hidden="true">
+        <span class="lv-brand-logo">function<span>findr</span><sup>™</sup></span>
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><circle cx="11" cy="11" r="4"/><path d="M13 13l14 6-6 2-2 6z" fill="currentColor"/></svg>
+      </div>
+
+      <ol class="lv-steps">
+        <li class="lv-step">
+          <span class="lv-num" aria-hidden="true">1</span>
+          <div class="lv-text">
+            <h3><span class="lv-step-name">Search</span> Customers find your venue</h3>
+            <p>Your venue appears when people search by event type, guest numbers and location.</p>
+          </div>
+          <div class="lv-art lv-phone"><img src="assets/how-phone.jpg" alt="A venue’s function space page on a phone" loading="lazy" width="500" height="1080"></div>
+        </li>
+        <li class="lv-step">
+          <span class="lv-num" aria-hidden="true">2</span>
+          <div class="lv-art lv-bubbles">
+            <img class="lv-bubble lv-b1" src="assets/how-drinks.jpg" alt="" loading="lazy">
+            <img class="lv-bubble lv-b2" src="assets/how-canapes.jpg" alt="" loading="lazy">
+            <span class="lv-dot lv-d1"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5l8 8-11 11a3 3 0 0 1-4 0l-4-4a3 3 0 0 1 0-4z"/><path d="M14 10l8 8M24 2l2 2M27 5l2 2"/></svg></span>
+            <span class="lv-dot lv-d2"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19c-4 0-7-4-7-8.500S8 3 12 3s7 3 7 7.500S16 19 12 19z"/><path d="M24 7c2.300 1 4 3.500 4 6.500 0 4-2.500 7.500-6 7.500M12 21c0 3-2 4-2 8M21.500 23c0 2.500 1.500 3.500 1.500 6"/></svg></span>
+            <span class="lv-dot lv-d3"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v8a3 3 0 0 0 6 0V3M9 3v26M20 29V3c3 1 5 5 5 10s-2 6-5 6M26 29V19"/></svg></span>
+          </div>
+          <div class="lv-text">
+            <h3><span class="lv-step-name">Explore</span> They review your spaces</h3>
+            <p>They explore your spaces, packages, facilities and availability.</p>
+          </div>
+        </li>
+        <li class="lv-step">
+          <span class="lv-num" aria-hidden="true">3</span>
+          <div class="lv-text">
+            <h3><span class="lv-step-name">Book</span> Event details are submitted</h3>
+            <p>Event details, guest numbers and packages are confirmed online.</p>
+          </div>
+          <div class="lv-art lv-icons" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round" stroke-linejoin="round"><path d="M16 27S4 19.500 4 11.500A6.500 6.500 0 0 1 16 8a6.500 6.500 0 0 1 12 3.500C28 19.500 16 27 16 27z"/></svg>
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="23" height="21" rx="3"/><path d="M3 11h23M9 3.500v5M20 3.500v5M8 16h.5M13 16h.5M18 16h.5M8 21h.5M13 21h.5"/><circle cx="25" cy="25" r="5" fill="#fff"/><path d="M22.800 25l1.600 1.600 2.800-3"/></svg>
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round" stroke-linejoin="round"><path d="M4 28l5.500-15.500 10 10z"/><path d="M7.500 18.500l6 6M15 8.500c1-2 0-4-1.500-4.500M19.500 12.500c2.500-1.500 5-1 6.500.500M18 10l4-5M25 18l3-1M21 7l1-3M24 11l4-2"/></svg>
+          </div>
+        </li>
+        <li class="lv-step">
+          <span class="lv-num" aria-hidden="true">4</span>
+          <div class="lv-art lv-laptop"><img src="assets/how-laptop.jpg" alt="The venue’s booking calendar on a laptop" loading="lazy" width="900" height="562"></div>
+          <div class="lv-text">
+            <h3><span class="lv-step-name">Confirm</span> Booking details are sent instantly</h3>
+            <p>Both you and the customer receive the booking details instantly.</p>
+          </div>
+        </li>
+      </ol>
+
+      <p class="lv-promise">More visibility.<br>Better enquiries.<br>Simpler bookings.</p>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="trust-title">
+    <div class="band-inner">
+      <h2 id="trust-title">Trusted by Melbourne’s top venues</h2>
+      <div class="logo-row" id="logos"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <a class="logo logo-stacked" href="index.html" aria-label="FunctionFindr home">function<span>findr</span></a>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="#">How it works</a>
+      <a href="#">About Us</a>
+      <a class="footer-email" href="mailto:info@functionfindr.com">info@functionfindr.com</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <nav aria-label="Legal"><a href="#">Privacy</a><a href="#">Terms of Use</a></nav>
+    <span>@2026 Info All Rights Reserved</span>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script src="search-data.js"></script>
+<script src="list-venue.js"></script>
+</body>
+</html>

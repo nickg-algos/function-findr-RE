@@ -1,0 +1,100 @@
+/* "Hi …, welcome!" (mockup page 18): set up a function space. Card, fields and photo boxes come from get-started.css. */
+
+.ss h1 { font-size: clamp(1.9rem, 3.4vw, 2.9rem); }
+.ss-added { margin-top: .75rem; color: var(--ok); font-weight: 600; text-align: center; }
+.ss-added:empty { display: none; }
+.ss-block { margin-top: 1.75rem; }
+.ss-count.is-over { color: var(--error); font-weight: 600; }
+
+.ss-row { margin: 0; padding: 1.4rem 0; border: 0; border-top: 1px solid #808285; }
+.ss-row h2, .ss-row > legend, .ss-legend, .ss-cap legend, .ss-session legend, .ss-extra legend { color: #000; font-size: .95rem; font-weight: 600; }
+.ss-row > legend { float: left; width: 100%; margin-bottom: .75rem; padding: 0; }
+.ss-row > p:not(.gs-hint):not(.gs-err) { margin-top: .4rem; color: #000; font-size: .92rem; }
+.ss-block + .ss-row { margin-top: 1.5rem; }
+fieldset { min-width: 0; }
+
+/* Capacity and deposit */
+.ss-cap-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.25rem 3.25rem; }
+.ss-cap, .ss-extra, .ss-session { margin: 0; padding: 0; border: 0; }
+.ss-cap legend { padding: 0; }
+.ss-cap-fields { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; margin-top: .5rem; }
+.ss-small { display: grid; gap: .4rem; color: #000; font-size: .92rem; }
+.ss-deposit { display: grid; align-content: start; gap: .4rem; }
+.ss input:not([type=checkbox]):not([type=radio]):not(.gs-file), .ss select {
+  min-height: 2.6rem; padding: .35rem .6rem; border: 1px solid #808285; border-radius: .4rem; background: #fff; color: #231f20; font: inherit; font-size: 1rem;
+}
+.ss-cap input { width: 7rem; }
+.ss select { appearance: none; width: 100%; max-width: 16rem; padding-right: 2rem; cursor: pointer; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10'%3E%3Cpath d='M2 2l6 6 6-6' fill='none' stroke='%23231f20' stroke-width='2.400' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right .65rem center / .8rem; }
+.ss input:focus-visible, .ss select:focus-visible, .ss textarea:focus-visible { outline: 0; border-color: var(--orange) !important; box-shadow: 0 0 0 3px rgba(208, 112, 47, .2); }
+.ss [aria-invalid]:not([type=radio]) { border-color: var(--error) !important; }
+.ss-money { display: inline-flex; align-items: center; gap: .35rem; }
+.ss-money > span { color: #000; font-weight: 500; }
+.ss-money input { width: 7.5rem; }
+.ss-money.is-off { opacity: .45; }
+
+/* Buffer times */
+.ss-example { padding: .6rem .9rem; border-left: 4px solid var(--orange); border-radius: .3rem; background: #fdf7f2; }
+.ss-buffers { margin-top: 1.25rem; }
+
+/* Extras */
+.ss-extras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem 2rem; margin-top: 1rem; }
+.ss-extra { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; }
+.ss-extra legend { float: left; width: 100%; padding: 0; font-weight: 500; }
+.ss-extra .check { align-items: center; }
+.ss-extra .gs-err { flex-basis: 100%; }
+
+/* Available hours */
+.ss-sessions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem 3rem; }
+.ss-session legend { margin-bottom: .6rem; padding: 0; }
+.ss-hours { width: 100%; border-collapse: collapse; }
+.ss-hours th, .ss-hours td { padding: .3rem .35rem .3rem 0; border-bottom: 1px solid var(--line); text-align: left; font-weight: 400; }
+.ss-hours thead th { color: #231f20; font-size: .88rem; }
+.ss-hours tbody th { color: #231f20; font-size: .92rem; }
+.ss-hours input[type=time] { width: 100%; min-width: 6.5rem; padding-inline: .4rem !important; }
+.ss-hours .ss-money input { width: 5.5rem; }
+
+/* Menus and checkbox groups */
+.ss-menu-link { display: inline-flex; align-items: center; gap: .6rem; min-height: 2.5rem; margin-top: .75rem; padding: .3rem 1.6rem; border: 1px solid #231f20; border-radius: 999px; color: #231f20; font-weight: 600; }
+.ss-menu-link svg { width: .55rem; height: .9rem; }
+.ss-menu-link:hover { border-color: var(--orange); background: #fdf7f2; text-decoration: none; }
+.ss-checks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .9rem 1.5rem; clear: both; color: #231f20; font-size: .95rem; }
+
+/* Photos */
+.ss-photos { display: flex; flex-wrap: wrap; gap: 1.1rem; margin-top: .6rem; }
+.ss-photo-wrap .gs-photo { width: 15.5rem; }
+.ss-photo-wrap .gs-file { position: absolute; width: 1px; height: 1px; min-height: 0; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); opacity: 0; }
+
+/* Actions */
+.ss-actions { padding-top: 1.75rem; border-top: 1px solid #808285; }
+.ss-actions hr { margin: 1.5rem 0; border: 0; border-top: 1px solid #808285; }
+.ss-preview, .ss-another {
+  display: inline-flex; align-items: center; gap: .6rem; min-height: 2.75rem; padding: .4rem 1.4rem; border: 2px solid var(--orange); border-radius: .4rem;
+  font: inherit; font-weight: 600; text-transform: uppercase; cursor: pointer; transition: background-color .12s, color .12s;
+}
+.ss-preview { background: #fff; color: var(--orange-text); }
+.ss-preview:hover { background: var(--orange); color: #fff; }
+.ss-another { background: var(--orange); color: #fff; }
+.ss-another:hover { background: #fff; color: var(--orange-text); }
+.ss-another svg { width: .55rem; height: .9rem; }
+.ss-preview:focus-visible, .ss-another:focus-visible, .ss-menu-link:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+.ss-terms { margin-top: 1.5rem; font-size: .9rem; }
+.ss-terms a { color: #000; font-weight: 500; text-decoration: underline; }
+
+@media (max-width: 1000px) {
+  .ss-sessions { grid-template-columns: minmax(0, 1fr); }
+  .ss-checks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ss-extras { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  .ss-cap-row { grid-template-columns: minmax(0, 1fr); }
+  .ss-checks { grid-template-columns: minmax(0, 1fr); }
+  .ss-hours input[type=time] { min-width: 0; }
+  .ss-hours .ss-money input { width: 4.25rem; }
+  .ss-hours th, .ss-hours td { padding-right: .2rem; }
+  .ss-photo-wrap .gs-photo { width: 100%; }
+  .ss-photo-wrap { flex: 1 1 9rem; }
+  .ss-preview, .ss-another { width: 100%; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ss-preview, .ss-another { transition: none; }
+}

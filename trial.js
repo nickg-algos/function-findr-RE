@@ -57,7 +57,7 @@
 
     ["number", "name", "expiry", "cvc"].forEach((id) => { el(id).value = ""; }); // never kept
     try { sessionStorage.setItem(KEY, JSON.stringify({ ...signup, plan: plan.value, marketing: $("#t-marketing").checked, trial: "demo" })); } catch (err) { /* carry on */ }
-    location.href = "mockup.html?p=18"; // TODO: page 18's own address once it's built
+    location.href = "space-setup.html";
   });
 
   document.addEventListener("click", (e) => { if (e.target.closest('a[href="#"]')) e.preventDefault(); });

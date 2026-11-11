@@ -22,19 +22,10 @@
 
   /* ---------- Helpers ---------- */
 
-  const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const A = window.FF_AVAIL; // availability rules, shared with the next steps
+  const { DAYS, timeLabel } = A;
   const dollars = (cents) => "$" + Math.round(cents / 100).toLocaleString("en-AU");
-  const timeLabel = (mins) => {
-    const m = mins % 1440;
-    const h = Math.floor(m / 60);
-    return `${h % 12 || 12}:${String(m % 60).padStart(2, "0")} ${h < 12 ? "am" : "pm"}`;
-  };
-  const toMins = (hhmm) => { const [h, m] = hhmm.split(":").map(Number); return h * 60 + m; };
-  const dayNumber = (iso) => { const [y, m, d] = iso.split("-").map(Number); return Date.UTC(y, m - 1, d) / 864e5; };
-  const jsWeekday = (iso) => { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d).getDay(); }; // 0 = Sunday
-  const mondayFirst = (iso) => (jsWeekday(iso) + 6) % 7;
-  const ddmmyyyy = (iso) => iso.split("-").reverse().join("/");
-  const capText = [space.seated && `${space.seated} seated`, space.standing && `${space.standing} standing`].filter(Boolean).join(" or ");
+  const capText = A.capacityText(space);
 
   const icon = {
     pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s-7-6.600-7-12a7 7 0 0 1 14 0c0 5.400-7 12-7 12z" fill="currentColor"/><circle cx="12" cy="10" r="2.600" fill="#fff"/></svg>',
@@ -252,77 +243,52 @@
   const times = (from, to) => { const out = []; for (let m = from; m <= to; m += 30) out.push(`<option value="${m}">${timeLabel(m)}</option>`); return out.join(""); };
   fields.start.innerHTML = '<option value="">–</option>' + times(listing.opens, listing.latest - 30);
   fields.end.innerHTML = '<option value="">–</option>' + times(listing.opens + 30, listing.latest);
-  const today = (() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`; })();
-  fields.date.min = today;
+  fields.date.min = A.todayIso();
 
-  // Bookings that would clash: this space's own, plus any that take the whole venue.
-  const blocking = CAL && CAL.venueName === listing.name
-    ? CAL.bookings.filter((b) => b.space === space.calendarId || b.space === "whole")
-    : [];
-  function findClash(date, start, end) {
-    return blocking.find((b) => {
-      const [bDate, bTime] = b.start.split("T");
-      const offset = (dayNumber(bDate) - dayNumber(date)) * 1440;
-      if (Math.abs(offset) > 1440) return false;
-      const bStart = toMins(bTime) + offset;
-      let bEnd = toMins(b.end) + offset;
-      if (bEnd <= bStart) bEnd += 1440; // runs past midnight
-      return start < bEnd && bStart < end;
-    });
+  // Coming back with "Edit Selection" from the next step: start from what was chosen.
+  const before = A.fromParams(params);
+  if (before.date) fields.date.value = before.date;
+  if (before.start !== null && fields.start.querySelector(`option[value="${before.start}"]`)) fields.start.value = String(before.start);
+  if (before.end !== null && fields.end.querySelector(`option[value="${before.end}"]`)) fields.end.value = String(before.end);
+  if (Number.isInteger(before.guests)) fields.guests.value = String(before.guests);
+  if (before.name) $("#a-name").value = before.name;
+
+  function readForm() {
+    const num = (el) => (el.value.trim() === "" ? null : Number(el.value));
+    return { date: fields.date.value, start: num(fields.start), end: num(fields.end), guests: num(fields.guests), name: $("#a-name").value.trim() };
   }
 
   function showSpend() {
-    const date = fields.date.value;
-    const start = Number(fields.start.value);
-    const i = date && fields.start.value !== "" && space.minSpendCents ? venue.sessions.findIndex((s) => start >= s.start && start < s.end) : -1;
-    $("#a-spend").textContent = i >= 0
-      ? `Minimum spend for a ${DAYS[mondayFirst(date)]} ${venue.sessions[i].label.toLowerCase()}: ${dollars(space.minSpendCents[mondayFirst(date)][i])} (inc. GST)`
-      : "";
+    const req = readForm();
+    const ms = A.minSpend(venue, space, req.date, req.start);
+    $("#a-spend").textContent = ms ? `Minimum spend for a ${ms.day} ${ms.session.toLowerCase()}: ${dollars(ms.cents)} (inc. GST)` : "";
   }
   form.addEventListener("change", showSpend);
-
-  function setError(key, text) {
-    const el = fields[key];
-    $(`#a-${key}-msg`).textContent = text;
-    el.toggleAttribute("aria-invalid", !!text);
-    return !text;
-  }
+  showSpend();
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const result = $("#a-result");
     result.textContent = "";
     result.className = "sp-result";
-    const date = fields.date.value;
-    const start = fields.start.value === "" ? null : Number(fields.start.value);
-    const end = fields.end.value === "" ? null : Number(fields.end.value);
-    const guestsRaw = fields.guests.value.trim();
-    const guests = Number(guestsRaw);
-    const most = Math.max(space.seated || 0, space.standing || 0);
-
-    const ok = [
-      setError("date", !date ? "Please choose a date."
-        : date < today ? "Please choose a date from today onwards."
-        : listing.closed.includes(jsWeekday(date)) ? `${listing.name} is closed on ${DAYS[mondayFirst(date)]}s.` : ""),
-      setError("start", start === null ? "Please choose a start time." : ""),
-      setError("end", end === null ? "Please choose an end time." : start !== null && end <= start ? "End time needs to be after the start time." : ""),
-      setError("guests", !guestsRaw ? "Please enter the number of guests."
-        : !Number.isInteger(guests) || guests < 1 ? "Please enter a whole number of guests."
-        : guests > most ? `The ${space.name} holds up to ${capText}.` : ""),
-    ];
-    const firstBad = ["date", "start", "end", "guests"][ok.indexOf(false)];
+    const req = readForm();
+    const found = A.problems(listing, space, req);
+    let firstBad = null;
+    Object.keys(fields).forEach((key) => {
+      $(`#a-${key}-msg`).textContent = found[key];
+      fields[key].toggleAttribute("aria-invalid", !!found[key]);
+      if (found[key] && !firstBad) firstBad = key;
+    });
     if (firstBad) { fields[firstBad].focus(); return; }
 
-    const clash = findClash(date, start, end);
+    const clash = A.clash(CAL, listing, space, req);
     if (clash) {
-      const bStart = toMins(clash.start.split("T")[1]);
       result.classList.add("is-bad");
-      result.textContent = `Sorry, the ${space.name} is already booked from ${timeLabel(bStart)} to ${timeLabel(toMins(clash.end))} on ${DAYS[mondayFirst(clash.start.split("T")[0])]} ${ddmmyyyy(clash.start.split("T")[0])}. Please try another date or time.`;
+      result.textContent = A.clashText(space, clash);
       return;
     }
 
     // Free: carry the request on to the next step (page 10).
-    const next = new URLSearchParams({ p: "10", venue: listing.id, space: space.id, date, start: String(start), end: String(end), guests: String(guests), name: $("#a-name").value.trim() });
-    location.href = `mockup.html?${next}`;
+    location.href = `available.html?${A.toParams(listing.id, space.id, req)}`;
   });
 })();

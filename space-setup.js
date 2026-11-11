@@ -214,6 +214,38 @@
     });
   }
 
+  /* ---------- "Go back & make changes" from the preview: space-setup.html?edit=<space id> ---------- */
+
+  const hhmm = (mins) => { const m = mins % 1440; return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`; };
+  const toDollars = (c) => (c === null || c === undefined ? "" : c % 100 ? (c / 100).toFixed(2) : String(c / 100));
+  const editing = spaces.find((s) => s.id === new URLSearchParams(location.search).get("edit"));
+  if (editing) {
+    el("s-name").value = editing.name;
+    el("s-type").value = editing.type;
+    el("s-about").value = editing.about.join("\n\n");
+    el("s-standing").value = editing.standing ?? "";
+    el("s-seated").value = editing.seated ?? "";
+    el("s-deposit").value = toDollars(editing.depositCents);
+    el("s-setup").value = String(editing.bufferMinutes.setup);
+    el("s-packdown").value = String(editing.bufferMinutes.packDown);
+    D.extras.forEach((x) => {
+      const cents = editing.extrasCents[x.id];
+      form.querySelector(`input[name="x-${x.id}"][value="${cents === null ? "no" : "yes"}"]`).checked = true;
+      el(`x-${x.id}-amount`).value = toDollars(cents);
+    });
+    D.sessions.forEach((s) => editing.hours[s.id].forEach((h, i) => {
+      if (!h) return;
+      el(`${s.id}-open-${i}`).value = hhmm(h.open);
+      el(`${s.id}-close-${i}`).value = hhmm(h.close);
+      el(`${s.id}-spend-${i}`).value = toDollars(h.minSpendCents);
+    }));
+    D.groups.forEach((g) => $$(`input[name="g-${g.id}"]`, form).forEach((c) => { c.checked = (editing[g.id] || []).includes(c.value); }));
+    editing.photos.forEach((src, i) => setPhoto(i, src));
+    syncWords(); syncExample();
+    D.extras.forEach((x) => { const amount = el(`x-${x.id}-amount`); const v = amount.value; syncExtras(); amount.value = v; });
+    el("ss-added").textContent = `Editing ${editing.name}. Your changes replace the saved version.`;
+  }
+
   /* ---------- Check and keep ---------- */
 
   function showAdded() {
@@ -221,7 +253,7 @@
       ? `You’ve added ${spaces.length === 1 ? "1 space" : `${spaces.length} spaces`}: ${spaces.map((s) => s.name).join(", ")}.`
       : "";
   }
-  showAdded();
+  if (!editing) showAdded();
 
   function setMsg(id, text, input) {
     el(`${id}-msg`).textContent = text;
@@ -324,8 +356,11 @@
     const { bad, space } = collect();
     if (bad.length) { bad[0].focus(); return; }
 
-    // Same name twice replaces the earlier one.
-    spaces = spaces.filter((s) => s.id !== space.id).concat(space);
+    // Same name twice replaces the earlier one; an edited space replaces itself even if renamed.
+    const isOld = (s) => s.id === space.id || (editing && s.id === editing.id);
+    const at = spaces.findIndex(isOld);
+    const rest = spaces.filter((s) => !isOld(s));
+    spaces = at < 0 ? rest.concat(space) : [...rest.slice(0, at), space, ...rest.slice(at)]; // keeps its place in the list
     let kept = write(SPACES_KEY, spaces);
     if (!kept) kept = write(SPACES_KEY, spaces.map((s) => ({ ...s, photos: [] }))); // photos too big for the tab
     write(SIGNUP_KEY, { ...signup, venue: el("s-venue").value.trim() });
@@ -345,7 +380,7 @@
       el("s-name").focus();
       return;
     }
-    location.href = "mockup.html?p=20"; // TODO: page 20's own address once it's built
+    location.href = `preview.html?space=${encodeURIComponent(space.id)}`;
   });
 
   document.addEventListener("click", (e) => { if (e.target.closest('a[href="#"]')) e.preventDefault(); });

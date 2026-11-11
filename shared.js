@@ -33,7 +33,7 @@ window.FF_SHARED = (function () {
     { p: 17, title: "90 days free", href: "trial.html" },
     { p: 18, title: "Function space setup", href: "space-setup.html" },
     { p: 19, title: "Food and beverage setup", href: "venue-setup.html" },
-    { p: 20, title: "Preview your listing" },
+    { p: 20, title: "Preview your listing", href: "preview.html" },
     { p: 21, title: "You’re all set" },
     { p: null, title: "Venue dashboard (no mockup)", href: "dashboard.html" },
     { p: 22, title: "Booking calendar: add or edit", href: "calendar.html" },

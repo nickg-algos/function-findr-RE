@@ -1,0 +1,51 @@
+/* "Preview and approve your function space listing" (mockup page 20).
+   The listing reuses the space page's styles (venue.css, space.css); the band and card come from get-started.css. */
+
+.pv { padding-top: 3.5rem; }
+.pv h1 { max-width: 72rem; margin: 0 auto 2.5rem; color: #fff; font-size: clamp(1.7rem, 3.4vw, 2.9rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.15; text-align: center; }
+.pv-card { padding: 2.25rem clamp(1rem, 2.5vw, 2rem) 2.5rem; }
+.pv-card .av-example { margin: 0 0 1.75rem; }
+.pv-venue { color: #000; font-size: clamp(1.9rem, 3vw, 2.6rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.1; text-transform: uppercase; }
+#pv-space .sp-name { margin-top: .9rem; }
+.pv-main { max-width: 50rem; margin-top: 2.5rem; }
+.pv-none { color: #6d6e71; }
+.pv-none a { color: var(--orange-text); font-weight: 600; text-decoration: underline; }
+.pv-nophoto { margin-top: 1.5rem; padding: 2.5rem 1rem; border: 1px dashed #808285; border-radius: .9rem; background: var(--field); color: #58595b; text-align: center; }
+.pv-pkgs { display: grid; gap: .45rem; list-style: none; }
+.pv-pkgs li { padding-bottom: .4rem; border-bottom: 1px solid var(--line); }
+.pv-pkgs strong { display: block; color: #231f20; font-weight: 500; }
+.pv-pkgs span { display: block; margin-top: .15rem; color: var(--text); font-size: .9rem; }
+.pv .sp-sub { grid-template-columns: 0 9.5rem minmax(0, 1fr); }
+
+.pv-tabs { display: flex; flex-wrap: wrap; gap: .25rem; margin-bottom: 1.75rem; padding: .25rem; border-radius: .5rem; background: var(--field); }
+.pv-tabs button { min-height: 2.5rem; padding: .3rem 1rem; border: 0; border-radius: .35rem; background: none; color: #231f20; font: inherit; cursor: pointer; }
+.pv-tabs button[aria-pressed="true"] { background: #fff; font-weight: 600; box-shadow: 0 1px 3px rgba(0, 0, 0, .15); }
+.pv-tabs button:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+
+.pv-venue-only { max-width: 50rem; margin-top: 2rem; padding: 1.1rem 1.25rem; border: 1px dashed #a7a9ac; border-radius: .6rem; background: #f7f7f8; }
+.pv-venue-only h2 { color: #231f20; font-size: 1rem; font-weight: 600; }
+.pv-venue-only dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .75rem 1.5rem; margin-top: .6rem; }
+.pv-venue-only dt { color: #6d6e71; font-size: .85rem; }
+.pv-venue-only dd { margin: .15rem 0 0; color: #231f20; }
+
+.pv-demo { margin-top: 2.5rem; text-align: left; }
+.pv-actions { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin-top: 1rem; }
+.pv-back, .pv-go {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: .4rem 1.5rem; border: 2px solid var(--orange); border-radius: .4rem;
+  font: inherit; font-weight: 600; text-transform: uppercase; cursor: pointer; transition: background-color .12s, color .12s;
+}
+.pv-back { background: #fff; color: var(--orange-text); }
+.pv-back:hover { background: var(--orange); color: #fff; text-decoration: none; }
+.pv-go { background: var(--orange); color: #fff; }
+.pv-go:hover { background: #fff; color: var(--orange-text); }
+.pv-back:focus-visible, .pv-go:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
+@media (max-width: 700px) {
+  .pv { padding-top: 2rem; }
+  .pv .sp-sub { grid-template-columns: minmax(0, 1fr); }
+  .pv .sp-sub > span { display: none; }
+  .pv-back, .pv-go { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pv-back, .pv-go { transition: none; }
+}

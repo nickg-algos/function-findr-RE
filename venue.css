@@ -1,0 +1,75 @@
+/* Venue page (mockup page 8). Bands, logos and reviews are in styles.css. */
+
+.vp { max-width: calc(80rem + 2 * var(--gutter)); margin-inline: auto; padding: 2.5rem var(--gutter) 4.5rem; }
+.vp h1 { color: #000; font-size: clamp(1.9rem, 3vw, 2.6rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.1; text-transform: uppercase; }
+.vp-address { display: flex; align-items: center; gap: .5rem; margin-top: .5rem; color: #58595b; font-size: clamp(1.15rem, 1.6vw, 1.45rem); font-weight: 500; }
+.vp-address svg { flex: none; width: 1.5rem; height: 1.5rem; color: #6d6e71; }
+
+/* Main photo */
+.vp-hero { position: relative; margin-top: 2rem; }
+.vp-hero img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; border-radius: 1.4rem; background: var(--field); }
+.vp-badge { position: absolute; top: 1.4rem; left: 1.6rem; padding: .3rem .85rem; border-radius: .5rem; background: rgba(255, 255, 255, .92); color: #3f4042; font-weight: 500; }
+.vp-gallery-btn {
+  position: absolute; right: 1.6rem; bottom: 1.4rem; display: inline-flex; align-items: center; gap: .65rem; min-height: 2.75rem; padding: .35rem 1rem;
+  border: 1px solid #58595b; border-radius: .4rem; background: #fff; color: #231f20; font: inherit; font-size: 1.1rem; font-weight: 500; cursor: pointer; transition: background-color .12s, border-color .12s;
+}
+.vp-gallery-btn svg { width: 1.1rem; height: 1.1rem; color: #58595b; }
+.vp-gallery-btn:hover { border-color: var(--orange); background: #fdf7f2; }
+.vp-gallery-btn:focus-visible, .vp-check:focus-visible, .vp-close:focus-visible, .vp-empty a:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+
+/* About */
+.vp-about { max-width: 58rem; margin-top: 2rem; }
+.vp-tags { color: #000; font-size: 1.15rem; }
+.vp-sep { margin-inline: .5rem; }
+.vp-about > p:last-child { margin-top: 1.1rem; color: var(--text); line-height: 1.75; }
+
+/* Function spaces */
+.vp-spaces { max-width: 60rem; margin-top: 2.5rem; }
+.vp-space { display: grid; grid-template-columns: minmax(0, 1fr) 14.75rem; gap: 2.25rem; padding: 1.75rem 0; border-top: 1px solid #808285; }
+.vp-space:last-child { border-bottom: 1px solid #808285; }
+.vp-space h3 { color: #58595b; font-size: 1.2rem; font-weight: 600; letter-spacing: -.015em; }
+.vp-cap { margin-top: .9rem; color: #58595b; font-size: 1.15rem; }
+.vp-space-text > p:not(.vp-cap) { margin-top: .75rem; color: var(--text); font-size: .95rem; line-height: 1.55; }
+.vp-space-text > .vp-cap + p { margin-top: 1.1rem; }
+.vp-fac strong { display: block; color: #58595b; font-weight: 600; }
+.vp-check { display: inline-flex; align-items: center; gap: .45rem; margin-top: 1rem; color: var(--orange-text); font-weight: 600; }
+.vp-check svg { width: 1.05rem; height: 1.05rem; }
+.vp-check:hover { text-decoration: underline; }
+.vp-space img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; margin-top: 2.75rem; border-radius: .6rem; background: var(--field); }
+.vp-empty { padding: 1.5rem 0; border-block: 1px solid #808285; color: var(--text); }
+.vp-empty a { color: var(--orange-text); font-weight: 600; }
+
+/* Location */
+.vp-location { margin-top: 4.5rem; }
+.vp-location::before { content: ""; display: block; width: 13rem; height: 3px; margin-bottom: 2.75rem; background: var(--orange); }
+.vp-location h2 { color: #000; font-size: 1.45rem; font-weight: 700; letter-spacing: -.02em; }
+.vp-map { position: relative; max-width: 46.5rem; aspect-ratio: 743 / 340; margin-top: 1rem; overflow: hidden; border-radius: .4rem; background: #e6e7e8 url("assets/map.jpg") no-repeat; background-size: cover; }
+.vp-map-pin { position: absolute; width: 2.2rem; height: 2.2rem; color: var(--orange); transform: translate(-50%, -100%); filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .25)); }
+.vp-map-pin svg { display: block; width: 100%; height: 100%; }
+.vp-map-address { margin-top: .6rem; color: var(--text); }
+
+/* Photo gallery dialog */
+.vp-gallery { width: min(64rem, calc(100vw - 2rem)); max-height: calc(100vh - 3rem); padding: 1.75rem 2rem 2rem; border: 0; border-radius: 1.1rem; color: var(--text); box-shadow: 0 12px 40px rgba(0, 0, 0, .3); }
+.vp-gallery::backdrop { background: rgba(0, 0, 0, .55); }
+.vp-gallery h2 { padding-bottom: .9rem; padding-right: 3rem; border-bottom: 1px solid var(--line); color: #231f20; font-size: 1.75rem; font-weight: 600; letter-spacing: -.02em; }
+.vp-close { position: absolute; top: 1rem; right: 1rem; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 0; border-radius: .4rem; background: none; color: #231f20; font: inherit; font-size: 1.9rem; line-height: 1; cursor: pointer; }
+.vp-close:hover { background: #f1f1f2; }
+.vp-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: .75rem; margin-top: 1.25rem; list-style: none; }
+.vp-gallery-grid img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: .6rem; background: var(--field); }
+
+@media (max-width: 900px) {
+  .vp-space { grid-template-columns: minmax(0, 1fr) 11rem; gap: 1.25rem; }
+}
+@media (max-width: 600px) {
+  .vp { padding-top: 1.5rem; }
+  .vp-hero img { aspect-ratio: 4 / 3; border-radius: .9rem; }
+  .vp-badge { top: .75rem; left: .75rem; }
+  .vp-gallery-btn { right: .75rem; bottom: .75rem; font-size: 1rem; }
+  .vp-space { grid-template-columns: minmax(0, 1fr); }
+  .vp-space img { order: -1; margin-top: 0; aspect-ratio: 3 / 2; }
+  .vp-location { margin-top: 3rem; }
+  .vp-gallery { width: calc(100vw - 1rem); padding: 1.25rem 1rem 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vp-gallery-btn { transition: none; }
+}

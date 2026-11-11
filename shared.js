@@ -21,7 +21,7 @@ window.FF_SHARED = (function () {
     { p: 5, title: "Wishlist venues" },
     { p: 6, title: "My Bookings summary" },
     { p: 7, title: "My Bookings", href: "my-bookings.html" },
-    { p: 8, title: "Venue page" },
+    { p: 8, title: "Venue page", href: "venue.html" },
     { p: 9, title: "Function space and booking request" },
     { p: 10, title: "Available: sign in to book" },
     { p: 11, title: "Available: your details" },
@@ -111,6 +111,33 @@ window.FF_SHARED = (function () {
     return `<div class="mini"><div class="mini-track" role="img" aria-label="${esc(summary)}">${marks}</div>${text}</div>`;
   }
 
+  /* ---------- Venue logos, reviews and side-scrolling rows (styles in styles.css) ---------- */
 
-  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist, flow, stepHref };
+  const logoBoxes = (logos) => logos.map((l) => `<div class="logo-box logo-${esc(l.style)}">${esc(l.name)}</div>`).join("");
+  const reviewCards = (list) => list.map((t) => `<figure class="review"><figcaption>${esc(t.name)}</figcaption><blockquote>${esc(t.text)}</blockquote></figure>`).join("");
+
+  // Rows like "What people say": arrow buttons carry data-track="<row id>" and data-step="-1" or "1",
+  // move the row one card at a time, and switch off at either end.
+  function initCarousels(ids) {
+    const tracks = ids.map((id) => document.getElementById(id)).filter(Boolean);
+    const sync = (t) => {
+      const max = t.scrollWidth - t.clientWidth - 2;
+      document.querySelectorAll(`[data-track="${t.id}"]`).forEach((b) => { b.disabled = Number(b.dataset.step) < 0 ? t.scrollLeft <= 2 : t.scrollLeft >= max; });
+    };
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-track]");
+      const track = btn && document.getElementById(btn.dataset.track);
+      const card = track && track.firstElementChild;
+      if (!card) return;
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      track.scrollBy({ left: Number(btn.dataset.step) * (card.offsetWidth + gap), behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    });
+    tracks.forEach((t) => {
+      t.addEventListener("scroll", () => sync(t), { passive: true });
+      sync(t);
+    });
+    window.addEventListener("resize", () => tracks.forEach(sync));
+  }
+
+  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist, flow, stepHref, logoBoxes, reviewCards, initCarousels };
 })();

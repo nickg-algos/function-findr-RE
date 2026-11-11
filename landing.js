@@ -2,11 +2,10 @@
 (function () {
   "use strict";
 
-  const { esc } = window.FF_SHARED;
+  const { esc, logoBoxes, reviewCards, initCarousels } = window.FF_SHARED;
   const S = window.FF_SEARCH;
   const L = window.FF_LANDING;
   const $ = (sel, root = document) => root.querySelector(sel);
-  const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   const dollars = (cents) => "$" + Math.round(cents / 100).toLocaleString("en-AU");
 
   const pinIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s-7-6.600-7-12a7 7 0 0 1 14 0c0 5.400-7 12-7 12z" fill="currentColor"/><circle cx="12" cy="10" r="2.600" fill="#fff"/></svg>';
@@ -36,12 +35,12 @@
       <div class="l-card-body">
         <h3>${esc(v.name)}</h3>
         <p class="l-address">${pinIcon}<span>${esc(v.street)}, ${esc(v.suburb)}</span></p>
-        <a class="l-find" href="mockup.html?p=8" aria-label="Find my function at ${esc(v.name)}">Find my function ${arrow}</a>
+        <a class="l-find" href="venue.html?id=${esc(v.id)}" aria-label="Find my function at ${esc(v.name)}">Find my function ${arrow}</a>
       </div>
     </article>`).join("");
 
-  $("#logos").innerHTML = S.logos.map((l) => `<div class="logo-box logo-${l.style}">${esc(l.name)}</div>`).join("");
-  $("#reviews").innerHTML = S.testimonials.map((t) => `<figure class="review"><figcaption>${esc(t.name)}</figcaption><blockquote>${esc(t.text)}</blockquote></figure>`).join("");
+  $("#logos").innerHTML = logoBoxes(S.logos);
+  $("#reviews").innerHTML = reviewCards(S.testimonials);
 
   /* ---------- Hero search: goes to the search page ---------- */
 
@@ -58,24 +57,6 @@
 
   /* ---------- Carousels (Our venues, What people say) ---------- */
 
-  const tracks = ["venues", "reviews"].map((id) => document.getElementById(id));
-  function sync(track) {
-    const max = track.scrollWidth - track.clientWidth - 2;
-    document.querySelector(`[data-track="${track.id}"][data-step="-1"]`).disabled = track.scrollLeft <= 2;
-    document.querySelector(`[data-track="${track.id}"][data-step="1"]`).disabled = track.scrollLeft >= max;
-  }
-  document.addEventListener("click", (e) => {
-    if (e.target.closest('a[href="#"]')) e.preventDefault();
-    const btn = e.target.closest("[data-track]");
-    if (!btn) return;
-    const track = document.getElementById(btn.dataset.track);
-    const card = track.firstElementChild;
-    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-    track.scrollBy({ left: Number(btn.dataset.step) * (card.offsetWidth + gap), behavior: reducedMotion() ? "auto" : "smooth" });
-  });
-  tracks.forEach((t) => {
-    t.addEventListener("scroll", () => sync(t), { passive: true });
-    sync(t);
-  });
-  window.addEventListener("resize", () => tracks.forEach(sync));
+  initCarousels(["venues", "reviews"]);
+  document.addEventListener("click", (e) => { if (e.target.closest('a[href="#"]')) e.preventDefault(); });
 })();

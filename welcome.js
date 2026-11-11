@@ -47,7 +47,7 @@
   // My Bookings: the booking from data.js, shared with the My Bookings page.
   $("#wl-bookings").innerHTML = `
     <li>
-      <a class="wl-card" href="mockup.html?p=6">
+      <a class="wl-card" href="bookings.html">
         <span class="wl-photo"><img src="assets/sample-hotel.jpg" alt="" loading="lazy"></span>
         <span class="wl-name">${esc(B.eventName)}</span>
         <span class="wl-venue">${esc(B.venue)}</span>

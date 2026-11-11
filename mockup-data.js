@@ -2,6 +2,5 @@
 // Delete a page's entry and its image once that page is built.
 window.FF_MOCKUP = {
   images: {
-    6: [1600, 969],
   },
 };

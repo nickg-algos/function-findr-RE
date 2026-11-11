@@ -116,7 +116,8 @@
     if (late) { $("#c-result").textContent = A.clashText(space, late); return; }
 
     ["number", "name", "expiry", "cvc"].forEach((id) => { el(id).value = ""; }); // never kept
-    saveDraft({ ...draft, deposit: "demo" });
+    // The booking itself rides along too, so My Bookings (page 6) can list it in this tab.
+    saveDraft({ ...draft, deposit: "demo", booking: { venueId: listing.id, venue: listing.name, address: `${listing.street}, ${listing.suburb}`, space: space.name, photo: (space.mainPhoto || { src: space.photo }).src, ...req } });
     location.href = `confirmed.html?${A.toParams(listing.id, space.id, req)}`;
   });
 })();

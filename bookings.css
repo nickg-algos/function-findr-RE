@@ -1,0 +1,36 @@
+/* My Bookings summary (mockup page 6). The mini checklist comes from venue-shell.css; .fold from styles.css. */
+
+.bks { max-width: calc(62rem + 2 * var(--gutter)); margin-inline: auto; padding: 2.5rem var(--gutter) 4rem; }
+.bks h1 { color: #000; font-size: clamp(1.9rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -.03em; }
+.bk { padding: 2rem 0; border-bottom: 1px solid var(--line); }
+.bk:last-child { border-bottom: 0; }
+.bk-top { display: grid; grid-template-columns: minmax(0, 19.5rem) minmax(0, 1fr); gap: 1.9rem; align-items: start; }
+.bk-top img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 1.4rem; background: var(--field); }
+.bk-info { max-width: 24rem; padding-top: .5rem; }
+.bk-info h2 { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; color: #000; font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em; }
+.bk-new { padding: .1rem .55rem; border-radius: 999px; background: var(--ok); color: #fff; font-size: .78rem; font-weight: 600; letter-spacing: 0; }
+.bk-venue { margin-top: .25rem; color: #000; font-size: 1.2rem; font-weight: 700; text-transform: uppercase; }
+.bk-when { margin-top: .4rem; color: #6d6e71; font-weight: 500; line-height: 1.35; }
+.bk-status { margin-top: .6rem; color: var(--orange-text); font-size: .92rem; font-weight: 700; text-transform: uppercase; }
+.bk-details { display: inline-flex; align-items: center; gap: .45rem; margin-top: 1rem; color: var(--orange-text); font-weight: 600; }
+.bk-details svg { width: .5rem; height: .8rem; }
+.bk-details:hover { text-decoration: underline; }
+
+.bk-toggle { display: flex; align-items: center; gap: 1.25rem; min-height: 2.75rem; margin-top: 1.25rem; padding: 0; border: 0; background: none; color: #000; font: inherit; font-size: 1.2rem; font-weight: 600; text-transform: uppercase; cursor: pointer; }
+.bk-toggle svg { width: .65rem; height: 1rem; transition: transform .25s; }
+.bk-toggle[aria-expanded="true"] svg { transform: rotate(90deg); }
+.bk-toggle:hover span { color: var(--orange-text); }
+.bk-toggle:focus-visible, .bk-details:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+.bk-sum { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .1rem 2rem; max-width: 46rem; margin-top: .5rem; padding: .25rem 0 0 1.9rem; }
+.bk-sum div { padding: .55rem 0; border-bottom: 1px solid var(--line); }
+.bk-sum dt { color: #58595b; font-size: .85rem; font-weight: 600; }
+.bk-sum dd { margin: .2rem 0 0; color: #231f20; overflow-wrap: anywhere; }
+
+@media (max-width: 600px) {
+  .bk-top { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .bk-top img { aspect-ratio: 3 / 2; }
+  .bk-sum { padding-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bk-toggle svg { transition: none; }
+}

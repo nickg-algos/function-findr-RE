@@ -1,0 +1,60 @@
+/* "Review & Pay" (mockup page 12). The example note comes from available.css. */
+
+.pay-head { display: flex; align-items: center; gap: 1.75rem; }
+.pay-head h1 { color: #000; font-size: clamp(2rem, 3.5vw, 2.9rem); font-weight: 700; letter-spacing: -.035em; text-transform: uppercase; }
+.pay-back { display: grid; place-items: center; flex: none; width: 4.4rem; height: 4.4rem; border-radius: 50%; background: #58595b; color: #fff; transition: background-color .12s; }
+.pay-back svg { width: 1.25rem; height: 2rem; }
+.pay-back:hover { background: #231f20; }
+.pay-back:focus-visible, .pay-change:focus-visible, .pay-go:focus-visible, .pay-stop-link:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+.pay-stop { margin-top: 1.75rem; color: #231f20; font-size: 1.2rem; }
+.pay-stop-link { display: inline-block; margin-top: 1rem; color: var(--orange-text); font-weight: 600; text-decoration: underline; }
+
+.pay-layout { display: grid; grid-template-columns: minmax(16rem, 27rem) minmax(0, 1fr); gap: 3.5rem; align-items: start; margin-top: 3rem; }
+
+/* Summary card */
+.pay-summary { padding: 1.5rem 1.6rem 2rem; border: 1px solid var(--line); border-radius: .9rem; background: #fff; }
+.pay-summary h2 { color: #000; font-size: 1.3rem; font-weight: 700; letter-spacing: -.02em; text-transform: uppercase; }
+.pay-summary dl > div, .pay-pair > div { padding: .55rem 0 .6rem; }
+.pay-summary dl > div { border-bottom: 1px solid #808285; }
+.pay-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; padding: 0 !important; }
+.pay-summary dt { color: #58595b; font-size: .85rem; font-weight: 600; }
+.pay-summary dd { margin: .35rem 0 0; color: #231f20; font-size: .95rem; overflow-wrap: anywhere; }
+.pay-change { display: inline-flex; align-items: center; gap: .75rem; min-height: 2.75rem; margin-top: 2rem; padding: .3rem 1.25rem .3rem .75rem; border: 1px solid #231f20; border-radius: .4rem; color: #231f20; font-weight: 600; }
+.pay-change svg { width: .55rem; height: .9rem; }
+.pay-change:hover { border-color: var(--orange); background: #fdf7f2; text-decoration: none; }
+
+/* Deposit */
+.pay-main > img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; border-radius: .9rem; background: var(--field); }
+.pay-main h2 { margin-top: 1.5rem; color: #000; font-size: clamp(1.8rem, 2.8vw, 2.6rem); font-weight: 600; letter-spacing: -.03em; }
+.pay-demo { margin-top: .9rem; padding: .7rem 1rem; border-left: 4px solid var(--orange); border-radius: .3rem; background: #fdf7f2; color: #231f20; font-size: .95rem; }
+.pay-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem 1.25rem; margin-top: 1.5rem; }
+.pay-wide, .pay-result, .pay-go, .pay-after { grid-column: 1 / -1; }
+.pay-field { display: grid; gap: .3rem; }
+.pay-field label { color: #58595b; font-size: .92rem; font-weight: 600; }
+.pay-field input {
+  width: 100%; min-height: 3.5rem; padding: .5rem 1rem; border: 1px solid transparent; border-radius: .4rem; background: var(--field); color: #231f20; font: inherit; font-size: 1.05rem; font-variant-numeric: tabular-nums;
+}
+.pay-field input::placeholder { color: #808285; }
+.pay-field input:focus-visible { outline: 0; border-color: var(--orange); box-shadow: 0 0 0 3px rgba(208, 112, 47, .2); }
+.pay-field input[aria-invalid] { border-color: var(--error); }
+.pay-err { color: var(--error); font-size: .85rem; }
+.pay-err:empty, .pay-result:empty { display: none; }
+.pay-result { padding: .8rem 1rem; border-left: 4px solid var(--error); border-radius: .3rem; background: #f7f7f8; color: #231f20; }
+.pay-go {
+  min-height: 4rem; margin-top: .75rem; border: 2px solid var(--orange); border-radius: .4rem; background: var(--orange); color: #fff;
+  font: inherit; font-size: clamp(1.4rem, 2.2vw, 1.95rem); font-weight: 600; letter-spacing: -.02em; cursor: pointer; transition: background-color .12s, color .12s;
+}
+.pay-go:hover { background: #fff; color: var(--orange-text); }
+.pay-after { color: #58595b; font-size: 1.15rem; line-height: 1.35; text-align: center; }
+
+@media (max-width: 900px) {
+  .pay-layout { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+}
+@media (max-width: 600px) {
+  .pay-head { gap: 1rem; }
+  .pay-back { width: 3.25rem; height: 3.25rem; }
+  .pay-summary { padding: 1.25rem 1.1rem 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pay-back, .pay-go { transition: none; }
+}

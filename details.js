@@ -147,6 +147,6 @@
     }
 
     saveDraft({ eventName: next.name, contact, phone, email, layout: next.layout });
-    location.href = `mockup.html?p=12&${A.toParams(listing.id, space.id, next)}`; // TODO: page 12's own address once it's built
+    location.href = `pay.html?${A.toParams(listing.id, space.id, next)}`;
   });
 })();

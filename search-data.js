@@ -58,7 +58,7 @@
 
     // Sample wishlists from mockup page 4, holding venues that aren't on the first page of results.
     wishlists: [
-      { id: "list-50th", name: "50th birthday celebration", venues: ["wireframe", "template", "specimen"] },
+      { id: "list-50th", name: "50th birthday celebration", date: "2026-12-15", guests: 40, venues: ["wireframe", "template", "specimen"] },
       { id: "list-21st", name: "Sam’s 21st birthday", venues: ["example", "dummy", "fictional", "sketch"] },
     ],
 

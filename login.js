@@ -7,7 +7,7 @@
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const KEY = "ff.customer.v1";
-  const NEXT = "mockup.html?p=4"; // TODO: page 4's own address once it's built
+  const NEXT = "welcome.html";
   const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 
   function check(form, rules) {

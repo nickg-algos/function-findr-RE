@@ -1,0 +1,17 @@
+/* One wishlist's venues (mockup page 5). Venue cards come from search.css. */
+.ws { max-width: calc(62rem + 2 * var(--gutter)); margin-inline: auto; padding: 3.5rem var(--gutter) 4rem; }
+.ws-title { color: #000; font-size: clamp(1.9rem, 3vw, 2.6rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
+.ws-meta { margin-top: .5rem; color: #58595b; font-weight: 600; }
+.ws-meta + .ws-meta { margin-top: .2rem; }
+.ws-count { margin: 2rem 0 1rem; color: #58595b; font-size: .82rem; font-weight: 500; text-transform: uppercase; }
+.ws-count:empty { margin: 1rem 0 0; }
+.ws-name { color: #000; font-size: 1.3rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+.ws-name a { color: inherit; }
+.ws-undo { min-height: 1.5em; margin-bottom: .75rem; color: #231f20; }
+.ws-undo:empty { min-height: 0; margin: 0; }
+.ws-undo button { margin-left: .4rem; padding: 0; border: 0; background: none; color: var(--orange-text); font: inherit; font-weight: 600; text-decoration: underline; cursor: pointer; }
+.ws-empty { margin-top: 1.5rem; color: var(--text); }
+.ws-empty a { color: var(--orange-text); font-weight: 600; text-decoration: underline; }
+.ws-back { display: inline-flex; gap: .35rem; margin-top: 3rem; color: #000; font-size: 1.3rem; font-weight: 600; }
+.ws-back:hover { color: var(--orange-text); }
+.ws-back:focus-visible, .ws-undo button:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome | FunctionFindr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="available.css">
+<link rel="stylesheet" href="welcome.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="logo" href="index.html" aria-label="FunctionFindr home">function<span>findr</span><sup>™</sup></a>
+  <nav class="site-nav" aria-label="Main">
+    <a class="nav-link is-active" href="search.html">Venues</a>
+    <a class="nav-link" href="login.html#signup">Sign up</a>
+    <a class="nav-link" href="login.html">Log in</a>
+    <a class="btn-outline" href="list-venue.html">LIST YOUR VENUE <span class="arrow" aria-hidden="true">→</span></a>
+    <a class="btn-solid" href="search.html">BOOK A SPACE <span class="arrow" aria-hidden="true">→</span></a>
+  </nav>
+</header>
+
+<main class="av wl">
+  <div class="av-head"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><path d="M4 28l5.500-15.500 10 10z"/><path d="M7.500 18.500l6 6M15 8.500c1-2 0-4-1.500-4.500M19.500 12.500c2.500-1.500 5-1 6.500.500M18 10l4-5M25 18l3-1M21 7l1-3M24 11l4-2"/><circle cx="21" cy="2.500" r=".9"/><circle cx="28.500" cy="13" r=".9"/><circle cx="12" cy="5" r=".9"/></svg><h1 class="av-title" id="wl-title">Welcome back</h1></div>
+  <p class="av-lead">Keep track of your favourite function spaces so that you can easily compare availability, facilities, food &amp; beverage options and vibes of your selected spaces. Create as many wishlists as you like.</p>
+  <p class="av-lead">To create a new wishlist, simply click on the “Create a new Wishlist” frame, name it and that’s it! Start <a href="search.html">exploring venues</a> and hearting the icon in the top right hand corner to add new favourites to your wishlist.</p>
+
+  <section class="wl-section" aria-labelledby="lists-title">
+    <h2 id="lists-title">My Wishlists</h2>
+    <ul class="wl-grid" id="wl-lists"></ul>
+    <p class="sr-only" id="wl-live" aria-live="polite"></p>
+  </section>
+
+  <section class="wl-section" aria-labelledby="bookings-title">
+    <h2 id="bookings-title">My Bookings</h2>
+    <ul class="wl-grid" id="wl-bookings"></ul>
+  </section>
+</main>
+
+<dialog class="wl-box" id="wl-box" aria-labelledby="wl-box-title">
+  <button type="button" class="wl-close" data-close aria-label="Close">×</button>
+  <h2 id="wl-box-title">Create a new Wishlist</h2>
+  <form id="wl-form" novalidate>
+    <label for="wl-name">Wishlist name</label>
+    <input id="wl-name" type="text" maxlength="60" placeholder="eg. 50th birthday celebration" aria-describedby="wl-msg">
+    <p class="wl-msg" id="wl-msg"></p>
+    <div class="wl-box-actions"><button type="button" class="wl-cancel" data-close>Cancel</button><button type="submit" class="wl-create">Create</button></div>
+  </form>
+</dialog>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <a class="logo logo-stacked" href="index.html" aria-label="FunctionFindr home">function<span>findr</span></a>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="#">How it works</a>
+      <a href="#">About Us</a>
+      <a class="footer-email" href="mailto:info@functionfindr.com">info@functionfindr.com</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <nav aria-label="Legal"><a href="#">Privacy</a><a href="#">Terms of Use</a></nav>
+    <span>@2026 Info All Rights Reserved</span>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script src="search-data.js"></script>
+<script src="data.js"></script>
+<script src="welcome.js"></script>
+</body>
+</html>

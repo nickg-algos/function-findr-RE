@@ -1,0 +1,29 @@
+/* "Success! Booking Confirmation" (mockup page 13) */
+
+.cf { display: grid; place-items: center; min-height: min(56rem, calc(100vh - 6rem)); padding: 4rem var(--gutter); background: #fff url("assets/confetti.jpg") center / cover no-repeat; }
+.cf-box { max-width: 44rem; padding: 2rem 1.5rem; text-align: center; background: rgba(255, 255, 255, .82); border-radius: 1.1rem; }
+.cf h1 { color: #000; font-size: clamp(2.4rem, 4.5vw, 3.75rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.1; }
+.cf-sub { margin-top: .75rem; color: #000; font-size: clamp(2.2rem, 4.5vw, 3.75rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.1; }
+.cf-what { margin-top: 1.5rem; color: #231f20; font-size: clamp(1.15rem, 1.8vw, 1.45rem); font-weight: 500; line-height: 1.35; }
+.cf-email { margin-top: 1.25rem; color: #000; font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 500; letter-spacing: -.02em; line-height: 1.2; overflow-wrap: anywhere; }
+.cf-email strong { font-weight: 600; }
+.cf-demo { margin-top: 1rem; color: #58595b; font-size: .92rem; }
+.cf-actions { display: grid; gap: 1.25rem; max-width: 42rem; margin: 2.75rem auto 0; }
+.cf-btn {
+  display: grid; justify-items: center; gap: .1rem; min-height: 3.75rem; padding: .7rem 1.25rem; border: 2px solid var(--orange); border-radius: .4rem;
+  color: #fff; font-size: clamp(1.3rem, 2.3vw, 1.95rem); font-weight: 600; letter-spacing: -.02em; line-height: 1.15; transition: background-color .12s, color .12s, border-color .12s;
+}
+.cf-btn small { font-size: clamp(.85rem, 1.2vw, 1.05rem); font-weight: 600; letter-spacing: -.01em; }
+.cf-now { background: var(--orange); }
+.cf-now:hover { background: #fff; color: var(--orange-text); text-decoration: none; }
+.cf-later { border-color: #000; background: #000; }
+.cf-later:hover { background: #fff; color: #000; text-decoration: none; }
+.cf-btn:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
+@media (max-width: 600px) {
+  .cf { padding-block: 2.5rem; background-size: auto 100%; }
+  .cf-box { padding: 1.5rem .75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-btn { transition: none; }
+}

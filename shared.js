@@ -26,7 +26,7 @@ window.FF_SHARED = (function () {
     { p: 10, title: "Available: sign in to book", href: "available.html" },
     { p: 11, title: "Available: your details", href: "details.html" },
     { p: 12, title: "Review and pay", href: "pay.html" },
-    { p: 13, title: "Booking confirmed" },
+    { p: 13, title: "Booking confirmed", href: "confirmed.html" },
     { p: 14, title: "My Bookings: choose event details", href: "my-bookings.html" },
     { p: 15, title: "List your venue" },
     { p: 16, title: "Venue sign-up" },

@@ -149,6 +149,6 @@
 
     ["number", "name", "expiry", "cvc"].forEach((id) => { el(id).value = ""; }); // never kept
     saveDraft({ ...draft, deposit: "demo" });
-    location.href = `mockup.html?p=13&${A.toParams(listing.id, space.id, req)}`; // TODO: page 13's own address once it's built
+    location.href = `confirmed.html?${A.toParams(listing.id, space.id, req)}`;
   });
 })();

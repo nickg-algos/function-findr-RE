@@ -157,7 +157,7 @@
 
   $("#pv-approve").addEventListener("click", () => {
     if (!example) { try { sessionStorage.setItem("ff.venueSignup.v1", JSON.stringify({ ...signup, approved: "demo" })); } catch (err) { /* fine */ } }
-    location.href = "mockup.html?p=21"; // TODO: page 21's own address once it's built
+    location.href = "all-set.html";
   });
 
   render();

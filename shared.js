@@ -9,20 +9,66 @@ window.FF_SHARED = (function () {
     return m ? Number(m[1]) * 100 + Number((m[2] || "").padEnd(2, "0")) : null;
   }
 
-  const devPages = [
-    { href: "search.html", label: "p2 Venue Search" },
-    { href: "index.html", label: "p14 My Bookings" },
-    { href: "venue-setup.html", label: "p19 Venue Food & Beverage" },
-    { href: "calendar.html", label: "p23 Booking Calendar" },
-    { href: "dashboard.html", label: "Venue Dashboard (no mockup)" },
+  // Every page of the site in mockup order (p = page in BMF Website MockUp-Complete-V44.pdf).
+  // A step without `href` is shown as its mockup image by mockup.html. The landing page lives at
+  // index.html but is still an image (`image: true`) until it's built.
+  // When a page is built, give it an `href` (or drop `image`) and delete its image from mockup/.
+  const flow = [
+    { p: 1, title: "Landing page", href: "index.html", image: true },
+    { p: 2, title: "Venue search", href: "search.html" },
+    { p: 3, title: "Log in or sign up" },
+    { p: 4, title: "Welcome and wishlists" },
+    { p: 5, title: "Wishlist venues" },
+    { p: 6, title: "My Bookings summary" },
+    { p: 7, title: "My Bookings", href: "my-bookings.html" },
+    { p: 8, title: "Venue page" },
+    { p: 9, title: "Function space and booking request" },
+    { p: 10, title: "Available: sign in to book" },
+    { p: 11, title: "Available: your details" },
+    { p: 12, title: "Review and pay" },
+    { p: 13, title: "Booking confirmed" },
+    { p: 14, title: "My Bookings: choose event details", href: "my-bookings.html" },
+    { p: 15, title: "List your venue" },
+    { p: 16, title: "Venue sign-up" },
+    { p: 17, title: "90 days free" },
+    { p: 18, title: "Function space setup" },
+    { p: 19, title: "Food and beverage setup", href: "venue-setup.html" },
+    { p: 20, title: "Preview your listing" },
+    { p: 21, title: "You’re all set" },
+    { p: null, title: "Venue dashboard (no mockup)", href: "dashboard.html" },
+    { p: 22, title: "Booking calendar: add or edit", href: "calendar.html" },
+    { p: 23, title: "Booking calendar by space", href: "calendar.html" },
+    { p: 24, title: "Function spaces" },
   ];
+  const fileOf = (s) => s.href || "mockup.html";
+  // Pages that appear twice in the flow carry ?p= so Previous and Next know where you are.
+  const stepHref = (s) => (!s.href ? `mockup.html?p=${s.p}` : flow.filter((x) => x.href === s.href).length > 1 ? `${s.href}?p=${s.p}` : s.href);
+
+  function currentStep() {
+    const file = location.pathname.split("/").pop() || "index.html";
+    const p = Number(new URLSearchParams(location.search).get("p")) || null;
+    const here = flow.filter((s) => fileOf(s) === file);
+    return here.find((s) => s.p === p) || (file === "mockup.html" ? null : here[0]) || null;
+  }
 
   function renderDevTabs() {
-    const current = location.pathname.split("/").pop() || "index.html";
+    const cur = currentStep();
+    const i = flow.indexOf(cur);
+    const prev = i > 0 ? flow[i - 1] : null;
+    const next = i >= 0 && i < flow.length - 1 ? flow[i + 1] : null;
+    const name = (s) => `${s.p ? `p${s.p} ` : ""}${s.title}`;
+    const kind = (s) => (s.href && !s.image ? "live" : "mockup image");
+    const step = (s, label, cls) => (s
+      ? `<a class="dev-step ${cls}" href="${stepHref(s)}" title="${esc(name(s))}">${label}</a>`
+      : `<span class="dev-step ${cls}" aria-disabled="true">${label}</span>`);
     const nav = document.createElement("nav");
     nav.className = "dev-tabs";
     nav.setAttribute("aria-label", "Developer pages");
-    nav.innerHTML = `<span class="dev-tabs-label">Dev</span>${devPages.map((p) => `<a href="${p.href}"${p.href === current ? ' aria-current="page"' : ""}>${esc(p.label)}</a>`).join("")}`;
+    nav.innerHTML = `<span class="dev-tabs-label">Dev</span>
+      ${step(prev, "‹ Previous", "dev-prev")}
+      <label class="dev-jump"><span class="sr-only">Go to page</span><select>${cur ? "" : '<option value="" selected>Go to page…</option>'}${flow.map((s) => `<option value="${stepHref(s)}"${s === cur ? " selected" : ""}>${esc(name(s))} · ${kind(s)}</option>`).join("")}</select></label>
+      ${step(next, "Next ›", "dev-next")}`;
+    nav.querySelector("select").addEventListener("change", (e) => { if (e.target.value) location.href = e.target.value; });
     document.body.append(nav);
     document.body.classList.add("has-dev-tabs");
   }
@@ -66,5 +112,5 @@ window.FF_SHARED = (function () {
   }
 
 
-  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist };
+  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist, flow, stepHref };
 })();

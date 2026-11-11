@@ -249,3 +249,10 @@ input:disabled { background: #f1f1f2; border-color: #c7c8ca; cursor: not-allowed
 .dev-tabs a { padding: .15rem .6rem; border-radius: .3rem; color: #fff; }
 .dev-tabs a:hover { background: #58595b; text-decoration: none; }
 .dev-tabs a[aria-current="page"] { background: #fff; color: #231f20; font-weight: 700; }
+.dev-tabs .dev-step { padding: .15rem .6rem; border-radius: .3rem; color: #fff; }
+.dev-tabs span.dev-step { color: #808285; }
+.dev-jump select {
+  appearance: none; max-width: 22rem; padding: .2rem 1.6rem .2rem .6rem; border: 0; border-radius: .3rem; font: inherit; color: #fff; text-overflow: ellipsis;
+  background: #58595b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10'%3E%3Cpath d='M2 2l6 6 6-6' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right .5rem center / .6rem;
+}
+.dev-jump select:focus-visible, .dev-tabs a:focus-visible { outline: 2px solid var(--orange); outline-offset: 1px; }

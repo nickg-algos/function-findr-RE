@@ -115,7 +115,7 @@
       </div>
       <div class="v-top">
         <div>
-          <h3><a href="#">${esc(v.name)}</a></h3>
+          <h3><a href="mockup.html?p=8">${esc(v.name)}</a></h3>
           <p class="v-address"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1a5 5 0 0 0-5 5c0 3.600 5 9 5 9s5-5.400 5-9a5 5 0 0 0-5-5zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>${esc(v.street)}, ${esc(v.suburb)}</p>
         </div>
         <div class="v-score">

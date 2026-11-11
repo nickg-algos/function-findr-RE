@@ -205,7 +205,7 @@
   // Lines: this period against a year earlier, with a crosshair that snaps to the month.
   function drawLines(el, { labels, titles, current, earlier, label }) {
     const W = Math.max(240, el.clientWidth);
-    const H = el.closest(".dw").dataset.size === "l" ? 260 : 220;
+    const H = 275; // keeps this chart level with a medium Functions held box beside it
     const m = { t: 22, r: 14, b: 26, l: 36 };
     const iw = W - m.l - m.r;
     const base = H - m.b;
@@ -280,7 +280,7 @@
     let spark = "";
     if (el.closest(".dw").dataset.size === "m" && series) {
       const W = 200;
-      const H = 165; // matches .db-spark in dashboard.css
+      const H = 220; // matches .db-spark in dashboard.css
       const max = Math.max(...series);
       const min = Math.min(...series);
       const x = (i) => 4 + ((W - 8) * i) / (series.length - 1);

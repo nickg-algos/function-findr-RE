@@ -58,7 +58,7 @@
 .is-editing .dw.is-dragging .dw-grip { cursor: grabbing; }
 
 /* Stat tiles */
-.dw-tile[data-size="m"] { align-self: stretch; } /* as tall as the chart beside it */
+.dw-tile[data-size="m"], .dw[data-id="functions"][data-size="m"] { align-self: stretch; } /* the tile and chart finish level */
 .db-figure { color: #000; font-size: 2rem; font-weight: 600; letter-spacing: -.03em; line-height: 1.1; }
 .db-delta { display: flex; flex-wrap: wrap; align-items: center; gap: .1rem .35rem; margin-top: .4rem; font-size: .85rem; }
 .db-delta > span:first-of-type { font-weight: 600; }
@@ -68,7 +68,8 @@
 .db-delta.is-down svg { transform: rotate(180deg); }
 .db-delta-vs { color: var(--text); }
 .db-spark-wrap { position: relative; }
-.db-spark { display: block; width: 100%; height: 165px; margin-top: .6rem; }
+.db-spark { display: block; width: 100%; height: 220px; margin-top: .6rem; }
+@media (min-width: 601px) { .dw-tile[data-size="m"] .db-figure { font-size: 2.75rem; } }
 .db-spark-dot { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 2px #fff; }
 .db-spark-note { margin-top: .25rem; font-size: .8rem; }
 

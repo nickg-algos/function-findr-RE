@@ -1,0 +1,8 @@
+/* Mockup pages that aren't built yet: the page is shown as its mockup image. */
+.mockup-page { background: #fff; }
+.mockup { max-width: 1920px; margin: 0 auto; }
+.mockup img { display: block; width: 100%; height: auto; }
+.mockup-missing { max-width: 36rem; margin: 0 auto; padding: 4rem 16px; text-align: center; }
+.mockup-missing h1 { color: #000; font-size: 2rem; font-weight: 600; letter-spacing: -.02em; }
+.mockup-missing p { margin-top: .75rem; }
+.mockup-missing a { color: var(--orange-text); font-weight: 600; }

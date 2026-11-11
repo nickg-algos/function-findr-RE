@@ -19,6 +19,7 @@ window.FF_VENUES = {
     ],
     ageRule: "Guests under 18 must be accompanied by a parent or guardian.",
     cancellation: ["Free cancellation up to 7 days prior", "Flexible date changes"],
+    changesUpToDays: 7, // matches the cancellation line above
     // Minimum spends are by session; minutes after midnight.
     sessions: [
       { id: "lunch", label: "Lunch", start: 720, end: 960 },

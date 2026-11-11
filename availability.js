@@ -1,6 +1,7 @@
 // Availability rules, in one place (CLAUDE.md §8): used by the space page (p9) to check a request
 // and by the next steps (p10 on) to re-check whatever arrives in the link.
-// A request is { date: "YYYY-MM-DD", start, end (minutes after midnight; end can pass 1440), guests }.
+// A request is { date: "YYYY-MM-DD", start, end (minutes after midnight; end can pass 1440), guests,
+// layout ("seated" | "standing", optional until the details page asks for it) }.
 window.FF_AVAIL = (function () {
   const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -25,7 +26,8 @@ window.FF_AVAIL = (function () {
 
   // What's wrong with each field, as the message to show ("" when it's fine).
   function problems(listing, space, req) {
-    const most = Math.max(space.seated || 0, space.standing || 0);
+    // With a layout chosen, guests count against that layout; before then, against the bigger one.
+    const most = req.layout ? space[req.layout] || 0 : Math.max(space.seated || 0, space.standing || 0);
     const g = req.guests;
     return {
       date: !req.date ? "Please choose a date."
@@ -39,7 +41,8 @@ window.FF_AVAIL = (function () {
         : req.end > listing.latest ? `Functions here finish by ${timeLabel(listing.latest)}.` : "",
       guests: g === null || g === "" ? "Please enter the number of guests."
         : !Number.isInteger(g) || g < 1 ? "Please enter a whole number of guests."
-        : g > most ? `The ${space.name} holds up to ${capacityText(space)}.` : "",
+        : req.layout && !most ? `The ${space.name} isn’t set up for ${req.layout} functions.`
+        : g > most ? `The ${space.name} holds up to ${req.layout ? `${most} ${req.layout}` : capacityText(space)}.` : "",
     };
   }
 
@@ -72,9 +75,14 @@ window.FF_AVAIL = (function () {
   // Reads a request from a link's parameters (numbers stay null when missing).
   function fromParams(params) {
     const num = (k) => (params.get(k) === null || params.get(k) === "" ? null : Number(params.get(k)));
-    return { date: params.get("date") || "", start: num("start"), end: num("end"), guests: num("guests"), name: (params.get("name") || "").slice(0, 80) };
+    const layout = ["seated", "standing"].includes(params.get("layout")) ? params.get("layout") : null;
+    return { date: params.get("date") || "", start: num("start"), end: num("end"), guests: num("guests"), name: (params.get("name") || "").slice(0, 80), layout };
   }
-  const toParams = (venueId, spaceId, req) => new URLSearchParams({ venue: venueId, space: spaceId, date: req.date, start: String(req.start), end: String(req.end), guests: String(req.guests), name: req.name || "" });
+  function toParams(venueId, spaceId, req) {
+    const p = new URLSearchParams({ venue: venueId, space: spaceId, date: req.date, start: String(req.start), end: String(req.end), guests: String(req.guests), name: req.name || "" });
+    if (req.layout) p.set("layout", req.layout);
+    return p;
+  }
 
   return { DAYS, timeLabel, toMins, dayName, ddmmyyyy, longDate, todayIso, capacityText, problems, clash, clashText, minSpend, fromParams, toParams };
 })();

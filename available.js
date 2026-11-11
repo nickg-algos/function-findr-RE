@@ -34,7 +34,7 @@
   const clash = fieldProblem ? null : A.clash(CAL, listing, space, req);
   const problem = fieldProblem || (clash && A.clashText(space, clash));
   const editHref = `space.html?${A.toParams(listing.id, space.id, req)}`;
-  const nextHref = `mockup.html?p=11&${A.toParams(listing.id, space.id, req)}`; // TODO: becomes page 11's own address once it's built
+  const nextHref = `details.html?${A.toParams(listing.id, space.id, req)}`;
 
   const icon = {
     popper: '<svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><path d="M4 28l5.500-15.500 10 10z"/><path d="M7.500 18.500l6 6M15 8.500c1-2 0-4-1.500-4.500M19.500 12.500c2.500-1.500 5-1 6.500.500M18 10l4-5M25 18l3-1M21 7l1-3M24 11l4-2"/><circle cx="21" cy="2.500" r=".9"/><circle cx="28.500" cy="13" r=".9"/><circle cx="12" cy="5" r=".9"/></svg>',

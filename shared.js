@@ -16,7 +16,7 @@ window.FF_SHARED = (function () {
   const flow = [
     { p: 1, title: "Landing page", href: "index.html" },
     { p: 2, title: "Venue search", href: "search.html" },
-    { p: 3, title: "Log in or sign up" },
+    { p: 3, title: "Log in or sign up", href: "login.html" },
     { p: 4, title: "Welcome and wishlists" },
     { p: 5, title: "Wishlist venues" },
     { p: 6, title: "My Bookings summary" },

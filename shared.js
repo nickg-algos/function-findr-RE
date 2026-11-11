@@ -38,7 +38,7 @@ window.FF_SHARED = (function () {
     { p: null, title: "Venue dashboard (no mockup)", href: "dashboard.html" },
     { p: 22, title: "Booking calendar: add or edit", href: "calendar.html" },
     { p: 23, title: "Booking calendar by space", href: "calendar.html" },
-    { p: 24, title: "Function spaces" },
+    { p: 24, title: "Function spaces", href: "function-spaces.html" },
   ];
   const fileOf = (s) => s.href || "mockup.html";
   // Pages that appear twice in the flow carry ?p= so Previous and Next know where you are.

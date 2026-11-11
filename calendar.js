@@ -457,5 +457,11 @@
   }
   window.addEventListener("storage", (e) => { if (e.key === CHECKLIST_KEY) refreshLive(); });
   window.addEventListener("pageshow", (e) => { if (e.persisted) refreshLive(); });
+  // "View Bookings" on the function spaces page opens calendar.html?space=<id>, showing just that room.
+  const fromLink = new URLSearchParams(location.search).get("space");
+  if (fromLink && D.spaces.some((s) => s.id === fromLink)) {
+    spaceFilter = fromLink;
+    $("#cal-filter").value = fromLink;
+  }
   render();
 })();

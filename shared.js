@@ -10,11 +10,11 @@ window.FF_SHARED = (function () {
   }
 
   // Every page of the site in mockup order (p = page in BMF Website MockUp-Complete-V44.pdf).
-  // A step without `href` is shown as its mockup image by mockup.html. The landing page lives at
-  // index.html but is still an image (`image: true`) until it's built.
-  // When a page is built, give it an `href` (or drop `image`) and delete its image from mockup/.
+  // A step without `href` is shown as its mockup image by mockup.html. A step can also keep its own
+  // address while still being an image (`image: true`).
+  // When a page is built, give it an `href` and delete its image from mockup/ and mockup-data.js.
   const flow = [
-    { p: 1, title: "Landing page", href: "index.html", image: true },
+    { p: 1, title: "Landing page", href: "index.html" },
     { p: 2, title: "Venue search", href: "search.html" },
     { p: 3, title: "Log in or sign up" },
     { p: 4, title: "Welcome and wishlists" },

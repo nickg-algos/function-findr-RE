@@ -459,4 +459,12 @@
   $("#reviews").addEventListener("scroll", syncReviewArrows, { passive: true });
   window.addEventListener("resize", syncReviewArrows);
   syncReviewArrows();
+
+  // Arriving from the landing page's search bar (search.html?guests=60): fill in the guest count and search.
+  // TODO(confirm): the landing bar also sends event type and location, which this page has no fields for yet.
+  const guestsFromLink = Number(new URLSearchParams(location.search).get("guests"));
+  if (Number.isInteger(guestsFromLink) && guestsFromLink > 0) {
+    $("#s-guests").value = String(guestsFromLink);
+    runSearch();
+  }
 })();

@@ -126,27 +126,6 @@
 .also .v-about, .also .v-address { color: #4a4b4d; }
 .also .v-price { color: #6d6e71; }
 
-/* Trust and reviews */
-.band { padding: 3rem var(--gutter); background: #ececec; }
-.band-dark { background: #d4d4d4; }
-.band-inner { max-width: 84rem; margin-inline: auto; }
-.band h2 { color: #000; font-size: 2rem; font-weight: 700; letter-spacing: -.03em; text-transform: uppercase; }
-.logo-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
-.logo-box { display: grid; place-items: center; min-height: 6rem; padding: .5rem; border: 1px solid #808285; border-radius: .4rem; background: #fff; color: #231f20; font-size: 1.45rem; text-align: center; }
-.logo-serif { font-family: Georgia, "Times New Roman", serif; }
-.logo-wide { font-weight: 500; letter-spacing: .28em; }
-.logo-script { font-family: "Snell Roundhand", "Brush Script MT", cursive; font-size: 1.8rem; }
-.reviews-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
-.review-arrows { display: flex; gap: .5rem; }
-.review-arrow { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid #58595b; border-radius: .25rem; background: #fff; color: var(--orange-text); font: inherit; font-size: 1.35rem; line-height: 1; cursor: pointer; }
-.review-arrow:hover:not(:disabled) { background: var(--orange-text); color: #fff; }
-.review-arrow:disabled { border-color: #bcbec0; color: #939598; cursor: not-allowed; }
-.review-track { --gap: 1.25rem; display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 2 * var(--gap)) / 3); column-gap: var(--gap); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-.review-track::-webkit-scrollbar { display: none; }
-.review { min-width: 0; margin: 0; padding: 2rem 2rem 2.25rem; border: 1px solid #58595b; border-radius: .4rem; background: #fff; scroll-snap-align: start; }
-.review figcaption { color: #231f20; font-size: 1.25rem; font-weight: 500; margin-bottom: .75rem; }
-.review blockquote { margin: 0; color: #231f20; line-height: 1.3; }
-
 /* Fuller footer on this page */
 .s-footer-nav { gap: .5rem 2.5rem; }
 
@@ -161,8 +140,6 @@
   .map-col { position: static; display: none; }
   .map-col.is-open { display: block; }
   .map-box { max-height: 70vh; margin-inline: auto; }
-  .review-track { grid-auto-columns: min(80%, 22rem); }
-  .logo-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
 }
 @media (max-width: 600px) {
   .s-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -172,6 +149,5 @@
   .v-grid { grid-template-columns: minmax(0, 1fr); }
   .f-panel { position: fixed; inset: auto 0 0 0; width: 100%; max-height: 85vh; border-radius: .9rem .9rem 0 0; }
   .f-grid { grid-template-columns: minmax(0, 1fr); }
-  .band h2 { font-size: 1.5rem; }
   .also { padding-inline: 1rem; }
 }

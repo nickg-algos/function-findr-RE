@@ -1,17 +1,16 @@
 // Shows one page of the mockup as an image until that page is built.
-// mockup.html?p=8 shows page 8; index.html (data-page="1") shows the landing page.
+// mockup.html?p=8 shows page 8.
 (function () {
   "use strict";
 
   const { esc, flow, stepHref } = window.FF_SHARED;
   const sizes = window.FF_MOCKUP.images;
   const main = document.getElementById("mockup");
-  const fixed = Number(document.body.dataset.page) || null;
-  const n = fixed || Number(new URLSearchParams(location.search).get("p")) || 1;
+  const n = Number(new URLSearchParams(location.search).get("p")) || 1;
   const step = flow.find((s) => s.p === n);
 
-  // A page that has its own address (built, or the landing page at index.html) opens there instead.
-  if (!fixed && step && step.href) {
+  // A page that has been built opens there instead.
+  if (step && step.href) {
     location.replace(stepHref(step));
     return;
   }

@@ -41,16 +41,6 @@
               <label for="s-guests">No. of Guests:</label>
               <input id="s-guests" type="number" inputmode="numeric" min="1" step="1" placeholder="Any">
             </div>
-            <div class="s-field">
-              <label for="s-price">Price:</label>
-              <select id="s-price">
-                <option value="">Any</option>
-                <option value="1">Up to $</option>
-                <option value="2">Up to $$</option>
-                <option value="3">Up to $$$</option>
-                <option value="4">Up to $$$$</option>
-              </select>
-            </div>
             <button type="button" class="s-field s-filter-btn" id="filter-open" aria-expanded="false" aria-controls="filter-panel">
               <span class="s-filter-name s-field-name">Filter: <svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span id="filter-value">Any</span>
@@ -76,8 +66,6 @@
           <label for="sort">Sort by:</label>
           <select id="sort">
             <option value="distance">Distance</option>
-            <option value="priceLow">Price: low to high</option>
-            <option value="priceHigh">Price: high to low</option>
             <option value="rating">Rating</option>
             <option value="capacity">Capacity</option>
           </select>

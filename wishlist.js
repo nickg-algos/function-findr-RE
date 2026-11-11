@@ -28,7 +28,6 @@
   document.title = `${list.name} | FunctionFindr`;
 
   const heartPath = "M12 21s-8.500-5.100-10.400-10C.300 7.300 2.700 4 6.200 4c2.300 0 4.300 1.300 5.800 3.500C13.500 5.300 15.500 4 17.800 4c3.500 0 5.900 3.300 4.600 7-1.900 4.900-10.400 10-10.400 10z";
-  const priceMark = (level) => `<span class="v-price" aria-label="Price level ${level} of 5"><span aria-hidden="true"><b>${"$".repeat(level)}</b>${"$".repeat(5 - level)}</span></span>`;
   const venue = (id) => S.venues.find((v) => v.id === id);
   let lastRemoved = null;
 
@@ -47,7 +46,6 @@
           <p class="v-address"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1a5 5 0 0 0-5 5c0 3.600 5 9 5 9s5-5.400 5-9a5 5 0 0 0-5-5zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>${esc(v.street)}, ${esc(v.suburb)}</p>
         </div>
         <div class="v-score">
-          ${priceMark(v.price)}
           <span class="v-rating" aria-label="Rated ${v.rating} out of 5"><span class="v-star" aria-hidden="true">★</span><span aria-hidden="true">${v.rating.toFixed(1)}</span></span>
         </div>
       </div>

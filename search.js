@@ -10,7 +10,7 @@
   /* ---------- State ---------- */
 
   const chevronIcon = '<svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const emptySearch = { date: "", start: null, end: null, guests: null, price: null };
+  const emptySearch = { date: "", start: null, end: null, guests: null };
   const anyOfIds = new Set(D.filterGroups.flatMap((g) => g.sets).filter((s) => s.anyOf).flatMap((s) => s.items.map(([id]) => id)));
 
   let applied = { ...emptySearch };
@@ -57,7 +57,6 @@
     if (search.start !== null && search.start < venue.opens) return false;
     if (search.end !== null && search.end > venue.latest) return false;
     if (search.guests !== null && search.guests > Math.max(venue.seated, venue.standing)) return false;
-    if (search.price !== null && venue.price > search.price) return false;
     // Venue Type is any-of, because a venue only has one; every other ticked filter must apply.
     const types = [...filters].filter((id) => anyOfIds.has(id));
     if (types.length && !types.includes(venue.type)) return false;
@@ -66,8 +65,6 @@
 
   const sorters = {
     distance: (a, b) => a.distanceKm - b.distanceKm,
-    priceLow: (a, b) => a.price - b.price || a.distanceKm - b.distanceKm,
-    priceHigh: (a, b) => b.price - a.price || a.distanceKm - b.distanceKm,
     rating: (a, b) => b.rating - a.rating || a.distanceKm - b.distanceKm,
     capacity: (a, b) => Math.max(b.seated, b.standing) - Math.max(a.seated, a.standing),
   };
@@ -79,7 +76,7 @@
       const v = $(id).value;
       return v === "" ? null : Number(v);
     };
-    return { date: $("#s-date").value, start: num("#s-start"), end: num("#s-end"), guests: num("#s-guests"), price: num("#s-price") };
+    return { date: $("#s-date").value, start: num("#s-start"), end: num("#s-end"), guests: num("#s-guests") };
   }
 
   function searchProblem(s) {
@@ -96,10 +93,6 @@
   /* ---------- Markup ---------- */
 
   const heartPath = "M12 21s-8.5-5.1-10.4-10C.3 7.300 2.700 4 6.200 4c2.300 0 4.300 1.300 5.800 3.500C13.500 5.300 15.500 4 17.800 4c3.500 0 5.900 3.300 4.600 7-1.900 4.900-10.400 10-10.400 10z";
-
-  function priceMark(level) {
-    return `<span class="v-price" aria-label="Price level ${level} of 5"><span aria-hidden="true"><b>${"$".repeat(level)}</b>${"$".repeat(5 - level)}</span></span>`;
-  }
 
   const heartLabel = (v) => (isSaved(v.id) ? `${v.name} is in your wishlist. Change where it’s saved` : `Save ${v.name} to a wishlist`);
 
@@ -119,7 +112,6 @@
           <p class="v-address"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1a5 5 0 0 0-5 5c0 3.600 5 9 5 9s5-5.400 5-9a5 5 0 0 0-5-5zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>${esc(v.street)}, ${esc(v.suburb)}</p>
         </div>
         <div class="v-score">
-          ${priceMark(v.price)}
           <span class="v-rating" aria-label="Rated ${v.rating} out of 5"><span class="v-star" aria-hidden="true">★</span><span aria-hidden="true">${v.rating.toFixed(1)}</span></span>
         </div>
       </div>

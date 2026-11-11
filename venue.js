@@ -41,7 +41,7 @@
           <p class="vp-cap">${capacity(s)}</p>
           ${s.about.map((p) => `<p>${esc(p)}</p>`).join("")}
           <p class="vp-fac"><strong>Facilities</strong> ${esc(s.facilities.join(", "))}</p>
-          <a class="vp-check" href="mockup.html?p=9" aria-label="Check availability for the ${esc(s.name)}">Check availability ${arrow}</a>
+          <a class="vp-check" href="space.html?venue=${esc(listing.id)}&amp;space=${esc(s.id)}" aria-label="Check availability for the ${esc(s.name)}">Check availability ${arrow}</a>
         </div>
         <img src="${esc(s.photo)}" alt="${esc(s.alt)}" loading="lazy" width="236" height="236">
       </article>`).join("")

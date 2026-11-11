@@ -7,11 +7,45 @@ window.FF_VENUES = {
     photo: { src: "assets/sample-hotel.jpg", alt: "The upstairs function room at The Sample Hotel, with high tables and bar stools in the afternoon sun" },
     about: "Set in the heart of Yarraville, The Sample Hotel blends modern pub dining with relaxed, character-filled spaces perfect for any occasion. Whether you’re planning a casual celebration, a milestone event or a corporate gathering, the venue offers flexible function areas, thoughtful food and beverage packages, and a welcoming atmosphere that makes hosting easy. With its mix of indoor and outdoor spaces and a focus on fresh, contemporary hospitality, The Sample Hotel is a go-to destination for events in Melbourne’s inner west.",
 
+    // Venue-wide details shown on each space page (mockup page 9). Food and drink menus come from data.js.
+    foodPackages: ["canapes", "antipasto", "private", "alacarte", "twocourse", "threecourse", "kids"],
+    beveragePackages: ["barTab", "drinks", "cocktails", "payg"],
+    dietary: ["Halal menu", "Gluten free menu", "Vegan menu"],
+    additional: [
+      "Own decorations welcome (please avoid adhesives or confetti)",
+      "BYO celebration cake permitted ($1pp venue cutting fee applies)",
+      "BYO celebration cake, guest to cut. No cakeage",
+      "Play your own music or hire a DJ",
+    ],
+    ageRule: "Guests under 18 must be accompanied by a parent or guardian.",
+    cancellation: ["Free cancellation up to 7 days prior", "Flexible date changes"],
+    // Minimum spends are by session; minutes after midnight.
+    sessions: [
+      { id: "lunch", label: "Lunch", start: 720, end: 960 },
+      { id: "evening", label: "Evening", start: 1020, end: 1320 },
+    ],
+
     // Capacities come from each description; the mockup's "50 seated | 100 standing" lines were placeholders.
     // TODO(confirm): seated numbers for the Bar/Pool Room and Rooftop Deck, and standing for the Dining Room.
     spaces: [
       {
+        id: "function-room", calendarId: "functionRoom",
         name: "Function Room", seated: 50, standing: 100,
+        depositCents: 25000,
+        // Monday first; [lunch, evening] in cents, from the mockup.
+        // TODO(confirm): whether minimum spends include GST (shown to customers, so ACL says they should).
+        minSpendCents: [[180000, 200000], [180000, 200000], [180000, 200000], [180000, 200000], [200000, 220000], [200000, 220000], [200000, 220000]],
+        av: ["TV", "Projector", "Screen", "Microphone", "Speakers"],
+        accessibility: [
+          { label: "Wheelchair accessible", available: false },
+          { label: "Wheelchair friendly toilets", available: false },
+          { label: "Lift access", available: false },
+        ],
+        mainPhoto: { src: "assets/sample-hotel.jpg", alt: "The upstairs function room at The Sample Hotel, with high tables and bar stools in the afternoon sun" },
+        sidePhotos: [
+          { src: "assets/sample-bar.jpg", alt: "The front bar's timber counter and stools" },
+          { src: "assets/sample-food.jpg", alt: "A burger, chips and drinks on a round pub table" },
+        ],
         photo: "assets/sample-function-room.jpg", alt: "The function room's high tables, bar stools and long bar",
         about: [
           "Opposite the deck, this light-filled upstairs function space offers a fresh, modern setting for relaxed celebrations and social gatherings. With room for up to 100 guests standing or 50 seated, the space is versatile and easily adapted to suit a range of occasions.",
@@ -20,6 +54,7 @@ window.FF_VENUES = {
         facilities: ["AV Equipment", "Wi-Fi Access", "Dance Floor", "Air Conditioning/Heating", "High and Low Tables"],
       },
       {
+        id: "dining-room",
         name: "Dining Room", seated: 60, standing: null,
         photo: "assets/sample-dining-room.jpg", alt: "The dining room's timber chairs and tables under a large abstract painting",
         about: [
@@ -29,6 +64,7 @@ window.FF_VENUES = {
         facilities: ["AV Equipment", "Wi-Fi Access", "Dance Floor", "Air Conditioning/Heating"],
       },
       {
+        id: "bar-pool-room",
         name: "Bar/Pool Room", seated: null, standing: 70,
         photo: "assets/sample-pool-room.jpg", alt: "A pool table under a hanging lamp in a timber-panelled bar",
         about: [
@@ -38,6 +74,7 @@ window.FF_VENUES = {
         facilities: ["Air Conditioning/Heating", "Pool Table", "High and Low Tables"],
       },
       {
+        id: "rooftop-deck",
         name: "Rooftop Deck", seated: null, standing: 80,
         photo: "assets/sample-rooftop.jpg", alt: "The rooftop deck's timber benches and high bar tables",
         about: [

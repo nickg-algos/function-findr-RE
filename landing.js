@@ -14,7 +14,7 @@
   /* ---------- Cards ---------- */
 
   $("#rooms").innerHTML = L.rooms.map((r) => `
-    <a class="l-card" href="mockup.html?p=9">
+    <a class="l-card" href="${esc(r.href)}">
       <img src="${esc(r.photo)}" alt="${esc(r.alt)}" loading="lazy" width="390" height="280">
       <div class="l-card-body">
         <h3>${esc(r.name)} <span class="l-card-venue">at ${esc(r.venue)}</span></h3>

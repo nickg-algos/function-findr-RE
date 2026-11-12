@@ -139,5 +139,9 @@ window.FF_SHARED = (function () {
     window.addEventListener("resize", () => tracks.forEach(sync));
   }
 
-  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist, flow, stepHref, logoBoxes, reviewCards, initCarousels };
+  /* ---------- Minimum spend amounts (p9 space page and p20 preview) ---------- */
+
+  // Whole dollars with no thousands comma ($1200), as the founder asked for minimum spends.
+  const plainDollars = (cents) => `$${(cents / 100).toFixed(cents % 100 ? 2 : 0)}`;
+  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist, flow, stepHref, logoBoxes, reviewCards, initCarousels, plainDollars };
 })();

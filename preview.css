@@ -15,7 +15,7 @@
 .pv-pkgs li { padding-bottom: .4rem; border-bottom: 1px solid var(--line); }
 .pv-pkgs strong { display: block; color: #231f20; font-weight: 500; }
 .pv-pkgs span { display: block; margin-top: .15rem; color: var(--text); font-size: .9rem; }
-.pv .sp-sub { grid-template-columns: 0 9.5rem minmax(0, 1fr); }
+.pv .sp-sub { grid-template-columns: 4.5rem 9.5rem minmax(0, 1fr); } /* room for the orange step icons, as on p9 */
 
 .pv-tabs { display: flex; flex-wrap: wrap; gap: .25rem; margin-bottom: 1.75rem; padding: .25rem; border-radius: .5rem; background: var(--field); }
 .pv-tabs button { min-height: 2.5rem; padding: .3rem 1rem; border: 0; border-radius: .35rem; background: none; color: #231f20; font: inherit; cursor: pointer; }
@@ -42,8 +42,8 @@
 
 @media (max-width: 700px) {
   .pv { padding-top: 2rem; }
-  .pv .sp-sub { grid-template-columns: minmax(0, 1fr); }
-  .pv .sp-sub > span { display: none; }
+  .pv .sp-sub { grid-template-columns: 3.75rem minmax(0, 1fr); }
+  .pv .sp-sub > :nth-child(3) { grid-column: 1 / -1; }
   .pv-back, .pv-go { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {

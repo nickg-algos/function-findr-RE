@@ -83,7 +83,7 @@
         <thead class="sr-only"><tr><th scope="col">Day</th>${sessions.map(([, l]) => `<th scope="col">${l}</th>`).join("")}</tr></thead>
         <tbody>${DAYS.map((d, i) => `<tr><th scope="row">${d}</th>${sessions.map(([id]) => {
           const h = s.hours[id][i];
-          return `<td>${h ? `<strong>${timeLabel(h.open)} – ${timeLabel(h.close)}</strong><br>${h.minSpendCents !== null ? `${dollars(h.minSpendCents)} min spend` : "No minimum spend"}` : '<span class="pv-none">Closed</span>'}</td>`;
+          return `<td>${h ? `<strong>${timeLabel(h.open)} – ${timeLabel(h.close)}</strong><br>${h.minSpendCents !== null ? `${window.FF_SHARED.plainDollars(h.minSpendCents)} min spend` : "No minimum spend"}` : '<span class="pv-none">Closed</span>'}</td>`;
         }).join("")}</tr>`).join("")}</tbody>
       </table>
       <p class="sp-note">Minimum spends include GST.</p>` : '<p class="pv-none">No hours yet.</p>';
@@ -110,10 +110,10 @@
       <div class="sp-main pv-main">
         ${row("About this space", `<div class="sp-about">${s.about.map((p) => `<p>${esc(p)}</p>`).join("")}</div>`)}
         <section class="sp-row"><h2>Event options</h2><div class="sp-options">
-          <div class="sp-sub"><span></span><h3>Food Packages</h3>${pkgs(packages.food)}</div>
-          <div class="sp-sub"><span></span><h3>Dietary Accommodations</h3>${bullets(s.dietary, "sp-two")}</div>
-          <div class="sp-sub"><span></span><h3>Beverage Options</h3>${pkgs(packages.bev)}</div>
-          <div class="sp-sub"><span></span><h3>Additional</h3>${bullets(s.additional)}</div>
+          <div class="sp-sub"><img class="sp-icon" src="assets/step-food.png" alt="" width="124" height="74"><h3>Food Packages</h3>${pkgs(packages.food)}</div>
+          <div class="sp-sub"><img class="sp-icon" src="assets/step-dietary.png" alt="" width="124" height="74"><h3>Dietary Accommodations</h3>${bullets(s.dietary, "sp-two")}</div>
+          <div class="sp-sub"><img class="sp-icon" src="assets/step-bev.png" alt="" width="124" height="74"><h3>Beverage Options</h3>${pkgs(packages.bev)}</div>
+          <div class="sp-sub"><img class="sp-icon" src="assets/step-additional.png" alt="" width="124" height="74"><h3>Additional</h3>${bullets(s.additional)}</div>
         </div></section>
         ${row("Minimum spend", hoursTable)}
         ${row("Capacity", `<p class="sp-cap">${cap}</p>`)}

@@ -53,7 +53,7 @@
           <table class="sp-table">
             <caption class="sr-only">Minimum spend for the ${esc(space.name)} by day and session</caption>
             <thead class="sr-only"><tr><th scope="col">Day</th>${venue.sessions.map((s) => `<th scope="col">${esc(s.label)}</th>`).join("")}</tr></thead>
-            <tbody>${DAYS.map((day, i) => `<tr><th scope="row">${day}</th>${venue.sessions.map((s, j) => `<td><strong>${timeLabel(s.start)} – ${timeLabel(s.end)}</strong><br>${dollars(space.minSpendCents[i][j])} min spend</td>`).join("")}</tr>`).join("")}</tbody>
+            <tbody>${DAYS.map((day, i) => `<tr><th scope="row">${day}</th>${venue.sessions.map((s, j) => `<td><strong>${timeLabel(s.start)} – ${timeLabel(s.end)}</strong><br>${window.FF_SHARED.plainDollars(space.minSpendCents[i][j])} min spend</td>`).join("")}</tr>`).join("")}</tbody>
           </table>
           <p class="sp-note">Minimum spends include GST.</p>
         </div>
@@ -107,10 +107,10 @@
         <section class="sp-row" aria-labelledby="opt-title">
           <h2 id="opt-title">Event options</h2>
           <div class="sp-options">
-            <div class="sp-sub">${icon.food}<h3>Food Packages</h3>${pkgList(venue.foodPackages, D.foodPackages)}</div>
-            <div class="sp-sub"><span aria-hidden="true"></span><h3>Dietary Accommodations</h3>${bullets(venue.dietary, "sp-two")}</div>
-            <div class="sp-sub">${icon.drink}<h3>Beverage Options</h3>${pkgList(venue.beveragePackages, D.beveragePackages)}</div>
-            <div class="sp-sub">${icon.balloons}<h3>Additional</h3>${bullets(venue.additional)}</div>
+            <div class="sp-sub"><img class="sp-icon" src="assets/step-food.png" alt="" width="124" height="74"><h3>Food Packages</h3>${pkgList(venue.foodPackages, D.foodPackages)}</div>
+            <div class="sp-sub"><img class="sp-icon" src="assets/step-dietary.png" alt="" width="124" height="74"><h3>Dietary Accommodations</h3>${bullets(venue.dietary, "sp-two")}</div>
+            <div class="sp-sub"><img class="sp-icon" src="assets/step-bev.png" alt="" width="124" height="74"><h3>Beverage Options</h3>${pkgList(venue.beveragePackages, D.beveragePackages)}</div>
+            <div class="sp-sub"><img class="sp-icon" src="assets/step-additional.png" alt="" width="124" height="74"><h3>Additional</h3>${bullets(venue.additional)}</div>
           </div>
         </section>
 
@@ -261,7 +261,7 @@
   function showSpend() {
     const req = readForm();
     const ms = A.minSpend(venue, space, req.date, req.start);
-    $("#a-spend").textContent = ms ? `Minimum spend for a ${ms.day} ${ms.session.toLowerCase()}: ${dollars(ms.cents)} (inc. GST)` : "";
+    $("#a-spend").textContent = ms ? `Minimum spend for a ${ms.day} ${ms.session.toLowerCase()}: ${window.FF_SHARED.plainDollars(ms.cents)} (inc. GST)` : "";
   }
   form.addEventListener("change", showSpend);
   showSpend();

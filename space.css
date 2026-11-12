@@ -27,9 +27,11 @@
 .sp-about p { line-height: 1.75; }
 
 .sp-options { display: grid; gap: 1.25rem; }
-.sp-sub { display: grid; grid-template-columns: 3rem 9.5rem minmax(0, 1fr); align-items: start; gap: .5rem 1rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.sp-sub { display: grid; grid-template-columns: 4.5rem 9.5rem minmax(0, 1fr); align-items: start; gap: .5rem 1rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
 .sp-sub:first-child { padding-top: 0; border-top: 0; }
 .sp-sub > svg { width: 3rem; height: 3rem; color: #58595b; }
+/* The mockup's step icons in brand orange (assets/step-<id>.png, shared with My Bookings). */
+.sp-sub > .sp-icon { display: block; width: 4.5rem; height: auto; aspect-ratio: 124 / 74; margin-top: -.6rem; }
 .sp-sub h3 { color: #58595b; font-size: 1rem; font-weight: 400; }
 .sp-pkgs { list-style: none; }
 .sp-pkgs li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .3rem 0; border-bottom: 1px solid var(--line); font-size: .92rem; }
@@ -104,7 +106,8 @@
 }
 @media (max-width: 700px) {
   .sp-row { grid-template-columns: minmax(0, 1fr); gap: .6rem; }
-  .sp-sub { grid-template-columns: 2.5rem minmax(0, 1fr); }
+  .sp-sub { grid-template-columns: 3.75rem minmax(0, 1fr); }
+  .sp-sub > .sp-icon { width: 3.75rem; margin-top: -.4rem; }
   .sp-sub > svg { width: 2.5rem; height: 2.5rem; }
   .sp-sub > :nth-child(3) { grid-column: 1 / -1; }
   .sp-photos { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; border-radius: .9rem; }
@@ -121,3 +124,4 @@
 @media (prefers-reduced-motion: reduce) {
   .sp-view, .sp-see { transition: none; }
 }
+

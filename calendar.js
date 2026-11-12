@@ -120,7 +120,7 @@
       ${showSpace ? `<p class="cal-space">${esc(spaceName(b.space))}</p>` : ""}
       <p>${b.guests} Guests</p>
       ${items.length ? items.map((item) => `<p>${esc(item)}</p>`).join("") : '<p class="cal-none">No selections yet</p>'}
-      <p><a href="#"><u>Guest Contact details</u></a></p>
+      <p class="cal-foot"><a href="#"><u>Guest Contact details</u></a></p>
       ${miniChecklist(done)}
       <button type="button" class="cal-edit" data-edit="${b.id}" aria-label="View or edit booking: ${esc(b.title)}, ${esc(spaceName(b.space))}">View/Edit Booking</button>
     </article>`;
@@ -164,7 +164,18 @@
     $("#cal-crumb").textContent = view === "space" ? "By Space" : "By Date";
     $$("[data-view]").forEach((btn) => btn.setAttribute("aria-pressed", String(btn.dataset.view === view)));
     syncArrows();
+    evenCards();
   }
+
+  // Every booking card is as tall as the tallest, so the calendar reads as an even grid; the contact link,
+  // mini checklist and button sit at the bottom of each (see .cal-foot in calendar.css).
+  function evenCards() {
+    const cards = $$(".cal-card");
+    cards.forEach((c) => { c.style.minHeight = ""; });
+    const tallest = Math.max(0, ...cards.map((c) => c.offsetHeight));
+    cards.forEach((c) => { c.style.minHeight = `${tallest}px`; });
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(evenCards);
 
   function step(direction) {
     const track = $("#cal-columns");

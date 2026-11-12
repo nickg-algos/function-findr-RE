@@ -1,7 +1,7 @@
 /* The venue-side frame shared by every venue page: orange sidebar, top bar, page title.
    The cal- prefix is historical: it began on the booking calendar. */
 .cal-shell { display: grid; grid-template-columns: 15.5rem minmax(0, 1fr); min-height: 100vh; }
-.cal-side { background: var(--orange); color: #fff; }
+.cal-side { background: #d6793b; color: #fff; } /* a lighter orange than --orange, by request (white text still passes for large text) */
 .cal-side-inner { position: sticky; top: 0; padding: 2.75rem 1rem 2rem; }
 .cal-side .logo { display: inline-block; padding-left: .75rem; font-size: 2.3rem; }
 .cal-side .logo span { color: #fff; }
@@ -31,7 +31,7 @@
 .mini-line { flex: 1 1 auto; height: 2px; background: var(--line); }
 .mini-line.is-filled { background: var(--ok); }
 .mini .mini-text { margin: .45rem 0 0; font-size: .85rem; line-height: 1.2; }
-.mini .mini-text.is-complete { color: var(--ok); font-weight: 600; }
+.mini .mini-text.is-complete { color: var(--orange-text); font-weight: 600; } /* dark orange, by request */
 
 @media (max-width: 900px) {
   .cal-shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }

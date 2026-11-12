@@ -13,8 +13,9 @@
 .cal-columns { flex: 1 1 auto; min-width: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 13.3rem; column-gap: 1.3rem; align-items: start; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; }
 .cal-columns::-webkit-scrollbar { display: none; }
 .cal-col { padding: .9rem .75rem 1rem; border-radius: .25rem; background: var(--field); scroll-snap-align: start; }
-.cal-col h2 { display: grid; place-items: center; min-height: 5rem; margin-bottom: 1rem; padding: .35rem .5rem; border-radius: .25rem; background: var(--orange); color: #fff; font-size: 1.5rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.05; text-align: center; }
-.cal-card { margin-bottom: 1.85rem; padding: 1rem .5rem 1rem; border-radius: .6rem; background: #fff; color: #231f20; font-size: .95rem; }
+.cal-col h2 { display: grid; place-items: center; min-height: 5rem; margin-bottom: 1rem; padding: .35rem .5rem; border-radius: .25rem; background: #d6793b; color: #fff; font-size: 1.5rem; font-weight: 500; letter-spacing: -.02em; line-height: 1.05; text-align: center; } /* lighter orange, lighter type */
+.cal-card { display: flex; flex-direction: column; margin-bottom: 1.85rem; padding: 1rem .5rem 1rem; border-radius: .6rem; background: #fff; color: #231f20; font-size: .95rem; }
+.cal-card .cal-foot { margin-top: auto; padding-top: .25rem; } /* contact link, mini checklist and button line up at the bottom */
 .cal-card:last-child { margin-bottom: 0; }
 .cal-card p { margin-bottom: .45rem; line-height: 1.15; }
 .cal-card .cal-when { margin-bottom: .55rem; color: #000; font-size: 1.05rem; font-weight: 600; }
@@ -129,3 +130,5 @@ button.bk-step-head:hover { background: #f7f7f8; }
 
 /* Stretched to line up with the bottom of the checklist: rows spread evenly down the column. */
 #bk-fields.is-stretched { display: flex; flex-direction: column; justify-content: space-between; }
+/* The progress text always takes two lines in a card, so the contact links line up across the calendar too. */
+.cal-card .mini .mini-text { min-height: 2.4em; }

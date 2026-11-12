@@ -211,7 +211,7 @@
       sessionStorage.setItem("ff.venueChecklist.v1", JSON.stringify({ id: draft.id, live: draft.live, title: draft.title, guests: Number(draft.guests) || 0, sel: draft.sel }));
     } catch (e) { /* the checklist falls back to the customer's own */ }
     frame.style.height = "";
-    frame.src = `my-bookings.html?embed=venue&booking=${encodeURIComponent(draft.id)}`;
+    frame.src = `my-bookings.html?embed=venue&booking=${encodeURIComponent(draft.id)}${box.dataset.mode === "add" ? "&mode=add" : ""}`;
   }
   window.addEventListener("message", (e) => {
     if (e.origin === location.origin && e.data && e.data.type === "ff-checklist-height") frame.style.height = `${Math.ceil(e.data.h)}px`;
@@ -282,7 +282,7 @@
     $("#bk-lead").textContent = draft.live
       ? `${draft.contact} is filling this in on their My Bookings page, so it updates here as they go.`
       : adding
-        ? "Fill in anything already agreed with the customer. They can finish the rest on their own checklist."
+        ? "Fill in the customer’s checklist on their behalf, exactly as they would on My Bookings."
         : "These are the customer’s checklist answers. Change them here if they’ve asked you to.";
     syncSteps();
     loadChecklist();

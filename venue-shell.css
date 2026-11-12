@@ -31,7 +31,7 @@
 .mini-line { flex: 1 1 auto; height: 2px; background: var(--line); }
 .mini-line.is-filled { background: var(--ok); }
 .mini .mini-text { margin: .45rem 0 0; font-size: .85rem; line-height: 1.2; }
-.mini .mini-text.is-complete { color: var(--orange-text); font-weight: 600; } /* dark orange, by request */
+.mini .mini-text.is-complete { color: var(--ok); font-weight: 600; }
 
 @media (max-width: 900px) {
   .cal-shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }

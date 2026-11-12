@@ -15,6 +15,9 @@
     document.body.classList.add("mb-embed");
   }
   const OWN = !!(EMBED && seed && !seed.live);
+  // Editing an existing booking locks each package behind Edit Menu Selection. Adding a booking (mode=add)
+  // works exactly as the customer's own checklist, because the venue fills it in for them.
+  const LOCKED = EMBED && params.get("mode") !== "add";
   const STORE_KEY = OWN ? `ff.myBookings.v4.${seed.id}` : "ff.myBookings.v4";
   const STATUS_KEY = OWN ? `${window.FF_SHARED.CHECKLIST_KEY}.${seed.id}` : window.FF_SHARED.CHECKLIST_KEY;
   if (OWN) D.booking = { ...D.booking, eventName: seed.title || D.booking.eventName, guests: Number(seed.guests) || D.booking.guests };
@@ -302,7 +305,7 @@
     return panelFrame("antipasto", `
       <ul class="bullets"><li>${D.antipasto.note.map(esc).join("<br>")}</li></ul>
       ${D.antipasto.options.map((o) => `<div class="dish"><label class="check"><input type="radio" name="antipasto" data-k="antipasto" data-val="${o.id}"><span>${esc(o.label)}</span></label></div>`).join("")}
-      ${EMBED ? '<button type="button" class="confirm" data-confirm="antipasto">Edit Menu Selection</button>' : ""}`);
+      ${LOCKED ? '<button type="button" class="confirm" data-confirm="antipasto">Edit Menu Selection</button>' : ""}`);
   }
 
   function canapesPanel() {
@@ -316,7 +319,7 @@
       <ul class="bullets"><li>${esc(c.intro)}</li></ul>
       <p class="panel-lead">Please choose ${c.dishCount} dishes from our menu below: <span class="panel-count" id="dish-count" aria-live="polite"></span></p>
       ${dishes}
-      <button type="button" class="confirm" data-confirm="canapes">${EMBED ? "Edit Menu Selection" : "Confirm menu selection"}</button>
+      <button type="button" class="confirm" data-confirm="canapes">${LOCKED ? "Edit Menu Selection" : "Confirm menu selection"}</button>
       <p class="panel-msg" data-msg="canapes" role="alert"></p>`);
   }
 
@@ -369,7 +372,7 @@
         ${check("bar.spirits", "Yes", { val: "yes" })}
         ${check("bar.spirits", "No", { val: "no" })}
       </div>
-      <button type="button" class="confirm" data-confirm="barTab">${EMBED ? "Edit Bar Tab Selection" : "Confirm Bar Tab selection"}</button>
+      <button type="button" class="confirm" data-confirm="barTab">${LOCKED ? "Edit Bar Tab Selection" : "Confirm Bar Tab selection"}</button>
       <p class="panel-msg" data-msg="barTab" role="alert"></p>`);
   }
 
@@ -387,7 +390,7 @@
     return panelFrame(p.id, `
       <ul class="bullets"><li>${esc(menu.intro)}</li></ul>
       ${groups}
-      <button type="button" class="confirm" data-confirm="${p.id}">${EMBED ? "Edit Menu Selection" : "Confirm selection"}</button>
+      <button type="button" class="confirm" data-confirm="${p.id}">${LOCKED ? "Edit Menu Selection" : "Confirm selection"}</button>
       <p class="panel-msg" data-msg="${p.id}" role="alert"></p>`);
   }
 
@@ -629,7 +632,7 @@
   const unlocked = new Set();
   const editLabel = (id, open) => `${open ? "Save" : "Edit"} ${id === "barTab" ? "Bar Tab" : "Menu"} Selection`;
   function applyLocks() {
-    if (!EMBED) return;
+    if (!LOCKED) return;
     [...D.foodPackages, ...D.beveragePackages].forEach((p) => {
       const locked = !unlocked.has(p.id);
       $$(`[data-k="pkg.${p.id}"]`).forEach((el) => { el.disabled = locked; });
@@ -805,7 +808,7 @@
     const confirm = e.target.closest("[data-confirm]");
     if (confirm) {
       const id = confirm.dataset.confirm;
-      if (EMBED && !unlocked.has(id)) {
+      if (LOCKED && !unlocked.has(id)) {
         // Edit Menu Selection: unlock this package and open its menu.
         unlocked.add(id);
         state.open[slotOf(id)] = id;
@@ -815,7 +818,7 @@
         save(`${id === "barTab" ? "Bar tab" : "Menu"} unlocked for editing.`);
         return;
       }
-      if (EMBED && !state.pkg[id]) {
+      if (LOCKED && !state.pkg[id]) {
         // The venue unticked the package while editing: nothing to check, just lock it again.
         unlocked.delete(id);
         messages[id] = null;
@@ -838,7 +841,7 @@
       state.open[slotOf(id)] = null;
       unlocked.delete(id);
       sync();
-      save(EMBED ? "Menu selection updated." : "Selection confirmed.");
+      save(LOCKED ? "Menu selection updated." : "Selection confirmed.");
       $(`[data-view="${id}"]`).focus();
       return;
     }

@@ -22,11 +22,6 @@
 .pv-tabs button[aria-pressed="true"] { background: #fff; font-weight: 600; box-shadow: 0 1px 3px rgba(0, 0, 0, .15); }
 .pv-tabs button:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 
-.pv-venue-only { max-width: 50rem; margin-top: 2rem; padding: 1.1rem 1.25rem; border: 1px dashed #a7a9ac; border-radius: .6rem; background: #f7f7f8; }
-.pv-venue-only h2 { color: #231f20; font-size: 1rem; font-weight: 600; }
-.pv-venue-only dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .75rem 1.5rem; margin-top: .6rem; }
-.pv-venue-only dt { color: #6d6e71; font-size: .85rem; }
-.pv-venue-only dd { margin: .15rem 0 0; color: #231f20; }
 
 .pv-demo { margin-top: 2.5rem; text-align: left; }
 .pv-actions { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; margin-top: 1rem; }
@@ -50,4 +45,12 @@
   .pv-back, .pv-go { transition: none; }
 }
 
-.pv-pkgs .pv-file { margin-top: .35rem; min-width: 0; border-color: var(--orange); color: var(--orange-text); }
+
+/* A View menu button beside each package, as on the function space page. */
+.pv-pkgs li { display: flex; align-items: center; justify-content: space-between; gap: .5rem 1rem; }
+.pv-pkgs li > div { min-width: 0; }
+.pv-pkgs .sp-view { min-width: 9rem; }
+@media (max-width: 600px) {
+  .pv-pkgs li { flex-wrap: wrap; }
+  .pv-pkgs .sp-view { min-width: 0; }
+}

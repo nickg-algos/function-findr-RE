@@ -15,7 +15,6 @@
   const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const timeLabel = (mins) => { const m = mins % 1440; const h = Math.floor(m / 60); return `${h % 12 || 12}:${String(m % 60).padStart(2, "0")} ${h < 12 ? "am" : "pm"}`; };
   const dollars = (c) => "$" + (c % 100 ? (c / 100).toFixed(2) : String(c / 100)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  const duration = (m) => [Math.floor(m / 60) && `${Math.floor(m / 60)} hour${Math.floor(m / 60) === 1 ? "" : "s"}`, m % 60 && `${m % 60} min`].filter(Boolean).join(" ");
 
   /* ---------- What to preview: their spaces, or a marked example ---------- */
 
@@ -70,8 +69,40 @@
   try { venueDietary = (JSON.parse(localStorage.getItem("ff.venueSetup.v1")) || {}).dietary || []; } catch (e) { /* use the space's own */ }
   const bullets = (items, cls = "") => (items.length ? `<ul class="sp-bullets ${cls}">${items.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : '<p class="pv-none">None selected</p>');
   const row = (title, body) => `<section class="sp-row"><h2>${esc(title)}</h2><div>${body}</div></section>`;
+  const chev = '<svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // What the "View menu" pop-up shows: the venue's uploaded menu (if any), then what they entered on the
+  // food & beverage page. The example listing shows the sample menus, as customers see them on p9.
+  function menuBody(id) {
+    const file = window.FF_SHARED.menuFile(id);
+    const open = file ? `<p class="sp-fullmenu"><button type="button" class="sp-view" data-open-file="${esc(id)}">Open the venue’s menu ${chev}</button></p>` : "";
+    if (example) return open + window.FF_MENUS.html(id);
+    const cat = [...SETUP.food, ...SETUP.beverage].find((c) => c.id === id);
+    const saved = ((readL("ff.venueSetup.v1", {}).cats) || {})[id] || {};
+    const groups = (cat && cat.groups ? cat.groups : []).map((g) => {
+      const rows = [...((saved.groups || {})[g.id] || []), ...(saved.allRows && saved.allRows[g.id] ? [saved.allRows[g.id]] : [])].filter((r) => r.added && r.name);
+      return rows.length ? `${g.title && g.title !== "Options" ? `<h3>${esc(g.title)}</h3>` : ""}<ul class="sp-menu-list">${rows.map((r) => `<li>${esc(r.name)}</li>`).join("")}</ul>` : "";
+    }).join("");
+    const desc = saved.desc ? `<p>${esc(saved.desc)}</p>` : "";
+    return open + desc + groups || '<p>No menu items added yet. <a href="venue-setup.html">Enter menu items</a>.</p>';
+  }
+  const menuDialog = document.getElementById("menu");
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-pv-menu]");
+    if (b) {
+      const id = b.dataset.pvMenu;
+      const cat = [...SETUP.food, ...SETUP.beverage].find((c) => c.id === id);
+      const fromData = [...DATA.foodPackages, ...DATA.beveragePackages].find((p) => p.id === id);
+      document.getElementById("menu-title").textContent = (cat && cat.label) || (fromData && fromData.label) || "Menu";
+      document.getElementById("menu-body").innerHTML = menuBody(id);
+      menuDialog.showModal();
+      return;
+    }
+    if (e.target === menuDialog || e.target.closest("#menu [data-close]")) menuDialog.close();
+  });
+
   const pkgs = (list) => (list.length
-    ? `<ul class="pv-pkgs">${list.map((p) => `<li><strong>${esc(p.label)}</strong>${p.desc ? `<span>${esc(p.desc)}</span>` : ""}${p.id && window.FF_SHARED.menuFile(p.id) ? `<button type="button" class="sp-view pv-file" data-open-file="${esc(p.id)}">Open menu</button>` : ""}</li>`).join("")}</ul>`
+    ? `<ul class="pv-pkgs">${list.map((p) => `<li><div><strong>${esc(p.label)}</strong>${p.desc ? `<span>${esc(p.desc)}</span>` : ""}</div>${p.id ? `<button type="button" class="sp-view" data-pv-menu="${esc(p.id)}" aria-haspopup="dialog" aria-label="View the ${esc(p.label)} menu">View menu ${chev}</button>` : ""}</li>`).join("")}</ul>`
     : '<p class="pv-none">None yet. <a href="venue-setup.html">Enter menu items</a></p>');
 
   function render() {
@@ -90,7 +121,6 @@
         }).join("")}</tr>`).join("")}</tbody>
       </table>
       <p class="sp-note">Minimum spends include GST.</p>` : '<p class="pv-none">No hours yet.</p>';
-    const extras = [["roomHire", "Room hire"], ["cleaning", "Cleaning fee"], ["security", "Security fee"]].filter(([k]) => s.extrasCents[k] !== null);
 
     $("#pv-space").innerHTML = `
       <div class="sp-top">
@@ -127,16 +157,7 @@
         ${row("Age restrictions", bullets(s.age))}
         ${row("Cancellation and booking flexibility", bullets(s.cancellation, "sp-two"))}
       </div>
-
-      <aside class="pv-venue-only" aria-labelledby="vo-title">
-        <h2 id="vo-title">Only you see this</h2>
-        <dl>
-          <div><dt>Type</dt><dd>${esc(s.type)}</dd></div>
-          <div><dt>Setup time</dt><dd>${duration(s.bufferMinutes.setup)}</dd></div>
-          <div><dt>Pack down &amp; cleaning</dt><dd>${duration(s.bufferMinutes.packDown)}</dd></div>
-          <div><dt>Extras</dt><dd>${extras.length ? extras.map(([k, l]) => `${l} ${dollars(s.extrasCents[k])}`).join(", ") : "None"}</dd></div>
-        </dl>
-      </aside>`;
+`;
     document.title = `Preview: ${s.name} | FunctionFindr`;
     $("#pv-edit").href = example ? "space-setup.html" : `space-setup.html?edit=${encodeURIComponent(s.id)}`;
   }

@@ -4,9 +4,16 @@
 .lv-hero {
   position: relative; isolation: isolate; display: grid; align-content: center; justify-items: start; gap: 1.5rem;
   min-height: min(46rem, 88vh); padding: 4rem var(--gutter); color: #fff;
-  background: #231f20 url("assets/sample-hotel.jpg") center / cover no-repeat;
+  background: #2a2320; /* a warm charcoal taken from the photo's own background */
 }
-.lv-hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(35, 31, 32, .6); }
+.lv-hero::before { content: ""; position: absolute; inset: 0; z-index: -1; }
+/* The function manager from the mockup (cut from V44 p15) is the only image: on the right, fading into the charcoal behind the text.
+   TODO(confirm): this is the mockup's stock photo; check its licence before launch. */
+.lv-hero::after {
+  content: ""; position: absolute; top: 0; right: 0; bottom: 0; z-index: -1; width: min(58%, 52rem);
+  background: url("assets/lv-manager.jpg") 30% 15% / cover no-repeat;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 22%); mask-image: linear-gradient(to right, transparent, #000 22%);
+}
 .lv-kicker { font-size: clamp(1.3rem, 2.3vw, 2rem); font-weight: 400; letter-spacing: .12em; text-transform: uppercase; }
 .lv-hero h1 { max-width: 12ch; color: #fff; font-size: clamp(2.6rem, 5.8vw, 5.4rem); font-weight: 500; letter-spacing: -.035em; line-height: 1.02; }
 .lv-ticks { display: grid; gap: .6rem; margin-top: 1.5rem; list-style: none; font-size: clamp(1.25rem, 2.2vw, 2.1rem); font-weight: 600; letter-spacing: -.02em; }
@@ -87,6 +94,14 @@
 }
 @media (max-width: 600px) {
   .lv-hero { min-height: 0; padding-block: 3rem; }
+  /* On phones her photo sits across the top of the hero, fading into the charcoal, with the words below. */
+  .lv-hero { padding-top: 0; }
+  .lv-hero::after {
+    position: static; order: -1; width: auto; height: 19rem; margin: 0 calc(-1 * var(--gutter)) -1rem;
+    background-position: 50% 18%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent); mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  }
+  .lv-hero::after { justify-self: stretch; }
   .lv-how { padding-block: 3rem; }
 }
 @media (prefers-reduced-motion: reduce) {

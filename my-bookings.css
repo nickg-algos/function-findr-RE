@@ -238,3 +238,16 @@
 @media (max-width: 600px) {
   .mb .card-icon { width: 4.25rem; height: auto; margin: 0 -.25rem; }
 }
+
+/* Inside the booking calendar's Edit Booking pop-up: just the step cards (see app.js, embed=venue). */
+body.mb-embed { background: #fff; }
+.mb-embed .site-header, .mb-embed .site-footer, .mb-embed .mb-head, .mb-embed #booking,
+.mb-embed #checklist-pill, .mb-embed .terms, .mb-embed .dev-tabs { display: none; }
+.mb-embed .mb-band { background: #fff; }
+.mb-embed .page { max-width: none; padding: .25rem .25rem 1rem; }
+.mb-embed .form-foot { margin-top: .5rem; }
+
+/* Venue's view: locked packages keep their normal look (just not clickable) until Edit Menu Selection. */
+.mb-embed .is-locked input:disabled { background: #fff; border-color: #808285; cursor: default; }
+.mb-embed .is-locked input:disabled + span, .mb-embed .is-locked .check { color: inherit; cursor: default; }
+.mb-embed .is-locked textarea:disabled { cursor: default; }

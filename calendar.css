@@ -76,7 +76,7 @@
 .bk-check-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem; }
 .bk-check h3 { color: #000; font-size: 1.2rem; font-weight: 600; }
 .bk-check-sum { display: inline-flex; align-items: center; gap: .25rem; color: var(--orange-text); font-weight: 600; }
-.bk-check-sum.is-complete { color: var(--ok); }
+.bk-check-sum.is-complete { color: var(--orange-text); } /* dark orange, by request */
 .bk-check-sum .tick { width: 1.15rem; height: 1.15rem; }
 .bk-lead { margin: .3rem 0 1rem; font-size: .95rem; line-height: 1.35; }
 
@@ -123,3 +123,9 @@ button.bk-step-head:hover { background: #f7f7f8; }
   .bk-step-head { flex-wrap: wrap; gap: 0 .6rem; padding-block: .55rem; }
   .bk-step-sum { flex-basis: 100%; padding-left: 1.2rem; text-align: left; white-space: normal; }
 }
+
+/* The customer's checklist (My Bookings) inside Edit Booking; its height follows the content. */
+.bk-frame { display: block; width: 100%; min-height: 20rem; border: 0; background: #fff; }
+
+/* Stretched to line up with the bottom of the checklist: rows spread evenly down the column. */
+#bk-fields.is-stretched { display: flex; flex-direction: column; justify-content: space-between; }

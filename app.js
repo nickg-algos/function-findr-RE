@@ -2,7 +2,22 @@
   "use strict";
 
   const D = window.FF_DATA;
-  const STORE_KEY = "ff.myBookings.v4";
+  // Inside the venue's booking calendar this page runs in the Edit Booking pop-up
+  // (my-bookings.html?embed=venue&booking=<id>): just the checklist, for that booking. The calendar leaves the
+  // booking's details in sessionStorage (ff.venueChecklist.v1). The live booking (Sam's) shares the customer's
+  // own answers; every other calendar booking keeps its own, started from the packages the calendar has for it.
+  const params = new URLSearchParams(location.search);
+  const EMBED = params.get("embed") === "venue";
+  let seed = null;
+  if (EMBED) {
+    try { seed = JSON.parse(sessionStorage.getItem("ff.venueChecklist.v1")); } catch (e) { /* no details: the live booking */ }
+    if (seed && seed.id !== params.get("booking")) seed = null;
+    document.body.classList.add("mb-embed");
+  }
+  const OWN = !!(EMBED && seed && !seed.live);
+  const STORE_KEY = OWN ? `ff.myBookings.v4.${seed.id}` : "ff.myBookings.v4";
+  const STATUS_KEY = OWN ? `${window.FF_SHARED.CHECKLIST_KEY}.${seed.id}` : window.FF_SHARED.CHECKLIST_KEY;
+  if (OWN) D.booking = { ...D.booking, eventName: seed.title || D.booking.eventName, guests: Number(seed.guests) || D.booking.guests };
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
@@ -48,13 +63,27 @@
     };
   }
 
+  function seeded() {
+    const st = initialState();
+    const sel = seed.sel || {};
+    [...(sel.food || []), ...(sel.bev || [])].forEach((id) => { st.pkg[id] = true; });
+    (sel.dietary || []).forEach((id) => { st.diet[id] = { on: true }; });
+    (sel.additional || []).forEach((key) => {
+      const a = D.additional.find((x) => (x.val ? `${x.id}-${x.val}` : x.id) === key);
+      if (a) st.additional[a.id] = a.val || true;
+    });
+    Object.entries(sel.none || {}).forEach(([k, v]) => { if (v) st.none[k] = true; });
+    st.notes = sel.notes || "";
+    return st;
+  }
+
   function load() {
     try {
       const raw = localStorage.getItem(STORE_KEY);
       // Selections carry over, but every section starts closed so the page opens on one screen.
       if (raw) return { ...JSON.parse(raw), cards: {}, open: { food: null, bev: null }, barOpen: {} };
     } catch (e) { /* storage blocked or corrupt: start from the defaults */ }
-    return initialState();
+    return OWN ? seeded() : initialState();
   }
 
   let saveTimer;
@@ -272,7 +301,8 @@
   function antipastoPanel() {
     return panelFrame("antipasto", `
       <ul class="bullets"><li>${D.antipasto.note.map(esc).join("<br>")}</li></ul>
-      ${D.antipasto.options.map((o) => `<div class="dish"><label class="check"><input type="radio" name="antipasto" data-k="antipasto" data-val="${o.id}"><span>${esc(o.label)}</span></label></div>`).join("")}`);
+      ${D.antipasto.options.map((o) => `<div class="dish"><label class="check"><input type="radio" name="antipasto" data-k="antipasto" data-val="${o.id}"><span>${esc(o.label)}</span></label></div>`).join("")}
+      ${EMBED ? '<button type="button" class="confirm" data-confirm="antipasto">Edit Menu Selection</button>' : ""}`);
   }
 
   function canapesPanel() {
@@ -286,7 +316,7 @@
       <ul class="bullets"><li>${esc(c.intro)}</li></ul>
       <p class="panel-lead">Please choose ${c.dishCount} dishes from our menu below: <span class="panel-count" id="dish-count" aria-live="polite"></span></p>
       ${dishes}
-      <button type="button" class="confirm" data-confirm="canapes">Confirm menu selection</button>
+      <button type="button" class="confirm" data-confirm="canapes">${EMBED ? "Edit Menu Selection" : "Confirm menu selection"}</button>
       <p class="panel-msg" data-msg="canapes" role="alert"></p>`);
   }
 
@@ -339,7 +369,7 @@
         ${check("bar.spirits", "Yes", { val: "yes" })}
         ${check("bar.spirits", "No", { val: "no" })}
       </div>
-      <button type="button" class="confirm" data-confirm="barTab">Confirm Bar Tab selection</button>
+      <button type="button" class="confirm" data-confirm="barTab">${EMBED ? "Edit Bar Tab Selection" : "Confirm Bar Tab selection"}</button>
       <p class="panel-msg" data-msg="barTab" role="alert"></p>`);
   }
 
@@ -357,7 +387,7 @@
     return panelFrame(p.id, `
       <ul class="bullets"><li>${esc(menu.intro)}</li></ul>
       ${groups}
-      <button type="button" class="confirm" data-confirm="${p.id}">Confirm selection</button>
+      <button type="button" class="confirm" data-confirm="${p.id}">${EMBED ? "Edit Menu Selection" : "Confirm selection"}</button>
       <p class="panel-msg" data-msg="${p.id}" role="alert"></p>`);
   }
 
@@ -496,7 +526,7 @@
       items: [...(stepDone("food") ? finished(D.foodPackages) : []), ...(stepDone("bev") ? finished(D.beveragePackages) : [])],
     };
     try {
-      localStorage.setItem(window.FF_SHARED.CHECKLIST_KEY, JSON.stringify(status));
+      localStorage.setItem(STATUS_KEY, JSON.stringify(status));
     } catch (e) { /* the page still works without storage */ }
   }
 
@@ -594,8 +624,26 @@
     });
   }
 
+  // Venue's view (calendar pop-up): the customer has already chosen, so each package stays locked until the
+  // venue presses Edit Menu Selection, which unlocks that package; Save Menu Selection checks it and locks it again.
+  const unlocked = new Set();
+  const editLabel = (id, open) => `${open ? "Save" : "Edit"} ${id === "barTab" ? "Bar Tab" : "Menu"} Selection`;
+  function applyLocks() {
+    if (!EMBED) return;
+    [...D.foodPackages, ...D.beveragePackages].forEach((p) => {
+      const locked = !unlocked.has(p.id);
+      $$(`[data-k="pkg.${p.id}"]`).forEach((el) => { el.disabled = locked; });
+      const panel = $(`#panel-${p.id}`);
+      if (panel) $$("input, textarea, select", panel).forEach((el) => { el.disabled = locked; });
+      $$(`[data-confirm="${p.id}"]`).forEach((b) => { b.textContent = editLabel(p.id, !locked); });
+      const row = $(`[data-pkg="${p.id}"]`);
+      if (row) row.classList.toggle("is-locked", locked);
+    });
+  }
+
   function sync() {
     syncDerived();
+    applyLocks();
 
     $$("[data-k]").forEach((el) => {
       const value = getPath(el.dataset.k);
@@ -757,7 +805,26 @@
     const confirm = e.target.closest("[data-confirm]");
     if (confirm) {
       const id = confirm.dataset.confirm;
-      const error = id === "canapes" ? validateCanapes() : id === "barTab" ? validateBar() : validateMenu(id);
+      if (EMBED && !unlocked.has(id)) {
+        // Edit Menu Selection: unlock this package and open its menu.
+        unlocked.add(id);
+        state.open[slotOf(id)] = id;
+        sync();
+        const first = $(`#panel-${id} input:not([disabled]), #panel-${id} textarea`) || $(`[data-k="pkg.${id}"]`);
+        if (first) first.focus();
+        save(`${id === "barTab" ? "Bar tab" : "Menu"} unlocked for editing.`);
+        return;
+      }
+      if (EMBED && !state.pkg[id]) {
+        // The venue unticked the package while editing: nothing to check, just lock it again.
+        unlocked.delete(id);
+        messages[id] = null;
+        sync();
+        save("Package removed.");
+        return;
+      }
+      const error = id === "canapes" ? validateCanapes() : id === "barTab" ? validateBar()
+        : id === "antipasto" ? (state.antipasto ? "" : "Please choose a platter.") : validateMenu(id);
       if (error) {
         messages[id] = { text: error };
         // The problem may be inside a closed drinks section, so show it.
@@ -769,8 +836,9 @@
       state.pkg[id] = true;
       messages[id] = null;
       state.open[slotOf(id)] = null;
+      unlocked.delete(id);
       sync();
-      save("Selection confirmed.");
+      save(EMBED ? "Menu selection updated." : "Selection confirmed.");
       $(`[data-view="${id}"]`).focus();
       return;
     }
@@ -779,6 +847,11 @@
   /* ---------- Start ---------- */
 
   delete state.fn; // From the earlier Function Details editor.
+  if (EMBED && window.parent !== window) {
+    const post = () => window.parent.postMessage({ type: "ff-checklist-height", h: document.documentElement.scrollHeight }, location.origin);
+    new ResizeObserver(post).observe(document.body);
+    window.addEventListener("load", post);
+  }
   renderBooking();
   renderForm();
   // Enter in the Contact Details fields saves them.

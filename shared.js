@@ -72,7 +72,8 @@ window.FF_SHARED = (function () {
     document.body.append(nav);
     document.body.classList.add("has-dev-tabs");
   }
-  document.addEventListener("DOMContentLoaded", renderDevTabs);
+  // Not inside a frame, such as the checklist in the booking calendar's Edit Booking pop-up.
+  if (window.self === window.top) document.addEventListener("DOMContentLoaded", renderDevTabs);
 
   const CHECKLIST_KEY = "ff.checklistStatus.v1";
   const checklistSteps = [

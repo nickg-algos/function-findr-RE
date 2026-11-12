@@ -89,9 +89,19 @@
     return { done: ["function"], items: [] };
   }
 
+  // Progress saved by a booking's own checklist (the pop-up's My Bookings checklist), if it has been opened.
+  function savedStatus(id) {
+    try { return JSON.parse(localStorage.getItem(`${CHECKLIST_KEY}.${id}`)); } catch (e) { return null; }
+  }
+
   function checklistOf(b) {
     if (b.live) return liveStatus();
     const d = toDraft(b);
+    const saved = savedStatus(b.id);
+    if (saved) {
+      // Function Details comes from the booking details here; the other steps from the checklist.
+      return { done: checklistSteps.map((s) => s.id).filter((id) => (id === "function" ? stepDone(id, d) : saved.done.includes(id))), items: saved.items };
+    }
     return {
       done: checklistSteps.map((s) => s.id).filter((id) => stepDone(id, d)),
       items: [...d.sel.food.map((k) => labelOf("food", k)), ...d.sel.bev.map((k) => labelOf("bev", k))],
@@ -182,61 +192,46 @@
     return `<div class="bk-row"><label for="${id}">${esc(f.label)}:</label><div class="bk-input">${input}<p class="bk-msg" id="${id}-msg"></p></div></div>`;
   }
 
-  // Ticks the venue can change. A live booking's checklist belongs to the customer, so it is read-only.
-  function stepBody(id) {
-    const s = draft.sel;
-    const tick = (attrs, label, on) => `<label class="check"><input type="checkbox" ${attrs}${on ? " checked" : ""}><span>${label}</span></label>`;
-    const parts = [];
-    if (hasNone(id)) parts.push(tick(`data-none="${id}"`, "None", s.none[id]));
-    if (options[id]) options[id].forEach((o) => parts.push(tick(`data-g="${id}" value="${o.key}"`, esc(o.label), s[id].includes(o.key))));
-    let notes = "";
-    if (id === "notes") notes = `<label class="bk-notes-label" for="bk-notes">Anything the venue should know</label><textarea id="bk-notes" maxlength="2000">${esc(s.notes)}</textarea>`;
-    return `<div class="bk-opts">${parts.join("")}</div>${notes}`;
+  // The pop-up's checklist is My Bookings itself (my-bookings.html?embed=venue), so it looks and works exactly
+  // as it does for the customer. It reads this booking's details from sessionStorage (ff.venueChecklist.v1).
+  const frame = $("#bk-frame");
+  function loadChecklist() {
+    try {
+      sessionStorage.setItem("ff.venueChecklist.v1", JSON.stringify({ id: draft.id, live: draft.live, title: draft.title, guests: Number(draft.guests) || 0, sel: draft.sel }));
+    } catch (e) { /* the checklist falls back to the customer's own */ }
+    frame.style.height = "";
+    frame.src = `my-bookings.html?embed=venue&booking=${encodeURIComponent(draft.id)}`;
   }
+  window.addEventListener("message", (e) => {
+    if (e.origin === location.origin && e.data && e.data.type === "ff-checklist-height") frame.style.height = `${Math.ceil(e.data.h)}px`;
+  });
 
-  function renderSteps() {
-    $("#bk-steps").innerHTML = checklistSteps.map((s) => {
-      const open = s.id !== "function" && !draft.live;
-      const head = open
-        ? `<button type="button" class="bk-step-head" aria-expanded="false" aria-controls="bk-body-${s.id}">${chevron}<span class="bk-step-title">${esc(s.label)}</span><span class="bk-step-sum" data-sum="${s.id}"></span></button>`
-        : `<div class="bk-step-head"><span class="bk-step-title">${esc(s.label)}</span><span class="bk-step-sum" data-sum="${s.id}"></span></div>`;
-      const body = open ? `<div class="fold" id="bk-body-${s.id}"><div class="fold-inner"><div class="bk-step-body">${stepBody(s.id)}</div></div></div>` : "";
-      return `<li class="bk-step" data-step="${s.id}"><div class="bk-step-card">${head}${body}</div><span class="bk-mark"></span></li>`;
-    }).join("");
-    syncSteps();
-  }
-
-  function summaryOf(id, done) {
-    if (id === "function") {
-      const missing = fields.filter((f) => problems(draft)[f.k]).map((f) => f.label);
-      return missing.length ? `Still needed: ${missing.join(", ")}` : "All filled in";
+  // Side by side, the details stretch so the line under No. of guests lines up with the bottom of the
+  // Notes for the venue card (measured when the checklist first loads, with every card closed).
+  function alignDetails() {
+    const list = $("#bk-fields");
+    list.style.minHeight = "";
+    list.classList.remove("is-stretched");
+    if (window.matchMedia("(max-width: 960px)").matches || !box.open) return;
+    const fd = frame.contentDocument;
+    const cards = fd ? fd.querySelectorAll(".step .card") : [];
+    const last = cards[cards.length - 1];
+    if (!last) return;
+    const bottom = frame.getBoundingClientRect().top + last.getBoundingClientRect().bottom;
+    const need = bottom - list.getBoundingClientRect().top;
+    if (need > list.offsetHeight) {
+      list.style.minHeight = `${need}px`;
+      list.classList.add("is-stretched");
     }
-    if (draft.live) {
-      const items = liveStatus().items.filter((label) => options[id] && options[id].some((o) => o.label === label));
-      return done ? items.join(", ") || "Done" : "Not done yet";
-    }
-    const s = draft.sel;
-    if (s.none[id]) return "None";
-    if (id === "notes") return s.notes.trim() ? "Note added" : "Select an option";
-    return s[id].map((k) => labelOf(id, k)).join(", ") || "Select an option";
   }
+  frame.addEventListener("load", () => setTimeout(alignDetails, 150));
 
-  // The marks and line down the side, matching My Bookings: the line fills to the first step still to do.
+  // "3 of 6 done" above the checklist: Function Details from the details on the left, the rest from the checklist.
   function syncSteps() {
-    const done = draft.live ? liveStatus().done : checklistSteps.map((s) => s.id).filter((id) => stepDone(id, draft));
-    let reached = true;
-    checklistSteps.forEach((s) => {
-      const li = $(`.bk-step[data-step="${s.id}"]`);
-      const isDone = done.includes(s.id);
-      const mark = $(".bk-mark", li);
-      mark.className = `bk-mark${isDone ? " is-done" : ""}`;
-      mark.innerHTML = isDone ? `${tickIcon}<span class="sr-only">Complete</span>` : '<span class="sr-only">Not complete yet</span>';
-      reached = reached && isDone;
-      li.classList.toggle("is-filled", reached);
-      const sum = $(`[data-sum="${s.id}"]`, li);
-      sum.textContent = summaryOf(s.id, isDone);
-      sum.classList.toggle("is-empty", !isDone);
-    });
+    const status = draft.live ? liveStatus() : savedStatus(draft.id);
+    const done = checklistSteps.map((s) => s.id).filter((id) => (id === "function"
+      ? stepDone(id, draft)
+      : status ? status.done.includes(id) : stepDone(id, draft)));
     const count = done.length;
     $("#bk-check-sum").innerHTML = count === checklistSteps.length ? `${tickIcon}Checklist complete` : `${count} of ${checklistSteps.length} done`;
     $("#bk-check-sum").classList.toggle("is-complete", count === checklistSteps.length);
@@ -262,6 +257,11 @@
     const adding = !booking;
     const blank = { id: "", space: spaceFilter || D.spaces[0].id, title: "", contact: "", phone: "", email: "", start: "", end: "", guests: "", sel: emptySel() };
     draft = toDraft(booking || blank);
+    if (adding) {
+      draft.id = `bk${nextId}`;
+      // A new booking starts with a clean checklist, even if an earlier unsaved one used this id.
+      try { localStorage.removeItem(`ff.myBookings.v4.${draft.id}`); localStorage.removeItem(`${CHECKLIST_KEY}.${draft.id}`); } catch (e) { /* nothing saved */ }
+    }
     showErrors = false;
     box.dataset.mode = adding ? "add" : "edit";
     $("#bk-heading").textContent = adding ? "Add Booking" : "Edit Booking";
@@ -271,9 +271,10 @@
     $("#bk-lead").textContent = draft.live
       ? `${draft.contact} is filling this in on their My Bookings page, so it updates here as they go.`
       : adding
-        ? "Tick anything already agreed with the customer. They can finish the rest, and choose dishes and drinks within each package, on their own checklist."
+        ? "Fill in anything already agreed with the customer. They can finish the rest on their own checklist."
         : "These are the customer’s checklist answers. Change them here if they’ve asked you to.";
-    renderSteps();
+    syncSteps();
+    loadChecklist();
     form.scrollTop = 0;
     box.showModal();
     box.scrollTop = 0;
@@ -310,7 +311,8 @@
     };
     const adding = box.dataset.mode === "add";
     if (adding) {
-      D.bookings.push({ ...record, id: `bk${nextId++}`, sel: draft.sel });
+      D.bookings.push({ ...record, id: draft.id, sel: draft.sel });
+      nextId++;
     } else {
       const b = D.bookings.find((x) => x.id === draft.id);
       Object.assign(b, record);
@@ -337,6 +339,9 @@
     }
     // TODO(confirm): a real cancellation needs the venue's refund rules and a message to the customer.
     const title = draft.title;
+    if (!draft.live) {
+      try { localStorage.removeItem(`ff.myBookings.v4.${draft.id}`); localStorage.removeItem(`${CHECKLIST_KEY}.${draft.id}`); } catch (e) { /* nothing saved */ }
+    }
     D.bookings.splice(D.bookings.findIndex((x) => x.id === draft.id), 1);
     box.close();
     render($("#cal-columns").scrollLeft);
@@ -346,17 +351,8 @@
   form.addEventListener("input", (e) => {
     const t = e.target;
     if (t.dataset.f) draft[t.dataset.f] = t.value;
-    if (t.id === "bk-notes") {
-      draft.sel.notes = t.value;
-      if (t.value.trim() && draft.sel.none.notes) {
-        draft.sel.none.notes = false;
-        $('[data-none="notes"]').checked = false;
-      }
-    }
-    if (t.type !== "checkbox") {
-      syncSteps();
-      if (showErrors) syncErrors();
-    }
+    syncSteps();
+    if (showErrors) syncErrors();
   });
 
   form.addEventListener("change", (e) => {
@@ -367,41 +363,6 @@
       if (showErrors) syncErrors();
       return;
     }
-    if (t.type !== "checkbox") return;
-    const s = draft.sel;
-    if (t.dataset.none) {
-      const id = t.dataset.none;
-      s.none[id] = t.checked;
-      if (t.checked) {
-        if (id === "notes") {
-          s.notes = "";
-          $("#bk-notes").value = "";
-        } else {
-          s[id] = [];
-          $$(`[data-g="${id}"]`).forEach((c) => { c.checked = false; });
-        }
-      }
-    } else {
-      const id = t.dataset.g;
-      const opt = options[id].find((o) => o.key === t.value);
-      if (t.checked) {
-        // Options sharing a group (the two cake choices) replace each other.
-        if (opt.group) {
-          options[id].filter((o) => o.group === opt.group && o.key !== opt.key).forEach((o) => {
-            s[id] = s[id].filter((k) => k !== o.key);
-            $(`[data-g="${id}"][value="${o.key}"]`).checked = false;
-          });
-        }
-        s[id] = [...s[id], t.value];
-        if (hasNone(id)) {
-          s.none[id] = false;
-          $(`[data-none="${id}"]`).checked = false;
-        }
-      } else {
-        s[id] = s[id].filter((k) => k !== t.value);
-      }
-    }
-    syncSteps();
   });
 
   form.addEventListener("submit", (e) => {
@@ -410,13 +371,6 @@
   });
 
   form.addEventListener("click", (e) => {
-    const head = e.target.closest("button.bk-step-head");
-    if (head) {
-      const open = head.getAttribute("aria-expanded") !== "true";
-      head.setAttribute("aria-expanded", String(open));
-      $(`#${head.getAttribute("aria-controls")}`).classList.toggle("is-open", open);
-      return;
-    }
     if (e.target.closest("#bk-cancel")) cancelClicked();
     if (e.target.closest("#bk-close")) box.close();
   });
@@ -453,9 +407,9 @@
   // Picks up progress made on My Bookings in another tab, or before coming back with the dev tabs.
   function refreshLive() {
     render($("#cal-columns").scrollLeft);
-    if (box.open && draft.live) syncSteps();
+    if (box.open) syncSteps();
   }
-  window.addEventListener("storage", (e) => { if (e.key === CHECKLIST_KEY) refreshLive(); });
+  window.addEventListener("storage", (e) => { if (e.key && e.key.startsWith(CHECKLIST_KEY)) refreshLive(); });
   window.addEventListener("pageshow", (e) => { if (e.persisted) refreshLive(); });
   // "View Bookings" on the function spaces page opens calendar.html?space=<id>, showing just that room.
   const fromLink = new URLSearchParams(location.search).get("space");

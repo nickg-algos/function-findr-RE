@@ -1,0 +1,222 @@
+/* My Bookings (mockup p7 and p14), from V44-(14)[3]: a white title strip, then the booking on a grey band with
+   shadowed step cards, line icons and round checklist marks. Loaded after styles.css and scoped to body.mb,
+   because styles.css holds the older version of these rules. */
+
+.mb { --mb-grey: #58595b; --mb-gap: 1.1rem; }
+.mb-head { max-width: calc(62rem + 2 * var(--gutter)); margin-inline: auto; padding: 3rem var(--gutter) 2.25rem; }
+.mb .mb-head h1 { margin: 0; color: #231f20; font-size: 2.6rem; font-weight: 500; letter-spacing: -.03em; }
+.mb-band { background: #f6f1ec; } /* warm stone; TODO(confirm): new tint, add to the brand kit if kept */
+.mb .page { padding-block: 2.75rem 4.5rem; }
+
+/* Booking summary */
+.mb-event { margin-bottom: 2rem; color: var(--mb-grey); font-size: 2.6rem; font-weight: 500; letter-spacing: -.03em; line-height: 1.1; }
+.mb .booking-top { align-items: flex-start; gap: 1.5rem 2.25rem; }
+.mb .booking-photo { width: 19.5rem; border-radius: 1rem; }
+.mb .info-row { grid-template-columns: 2.4rem 1fr; gap: 1.6rem; margin-bottom: 1.4rem; color: var(--mb-grey); font-size: 1.2rem; }
+.mb .info-row svg { width: 2.4rem; height: 2.4rem; }
+.mb-sub { display: block; margin-top: .45rem; }
+.mb .contact-card { flex: 0 0 auto; min-width: 17rem; margin: 0 0 0 auto; padding: 1.5rem 2.25rem 1.75rem; border: 0; border-radius: .9rem; background: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .14); color: var(--mb-grey); }
+.mb .contact-card .detail-fields { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-auto-flow: row; gap: .8rem; font-size: 1.05rem; line-height: 1.3; }
+/* Side by side, the card is as tall as the photo, so their tops and bottoms line up. */
+@media (min-width: 901px) {
+  .mb .contact-card { display: flex; flex-direction: column; justify-content: flex-start; min-height: 19.5rem; padding-block: 1.25rem; }
+}
+.mb .details-note { margin: 0; color: var(--mb-grey); }
+/* "Please Select:" above the step titles on the left; the finalise date on the right, over the card ends. */
+.mb-note-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 2rem; margin-block: 2.25rem 1rem; }
+.mb-select { color: #231f20; font-size: 1.15rem; font-weight: 700; }
+.mb .mb-note-row .details-note { margin-left: auto; padding-right: 2rem; }
+@media (max-width: 600px) { .mb .mb-note-row .details-note { margin-left: 0; padding-right: 0; } }
+
+/* Step cards */
+.mb .cards, .mb .col { gap: var(--mb-gap); }
+.mb .card { border: 0; box-shadow: 0 2px 6px rgba(0, 0, 0, .14); }
+.mb .card-head { min-height: 4.75rem; gap: 0; padding: .5rem 2rem .5rem 1.75rem; }
+.mb .card-head[aria-expanded="true"] > .card-icon { transform: none; }
+.mb .card-icon { flex: none; width: 3.5rem; height: 3.5rem; margin-right: 2.75rem; color: var(--mb-grey); transition: none; }
+.mb .card-head .card-title { color: var(--mb-grey); font-size: 1.2rem; }
+.mb .card-sum { padding-left: 1rem; color: var(--mb-grey); font-size: 1.15rem; }
+.mb .card-head > svg:last-child { width: .8rem; height: 1.25rem; margin-left: 2.5rem; color: var(--mb-grey); }
+.mb .card-body { padding: 0 2rem 1.5rem; }
+
+/* Checklist marks to the right of the cards (as in the mockup): round, joined by a line,
+   filled orange with a white tick when done; the line fills orange down to the first step still to do. */
+.mb .step { --head: 4.25rem; --mark: 2.1rem; --rail: 3.75rem; padding-right: var(--rail); }
+.mb .step::before, .mb .step::after { bottom: calc(-1 * var(--mb-gap) - var(--mark-top)); background: #a7a9ac; }
+.mb .step::after { background: var(--orange); }
+.mb .step-mark { right: 0; border: 2px solid #a7a9ac; border-radius: 50%; }
+.mb .step-mark.is-done { background: var(--orange); border-color: var(--orange); }
+.mb .step-mark .tick { width: 62%; height: 62%; }
+.mb .form-foot { margin-top: 2rem; padding-right: var(--rail, 3.75rem); color: var(--mb-grey); }
+.mb .card-head { min-height: 4.25rem; }
+.mb .card-icon { width: 3rem; height: 3rem; }
+/* The finalise date lines up with the card ends, left of the ticks. */
+.mb .mb-note-row { padding-right: 3.75rem; }
+
+/* A little brand colour: orange line icons on the steps and the booking details. */
+.mb .card-icon, .mb .info-row svg { color: var(--orange); }
+
+@media (max-width: 900px) {
+  .mb .contact-card { margin: 0; flex: 1 1 100%; }
+}
+@media (max-width: 700px) {
+  .mb-head { padding-block: 2rem 1.5rem; }
+  .mb .mb-head h1 { font-size: 2rem; margin: 0; }
+  .mb-event { font-size: 1.9rem; margin-bottom: 1.25rem; }
+  .mb .booking-photo { width: 100%; aspect-ratio: 3 / 2; }
+  .mb .info-row { grid-template-columns: 2rem 1fr; gap: 1rem; font-size: 1.05rem; margin-bottom: 1rem; }
+  .mb .info-row svg { width: 2rem; height: 2rem; }
+  .mb .contact-card { min-width: 0; padding: 1.25rem 1.25rem 1.5rem; }
+  .mb .contact-card .detail-fields { font-size: 1rem; }
+  .mb .step { --head: 4.25rem; --mark: 1.7rem; --rail: 2.6rem; }
+  .mb .form-foot, .mb .mb-note-row { padding-right: 2.6rem; }
+}
+@media (max-width: 600px) {
+  .mb .card-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "icon title chev" "icon sum chev"; column-gap: .9rem; row-gap: .1rem; min-height: 4.25rem; padding: .6rem 1rem; }
+  .mb .card-icon { grid-area: icon; width: 2.25rem; height: 2.25rem; margin: 0; align-self: center; }
+  .mb .card-head .card-title { grid-area: title; font-size: 1.05rem; }
+  .mb .card-sum { grid-area: sum; margin: 0; padding: 0; text-align: left; font-size: .92rem; }
+  .mb .card-head > svg:last-child { grid-area: chev; align-self: center; margin-left: .25rem; }
+  .mb .card-body { padding: 0 1rem 1.25rem; }
+}
+
+/* Function Details: Edit, then Save Changes or Cancel */
+.mb .mb-edit, .mb .mb-save, .mb .mb-cancel { min-height: 2.75rem; padding: .4rem 1.4rem; border: 2px solid var(--orange); border-radius: .35rem; font: inherit; font-weight: 600; cursor: pointer; transition: background-color .15s, color .15s, border-color .15s; }
+.mb .mb-edit { background: #fff; color: var(--orange-text); }
+.mb .mb-edit:hover { background: var(--orange); color: #fff; }
+.mb .mb-save { background: var(--orange); color: #fff; }
+.mb .mb-save:hover { background: #fff; color: var(--orange-text); }
+.mb .mb-cancel { border-color: #d1d3d4; background: #d1d3d4; color: #000; }
+.mb .mb-cancel:hover { border-color: #808285; }
+.mb .mb-edit:focus-visible, .mb .mb-save:focus-visible, .mb .mb-cancel:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+.mb .fn-edit { display: grid; gap: .75rem; }
+.mb .fn-field label { display: block; margin-bottom: .35rem; color: #231f20; font-weight: 700; }
+.mb .fn-field input { width: 100%; min-height: 2.75rem; padding: .5rem .75rem; border: 2px solid transparent; border-radius: .35rem; background: var(--field); color: #231f20; font: inherit; }
+.mb .fn-field input:focus { border-color: var(--orange); outline: none; box-shadow: 0 0 0 3px rgba(208, 112, 47, .2); }
+.mb .fn-field input[aria-invalid] { border-color: var(--error); }
+.mb .fn-err { margin-top: .3rem; color: var(--error); font-size: .9rem; font-weight: 600; }
+.mb .fn-err:empty { display: none; }
+.mb .fn-hint { margin-top: .4rem; color: #6d6e71; font-size: .9rem; }
+.mb .fn-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.25rem; }
+@media (max-width: 600px) {
+  .mb .fn-actions > button { flex: 1 1 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mb .mb-edit, .mb .mb-save, .mb .mb-cancel { transition: none; }
+}
+
+/* Function Details box beside the photo: white, shadowed, as tall as the photo (it grows while editing). */
+.mb .fn-card { flex: 1 1 15rem; min-width: 0; padding: 1.25rem 1.5rem 1.4rem; border-radius: .9rem; background: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .14); color: var(--mb-grey); }
+.mb .fn-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.mb .fn-head h3 { margin: 0; color: var(--mb-grey); font-size: 1.2rem; font-weight: 700; }
+.mb .fn-head .mb-edit { min-height: 2.25rem; padding: .2rem 1rem; }
+.mb .fn-card .info-row { grid-template-columns: 1.75rem 1fr; gap: .9rem; margin-bottom: .9rem; font-size: 1.05rem; line-height: 1.3; }
+.mb .fn-card .info-row:last-child { margin-bottom: 0; }
+.mb .fn-card .info-row svg { width: 1.75rem; height: 1.75rem; }
+.mb .fn-card .info-row strong { color: #231f20; font-weight: 700; text-transform: uppercase; }
+.mb .fn-card > .fn-hint { margin-top: .75rem; }
+@media (min-width: 901px) {
+  .mb .booking-top { gap: 1.5rem; align-items: stretch; }
+  .mb .booking-photo { align-self: flex-start; }
+  .mb .fn-card { min-height: 19.5rem; }
+  .mb .contact-card { align-self: flex-start; }
+}
+@media (max-width: 900px) {
+  .mb .fn-card { flex: 1 1 100%; }
+}
+
+/* One white box beside the photo: Function Details (with Edit) and Contact Details side by side,
+   split by a hairline. It overrides the separate-card rules above. */
+.mb .mb-box { display: flex; flex: 1 1 30rem; min-width: 0; border-radius: .9rem; background: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .14); }
+.mb .mb-box .fn-card, .mb .mb-box .contact-card { flex: 1 1 0; min-width: 0; min-height: 0; margin: 0; padding: 1.25rem 1.5rem 1.4rem; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.mb .mb-box .fn-card { flex-grow: 1.25; }
+.mb .mb-box .contact-card { display: block; border-left: 1px solid var(--line); }
+.mb .mb-box .fn-head { min-height: 2.25rem; }
+.mb .mb-box .contact-card .detail-fields { gap: .75rem; font-size: 1rem; }
+@media (min-width: 901px) {
+  .mb .mb-box { min-height: 19.5rem; }
+}
+@media (max-width: 900px) {
+  .mb .mb-box { flex: 1 1 100%; }
+}
+@media (max-width: 600px) {
+  .mb .mb-box { flex-direction: column; }
+  .mb .mb-box .fn-card, .mb .mb-box .contact-card { flex: none; }
+  .mb .mb-box .contact-card { border-left: 0; border-top: 1px solid var(--line); }
+  .mb .mb-box .fn-card, .mb .mb-box .contact-card { padding: 1.1rem 1.1rem 1.25rem; }
+}
+
+/* Edit sits at the bottom of the Function Details side, filling the space under the guests line. */
+.mb .mb-box .fn-card { display: flex; flex-direction: column; }
+.mb .fn-foot { margin-top: auto; padding-top: 1rem; padding-left: 2.65rem; }
+.mb .fn-foot .mb-edit { min-height: 2.5rem; padding: .3rem 1.5rem; }
+.mb .mb-box .fn-head { min-height: 0; }
+.mb .mb-box .contact-card { align-self: stretch; }
+.mb .mb-box .fn-card { padding-bottom: 1.1rem; }
+.mb .fn-foot { padding-top: .6rem; }
+.mb .fn-foot .mb-edit { min-height: 2.25rem; }
+
+/* Balanced halves: equal widths and the same label-over-value layout on both sides.
+   Edit sits in the bottom-right corner of the whole box. */
+.mb .mb-box { position: relative; }
+.mb .mb-box .fn-card, .mb .mb-box .contact-card { flex: 1 1 0; padding: 1.1rem 1.5rem; }
+.mb .mb-box .contact-card { padding-bottom: 3.4rem; } /* room for Edit in the corner */
+.mb .mb-box .fn-head { margin-bottom: .75rem; }
+.mb .mb-box .detail-fields { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-auto-flow: row; gap: .5rem; font-size: 1rem; line-height: 1.3; }
+.mb .mb-box .detail-fields dt { color: #231f20; font-weight: 500; }
+.mb .mb-box .detail-fields dd { color: var(--mb-grey); }
+.mb .mb-box .fn-foot { position: absolute; right: 1.25rem; bottom: .9rem; margin: 0; padding: 0; }
+.mb .mb-box .fn-foot .mb-edit { min-height: 2rem; padding: .15rem 1.4rem; }
+@media (max-width: 600px) {
+  .mb .mb-box .fn-card, .mb .mb-box .contact-card { flex: none; }
+  .mb .mb-box .contact-card { padding-bottom: 3.75rem; }
+}
+
+/* Line the two sides up row by row: the box is one grid and each side shares its rows (subgrid),
+   so "Date:" sits level with "Email:" and so on, even when the venue runs to two lines. */
+@media (min-width: 601px) {
+  .mb .mb-box { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(5, auto) 1fr; }
+  .mb .mb-box .fn-card, .mb .mb-box .contact-card { display: grid; grid-row: 1 / -1; grid-template-rows: subgrid; row-gap: .5rem; align-content: start; }
+  .mb .mb-box .detail-fields { display: contents; }
+  .mb .mb-box .fn-head { margin-bottom: .25rem; }
+}
+@media (min-width: 901px) {
+  /* The photo takes the box's height, so their tops and bottoms always match. */
+  .mb .booking-photo { align-self: stretch; height: auto; aspect-ratio: auto; min-height: 12rem; contain: size; }
+  .mb .mb-box { min-height: 0; }
+}
+@media (min-width: 601px) {
+  /* No reserved strip under the details: Edit sits level with the last line, bottom right. */
+  .mb .mb-box .contact-card { padding-bottom: 1.1rem; }
+  .mb .mb-box .fn-foot { bottom: 1.1rem; }
+  .mb .mb-box .contact-card dl > div:last-child { padding-right: 5.5rem; }
+}
+@media (min-width: 601px) {
+  /* Contact Details stacks on its own (no gap under "Sam Sample"), leaving room for Edit below it.
+     Both headings still share the first row, so they stay level. */
+  .mb .mb-box .contact-card { display: block; }
+  .mb .mb-box .contact-card .fn-head { margin-bottom: .75rem; }
+  .mb .mb-box .contact-card .detail-fields { display: grid; gap: .5rem; }
+  .mb .mb-box .contact-card dl > div:last-child { padding-right: 0; }
+}
+.mb .mb-select span { color: var(--mb-grey); font-size: 1rem; font-weight: 400; }
+.mb .mb-select strong { color: #231f20; font-weight: 600; }
+
+/* "Checklist complete - SUBMIT" in brand orange (by request) in place of green; inverts on hover. */
+.mb .pill { border-color: var(--orange); background: var(--orange); color: #fff; }
+.mb .pill:hover { background: #fff; color: var(--orange-text); }
+.mb .pill:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
+/* Editing contact details: the form fills the whole box (Function Details hides until Save or Cancel),
+   fields two by two, with the note and buttons on one line, so the box stays about the same height. */
+.mb .mb-box.is-editing .fn-card { display: none; }
+.mb .mb-box.is-editing .contact-card { grid-column: 1 / -1; border: 0; padding-bottom: 1.1rem; }
+.mb .mb-box.is-editing .fn-edit { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem 1.25rem; }
+.mb .mb-box.is-editing .fn-field label { margin-bottom: .2rem; font-weight: 500; }
+.mb .mb-box.is-editing .fn-field input { min-height: 2.5rem; padding: .35rem .7rem; }
+.mb .fn-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.25rem; margin-top: 1rem; }
+.mb .fn-bottom .fn-hint { margin: 0; }
+.mb .fn-bottom .fn-actions { margin: 0; }
+@media (max-width: 600px) {
+  .mb .mb-box.is-editing .fn-edit { grid-template-columns: minmax(0, 1fr); }
+}

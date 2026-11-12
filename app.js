@@ -114,11 +114,23 @@
   // The animated wrapper for anything that drops down; sync() toggles is-open on it.
   const fold = (attrs, body) => `<div class="fold" ${attrs}><div class="fold-inner">${body}</div></div>`;
 
+  // Line drawings for each step's card (mockup p7).
+  const stepIcons = {
+    function: '<path d="M7 42l9-26 17 17z"/><path d="M12 30l7 7M14 23l11 11"/><path d="M24 11l2-6M30 15l6-5M34 22l7-1M36 6l1 4M41 13l3-2"/><path d="M33 30c3 3 7 2 8-1"/>',
+    food: '<path d="M8 6v11c0 3 2 5 4 5s4-2 4-5V6M12 6v10M12 22v20"/><path d="M24 6c-3 0-4 4-4 8s2 7 4 7 4-3 4-7-1-8-4-8zM24 21v21"/><path d="M38 42V6c3 2 5 8 5 16h-5"/>',
+    dietary: '<path d="M10 44V10"/><path d="M10 16c-3-1-4-4-4-6 3 0 4 2 4 6zM10 16c3-1 4-4 4-6-3 0-4 2-4 6zM10 24c-3-1-4-4-4-6 3 0 4 2 4 6zM10 24c3-1 4-4 4-6-3 0-4 2-4 6zM10 32c-3-1-4-4-4-6 3 0 4 2 4 6zM10 32c3-1 4-4 4-6-3 0-4 2-4 6zM10 10c-1-2 0-4 0-5 0 1 1 3 0 5z"/><path d="M29 43c-6 0-9-4-8-9 1-5 4-7 4-12 0-4 2-8 4-8s4 4 4 8c0 5 3 7 4 12 1 5-2 9-8 9z"/><circle cx="29" cy="34" r="4"/>',
+    bev: '<path d="M14 43l-8-8 17-17c2-2 5-3 7-3l5-5 3 3-5 5c0 2-1 5-3 7z"/><path d="M12 31l5 5M16 27l5 5"/><path d="M38 6l2-2M42 10l2-1M40 2v0"/>',
+    additional: '<ellipse cx="17" cy="16" rx="8" ry="10"/><ellipse cx="31" cy="19" rx="7" ry="9"/><path d="M17 26l-1.5 2h3zM31 28l-1.5 2h3zM17 28c-2 5 2 8 0 14M31 30c2 4-2 7 0 12"/>',
+    notes: '<path d="M15 35l2-6 20-20 4 4-20 20z"/><path d="M33 13l4 4M15 35l6-2"/><path d="M6 43c4-3 6 0 9-1 3-1 4-4 8-3 3 1 4 3 8 2 3-1 5-3 9-2"/>',
+  };
+  const stepIcon = (id) => `<svg class="card-icon" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${stepIcons[id]}</svg>`;
+
   function card(id, title, body) {
     return `<div class="step">
       <span class="step-mark" data-step="${id}"></span>
       <section class="card">
       <h3><button type="button" class="card-head" data-card="${id}" aria-expanded="false" aria-controls="card-${id}">
+        ${stepIcon(id)}
         <span class="card-title">${esc(title)}</span>
         <span class="card-sum" data-sum="${id}"></span>
         ${chevronIcon}
@@ -131,35 +143,111 @@
   function renderBooking() {
     const b = D.booking;
     $("#booking").innerHTML = `
-      <h1>${esc(b.eventName)}</h1>
+      <h2 class="mb-event">${esc(b.eventName)}</h2>
       <div class="booking-top">
         <img class="booking-photo" src="assets/space.jpg" alt="${esc(b.space)} with round timber tables and stools">
-        <div class="booking-info">
-          <h2>${esc(b.venue)}</h2>
-          <div class="info-row">
-            <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="currentColor" d="M24 7c-6.6 0-12 5.2-12 11.7C12 27.4 24 41 24 41s12-13.6 12-22.3C36 12.200 30.600 7 24 7zm0 16a4.500 4.500 0 1 1 0-9 4.500 4.500 0 0 1 0 9z" transform="translate(-6 0) scale(.75)"/></svg>
-            <p>${b.addressLines.map(esc).join(" ")}<br>${esc(b.space)}</p>
-          </div>
-          <div class="info-row">
-            <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="9" width="32" height="28" rx="5"/><path d="M5 18h32M13 5v7M29 5v7M12 25h3M20 25h3M12 31h3"/><circle cx="35" cy="34" r="8" fill="#fff"/><path d="M35 29v5l3 2"/></svg>
-            <p>${b.dateLines.map(esc).join(" ")}&nbsp; · &nbsp;${esc(b.time)}</p>
-          </div>
-          <div class="info-row">
-            <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="15" cy="13" r="5"/><circle cx="33" cy="13" r="5"/><path d="M7 41V27c0-4 3-7 8-7s8 3 8 7v14M25 41V27c0-4 3-7 8-7s8 3 8 7v14M12 41V29M18 41V29M30 41V29M36 41V29"/></svg>
-            <p>${esc(b.guests)} Guests&nbsp; · &nbsp;${esc(b.layout)}</p>
-          </div>
+        <div class="mb-box">
+        <section class="fn-card" id="fn-body" aria-labelledby="fn-title">${fnBody()}</section>
+        <section class="contact-card" id="contact-body" aria-labelledby="contact-title">${contactBody()}</section>
         </div>
-        <section class="contact-card" aria-labelledby="contact-title">
-          <h3 id="contact-title">Contact Details</h3>
-          <dl class="detail-fields">
-            <div><dt>Contact person:</dt><dd>${esc(b.contact)}</dd></div>
-            <div><dt>Phone number:</dt><dd>${esc(b.phone)}</dd></div>
-            <div><dt>Email:</dt><dd>${esc(b.email)}</dd></div>
-            <div><dt>Contact Person on Night:</dt><dd>${esc(b.contactOnNight)}</dd></div>
-          </dl>
-        </section>
       </div>
-      <p class="details-note">Finalise by <strong>${esc(b.finaliseBy)}</strong>. You can make changes until then.</p>`;
+      <div class="mb-note-row">
+        <p class="mb-select">Please Make Your Selections. <span>You can change this as many times as you like until the <strong>${esc(b.finaliseBy)}</strong>.</span></p>
+      </div>`;
+  }
+
+  /* ---------- Function Details (read only) and Contact Details (editable) ---------- */
+
+  function fnBody() {
+    const b = D.booking;
+    return `<div class="fn-head"><h3 id="fn-title">Function Details</h3></div>
+      <dl class="detail-fields">
+        <div><dt>Venue:</dt><dd>${esc(b.venue)}, ${esc(b.space)}<br>${b.addressLines.map(esc).join(" ")}</dd></div>
+        <div><dt>Date:</dt><dd>${b.dateLines.map(esc).join(" ")}</dd></div>
+        <div><dt>Time:</dt><dd>${esc(b.time)} – ${esc(b.endTime)}</dd></div>
+        <div><dt>Guests:</dt><dd>${esc(b.guests)}</dd></div>
+      </dl>`;
+  }
+
+  // Contact edits are personal details, so they stay in this tab only (sessionStorage), like the booking form's.
+  // TODO(confirm): whether the venue should be told when contact details change, and whether the
+  // contact person at the event is required.
+  const CONTACT_KEY = "ff.myBookingsContact.v1";
+  const contactFields = [
+    { id: "contact", label: "Contact person:", type: "text", attrs: 'maxlength="80" autocomplete="name"' },
+    { id: "email", label: "Email:", type: "email", attrs: 'maxlength="120" autocomplete="email" inputmode="email"' },
+    { id: "phone", label: "Phone number:", type: "tel", attrs: 'maxlength="20" autocomplete="tel" inputmode="tel"' },
+    { id: "contactOnNight", label: "Contact Person at event:", type: "text", attrs: 'maxlength="80" autocomplete="off"' },
+  ];
+  try { Object.assign(D.booking, JSON.parse(sessionStorage.getItem(CONTACT_KEY)) || {}); } catch (e) { /* the sample details */ }
+
+  function contactBody(editing = false) {
+    const b = D.booking;
+    const head = '<div class="fn-head"><h3 id="contact-title">Contact Details</h3></div>';
+    if (!editing) {
+      return `${head}
+        <dl class="detail-fields">
+          ${contactFields.map((f) => `<div><dt>${f.label}</dt><dd>${esc(b[f.id])}</dd></div>`).join("")}
+        </dl>
+        <div class="fn-foot"><button type="button" class="mb-edit" data-fn="edit" aria-label="Edit contact details">Edit</button></div>`;
+    }
+    return `${head}<div class="fn-edit">
+        ${contactFields.map((f) => `
+        <div class="fn-field">
+          <label for="cd-${f.id}">${f.label}</label>
+          <input id="cd-${f.id}" type="${f.type}" ${f.attrs} value="${esc(b[f.id])}" aria-describedby="cd-${f.id}-msg">
+          <p class="fn-err" id="cd-${f.id}-msg"></p>
+        </div>`).join("")}
+      </div>
+      <div class="fn-bottom">
+        <p class="fn-hint">To change the function details, please contact ${esc(b.venue)}.</p>
+        <div class="fn-actions">
+          <button type="button" class="mb-save" data-fn="save">Save Changes</button>
+          <button type="button" class="mb-cancel" data-fn="cancel">Cancel</button>
+        </div>
+      </div>`;
+  }
+
+  const phoneOk = (v) => /^(?:\+?61|0)[2-478]\d{8}$/.test(v.replace(/[\s()-]/g, ""));
+  const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+
+  function fnAction(action) {
+    const body = $("#contact-body");
+    // While editing, the form takes the whole box (Function Details hides) so the box doesn't balloon.
+    const box = $(".mb-box");
+    box.classList.toggle("is-editing", action === "edit");
+    if (action === "save") box.classList.add("is-editing"); // until the checks pass
+    if (action === "edit") {
+      body.innerHTML = contactBody(true);
+      $("#cd-contact").focus();
+      return;
+    }
+    if (action === "cancel") {
+      body.innerHTML = contactBody();
+      $('[data-fn="edit"]').focus();
+      return;
+    }
+    const v = Object.fromEntries(contactFields.map((f) => [f.id, $(`#cd-${f.id}`).value.trim()]));
+    const errors = {
+      contact: v.contact ? "" : "Please enter the contact person’s name.",
+      email: !v.email ? "Please enter an email address." : emailOk(v.email) ? "" : "Please enter an email address, like name@example.com.",
+      phone: !v.phone ? "Please enter a phone number." : phoneOk(v.phone) ? "" : "Please enter an Australian phone number, like 0412 345 678.",
+      contactOnNight: v.contactOnNight ? "" : "Please enter who we should talk to on the day.",
+    };
+    Object.entries(errors).forEach(([id, text]) => {
+      $(`#cd-${id}-msg`).textContent = text;
+      $(`#cd-${id}`).toggleAttribute("aria-invalid", !!text);
+    });
+    const bad = Object.keys(errors).find((id) => errors[id]);
+    if (bad) { $(`#cd-${bad}`).focus(); return; }
+
+    Object.assign(D.booking, v);
+    let kept = true;
+    try { sessionStorage.setItem(CONTACT_KEY, JSON.stringify(v)); } catch (e) { kept = false; }
+    box.classList.remove("is-editing");
+    body.innerHTML = contactBody();
+    save(kept ? "Contact details saved." : "Contact details updated, but they can’t be saved in this browser.");
+    $('[data-fn="edit"]').focus();
   }
 
   function renderForm() {
@@ -173,14 +261,6 @@
 
     $("#cards").innerHTML = `
       <div class="col">
-        ${card("function", "Function Details", `<dl class="detail-fields">
-          <div><dt>Event name:</dt><dd>${esc(b.eventName)}</dd></div>
-          <div><dt>Number of guests:</dt><dd>${esc(b.guests)}</dd></div>
-          <div><dt>Layout:</dt><dd>${esc(b.layout)}</dd></div>
-          <div><dt>Function space:</dt><dd>${esc(b.space)}</dd></div>
-          <div><dt>Function date:</dt><dd>${esc(b.dateLines.join(" "))}</dd></div>
-          <div><dt>Time:</dt><dd>${esc(b.time)} to ${esc(b.endTime)}</dd></div>
-        </dl>`)}
         ${card("food", "Food Packages", D.foodPackages.map(pkgRow).join(""))}
         ${card("dietary", "Dietary Accommodations", `<div class="line">${check("none.dietary", "None")}</div>${dietary}`)}
       </div>
@@ -189,7 +269,7 @@
         ${card("additional", "Additional", list([check("none.additional", "None"), ...D.additional.map((a) => check(`additional.${a.id}`, a.lines.map(esc).join("<br>"), { val: a.val }))]))}
       </div>
       <div class="col col-rest">
-        ${card("notes", "Notes for the venue", `<div class="line">${check("none.notes", "None")}</div><label for="notes" class="notes-label">Anything extra you would like the Venue to know?</label><textarea id="notes" maxlength="2000"></textarea>`)}
+        ${card("notes", "Notes for the Venue", `<div class="line">${check("none.notes", "None")}</div><label for="notes" class="notes-label">Anything extra you would like the Venue to know?</label><textarea id="notes" maxlength="2000"></textarea>`)}
       </div>`;
   }
 
@@ -400,6 +480,7 @@
     steps.forEach((id) => {
       const el = $(`[data-step="${id}"]`);
       const done = stepDone(id);
+      if (!el) return; // Function Details is the box at the top, not a step card.
       el.className = `step-mark${done ? " is-done" : ""}`;
       el.innerHTML = done ? `${tickIcon}<span class="sr-only">Complete</span>` : '<span class="sr-only">Not complete yet</span>';
       reached = reached && done;
@@ -436,7 +517,7 @@
   }
 
   const countOf = (obj) => Object.values(obj || {}).filter(Boolean).length;
-  const selected = (n) => (n ? `${n} selected` : "None selected");
+  const selected = (n) => (n ? `${n} selected` : "Select");
 
   function syncSummaries() {
     const ticked = (list) => list.filter((p) => state.pkg[p.id]).length;
@@ -446,11 +527,12 @@
     });
     const sums = {
       function: `${D.booking.eventName}, ${D.booking.guests} guests`,
-      food: selected(ticked(D.foodPackages)),
-      bev: selected(ticked(D.beveragePackages)),
-      dietary: getPath("none.dietary") ? "None" : diets.join(", ") || "None selected",
-      additional: getPath("none.additional") ? "None" : selected(countOf(state.additional)),
-      notes: getPath("none.notes") ? "None" : state.notes.trim() ? "Added" : "",
+      // "Confirmed" once the step is finished (its tick fills); until then, how many are ticked.
+      food: stepDone("food") ? "Confirmed" : selected(ticked(D.foodPackages)),
+      bev: stepDone("bev") ? "Confirmed" : selected(ticked(D.beveragePackages)),
+      dietary: getPath("none.dietary") ? "Confirmed" : diets.join(", ") || "Select",
+      additional: getPath("none.additional") ? "Confirmed" : countOf(state.additional) ? "Confirmed" : "Select",
+      notes: getPath("none.notes") ? "Confirmed" : state.notes.trim() ? "Added" : "",
     };
     $$("[data-sum]").forEach((el) => { el.textContent = sums[el.dataset.sum] || ""; });
 
@@ -636,6 +718,9 @@
     const anchor = e.target.closest('a[href="#"]');
     if (anchor) { e.preventDefault(); return; }
 
+    const fnBtn = e.target.closest("[data-fn]");
+    if (fnBtn) { fnAction(fnBtn.dataset.fn); return; }
+
     const cardBtn = e.target.closest("[data-card]");
     if (cardBtn) {
       state.cards[cardBtn.dataset.card] = !state.cards[cardBtn.dataset.card];
@@ -686,8 +771,13 @@
 
   /* ---------- Start ---------- */
 
+  delete state.fn; // From the earlier Function Details editor.
   renderBooking();
   renderForm();
+  // Enter in the Contact Details fields saves them.
+  $("#booking").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && e.target.closest(".fn-edit")) { e.preventDefault(); fnAction("save"); }
+  });
 
   document.addEventListener("change", onChange);
   document.addEventListener("input", onInput);

@@ -50,10 +50,11 @@
   }
 
   const state = load();
+  if (!Array.isArray(state.dietary)) state.dietary = []; // saved before dietary moved to this page
   // Drop-downs start closed on every visit, as on the My Bookings page.
   const open = {};
   // Food Options and Beverage Options start open so the choices are in view.
-  const sectionOpen = { food: true, bev: true };
+  const sectionOpen = { food: true, bev: true, diet: false };
   const secOpen = {};
   const rowMessages = {};
 
@@ -222,6 +223,7 @@
 
   function render() {
     $("#setup-intro").textContent = D.intro;
+    $("#diet-list").innerHTML = D.dietary.map((o) => `<label class="check"><input type="checkbox" data-diet value="${esc(o)}"${state.dietary.includes(o) ? " checked" : ""}><span>${esc(o)}</span></label>`).join("");
     $("#food-list").innerHTML = D.food.map(catBlock).join("");
     $("#bev-list").innerHTML = D.beverage.map(catBlock).join("");
   }
@@ -246,6 +248,13 @@
       const n = sections[key].filter((cat) => state.cats[cat.id].on).length;
       $(`[data-section-sum="${key}"]`).textContent = n ? `${n} selected` : "";
     });
+    // Dietary Accommodations: what's ticked, or "Select an option".
+    $('[data-section-toggle="diet"]').setAttribute("aria-expanded", String(sectionOpen.diet));
+    $("#diet-fold").classList.toggle("is-open", sectionOpen.diet);
+    const diet = state.dietary;
+    const dietSum = $('[data-section-sum="diet"]');
+    dietSum.textContent = !diet.length ? "Select an option" : diet.length > 2 ? `${diet.length} selected` : diet.join(", ");
+    dietSum.classList.toggle("is-set", diet.length > 0);
     allCats.filter((cat) => !cat.plain).forEach((cat) => {
       const isOpen = !!open[cat.id];
       $(`[data-cat-toggle="${cat.id}"]`).setAttribute("aria-expanded", String(isOpen));
@@ -325,6 +334,12 @@
 
   function onChange(e) {
     const el = e.target;
+    if (el.hasAttribute("data-diet")) {
+      state.dietary = $$("[data-diet]").filter((c) => c.checked).map((c) => c.value);
+      sync();
+      save();
+      return;
+    }
     if (el.dataset.catOn) {
       const id = el.dataset.catOn;
       state.cats[id].on = el.checked;

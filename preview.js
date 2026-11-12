@@ -65,6 +65,9 @@
     seated: '<svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6v13h9v9M4 19l-1 9M13 19h3"/><rect x="15" y="12" width="14" height="4" rx="1"/><path d="M18 16v12M26 16v12"/><circle cx="22" cy="5" r="2"/><path d="M22 7v5"/></svg>',
     standing: '<svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6" r="2.500"/><circle cx="22" cy="6" r="2.500"/><path d="M6 29v-8l-1-6c0-2 2-3 4-3h2c2 0 4 1 4 3M26 29v-8l1-6c0-2-2-3-4-3h-2c-2 0-4 1-4 3M10 29v-7M22 29v-7"/></svg>',
   };
+  // Dietary Accommodations are set once for the venue on the food & beverage page (localStorage ff.venueSetup.v1).
+  let venueDietary = [];
+  try { venueDietary = (JSON.parse(localStorage.getItem("ff.venueSetup.v1")) || {}).dietary || []; } catch (e) { /* use the space's own */ }
   const bullets = (items, cls = "") => (items.length ? `<ul class="sp-bullets ${cls}">${items.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : '<p class="pv-none">None selected</p>');
   const row = (title, body) => `<section class="sp-row"><h2>${esc(title)}</h2><div>${body}</div></section>`;
   const pkgs = (list) => (list.length
@@ -111,7 +114,7 @@
         ${row("About this space", `<div class="sp-about">${s.about.map((p) => `<p>${esc(p)}</p>`).join("")}</div>`)}
         <section class="sp-row"><h2>Event options</h2><div class="sp-options">
           <div class="sp-sub"><img class="sp-icon" src="assets/step-food.png" alt="" width="124" height="74"><h3>Food Packages</h3>${pkgs(packages.food)}</div>
-          <div class="sp-sub"><img class="sp-icon" src="assets/step-dietary.png" alt="" width="124" height="74"><h3>Dietary Accommodations</h3>${bullets(s.dietary, "sp-two")}</div>
+          <div class="sp-sub"><img class="sp-icon" src="assets/step-dietary.png" alt="" width="124" height="74"><h3>Dietary Accommodations</h3>${bullets(venueDietary.length ? venueDietary : s.dietary || [], "sp-two")}</div>
           <div class="sp-sub"><img class="sp-icon" src="assets/step-bev.png" alt="" width="124" height="74"><h3>Beverage Options</h3>${pkgs(packages.bev)}</div>
           <div class="sp-sub"><img class="sp-icon" src="assets/step-additional.png" alt="" width="124" height="74"><h3>Additional</h3>${bullets(s.additional)}</div>
         </div></section>

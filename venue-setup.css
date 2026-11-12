@@ -108,3 +108,13 @@ textarea.vs-field { display: block; resize: vertical; line-height: 1.4; }
   .vs-pill { width: 100%; }
   .vs-btn { width: 100%; }
 }
+
+/* Dietary Accommodations (moved from space set-up): tick boxes in a grid; the summary goes green once set. */
+.vs-diet { margin: 0; padding: .75rem 1rem 1.25rem; border: 0; }
+#diet-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem 1.5rem; }
+#diet-list .check { display: flex; align-items: center; gap: .6rem; min-height: 2rem; color: #231f20; }
+.card-sum.is-set { color: var(--ok); font-weight: 600; }
+[data-section-sum="diet"]:not(.is-set) { color: #6d6e71; font-weight: 400; }
+@media (max-width: 600px) {
+  #diet-list { grid-template-columns: minmax(0, 1fr); }
+}

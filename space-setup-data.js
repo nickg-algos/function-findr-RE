@@ -15,7 +15,6 @@ window.FF_SPACE_SETUP = {
   ],
 
   groups: [
-    { id: "dietary", label: "Dietary Accommodations", options: ["Vegetarian", "Vegan", "Gluten-Free", "Allergy-Friendly", "Halal"] },
     { id: "additional", label: "Additional", options: ["Own Decorations Welcome (please avoid adhesives or confetti)", "BYO Celebration Cake permitted ($1pp venue cutting fee applies)", "BYO Celebration Cake - guest to cut. No cakeage"] },
     { id: "facilities", label: "Facilities", options: ["AV Equipment: TV, projector, screen, microphone, speakers", "Air conditioning / Heating", "Wi-Fi Access", "Dance Floor", "Smoking Area", "Pool Table", "High and Low Tables"] },
     { id: "accessibility", label: "Accessibility", options: ["Wheelchair Accessible", "Wheelchair Accessible Toilets", "Lift Access"] },

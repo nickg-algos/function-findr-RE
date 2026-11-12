@@ -31,9 +31,20 @@
   const bufferSelect = (id) => `<select id="${id}" aria-describedby="${id}-msg ${id}-hint"><option value="">Choose a time</option>${D.bufferSteps.map((m) => `<option value="${m}">${duration(m)}</option>`).join("")}</select>`;
 
   const sessionTable = (s) => `
-    <fieldset class="ss-session" aria-describedby="${s.id}-msg">
-      <legend>${esc(s.label)} <span class="gs-req" aria-hidden="true">*</span></legend>
-      <table class="ss-hours">
+    <fieldset class="ss-session ss-group" aria-describedby="${s.id}-msg">
+      <legend class="sr-only">${esc(s.label)}</legend>
+      <button type="button" class="ss-group-head" aria-expanded="false" aria-controls="${s.id}-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">${esc(s.label)} <span class="gs-req" aria-hidden="true">*</span></span><span class="ss-group-sum" id="${s.id}-sum">Select an option</span></button>
+      <div class="fold" id="${s.id}-body"><div class="fold-inner"><div class="ss-fold-body">
+      <table class="ss-hours" id="${s.id}-same">
+        <thead><tr><th scope="col"><span class="sr-only">Days</span></th><th scope="col">Open</th><th scope="col">Close</th><th scope="col">Min Spend</th></tr></thead>
+        <tbody><tr>
+          <th scope="row">Every day</th>
+          <td><input type="time" step="900" id="${s.id}-all-open" aria-label="Every day ${s.id === "day" ? "day time" : "evening"} opening time"></td>
+          <td><input type="time" step="900" id="${s.id}-all-close" aria-label="Every day ${s.id === "day" ? "day time" : "evening"} closing time"></td>
+          <td>${money(`${s.id}-all-spend`, `Every day ${s.id === "day" ? "day time" : "evening"} minimum spend`)}</td>
+        </tr></tbody>
+      </table>
+      <table class="ss-hours" id="${s.id}-days" hidden>
         <thead><tr><th scope="col"><span class="sr-only">Day</span></th><th scope="col">Open</th><th scope="col">Close</th><th scope="col">Min Spend</th></tr></thead>
         <tbody>${DAYS.map((d, i) => `<tr>
           <th scope="row">${d}</th>
@@ -42,7 +53,9 @@
           <td>${money(`${s.id}-spend-${i}`, `${d} ${s.id === "day" ? "day time" : "evening"} minimum spend`)}</td>
         </tr>`).join("")}</tbody>
       </table>
+      <button type="button" class="ss-split" data-split="${s.id}" aria-controls="${s.id}-same ${s.id}-days">Set different hours for each day</button>
       ${err(s.id)}
+      </div></div></div>
     </fieldset>`;
 
   $("#setup").innerHTML = `
@@ -66,29 +79,49 @@
       </div>
       <div class="gs-field gs-wide">
         <label for="s-about">About Your Function Space <span class="gs-eg">(max ${D.maxWords} words. Capture the atmosphere, style and feel that make your space special. Describe the extras that WOW)</span> <span class="gs-req" aria-hidden="true">*</span></label>
-        <textarea id="s-about" rows="4" aria-required="true" aria-describedby="s-about-count s-about-msg"></textarea>
+        <textarea id="s-about" rows="2" aria-required="true" aria-describedby="s-about-count s-about-msg"></textarea>
         <p class="gs-hint ss-count" id="s-about-count">0 of ${D.maxWords} words</p>${err("s-about")}
       </div>
     </div>
 
-    <div class="ss-row ss-cap-row">
-      <fieldset class="ss-cap" aria-describedby="s-cap-msg">
-        <legend>Capacity <span class="gs-req" aria-hidden="true">*</span></legend>
-        <div class="ss-cap-fields">
-          <label class="ss-small">Max. guest count standing:<input id="s-standing" type="number" min="1" step="1" inputmode="numeric"></label>
-          <label class="ss-small">Max. guest count seated:<input id="s-seated" type="number" min="1" step="1" inputmode="numeric"></label>
+    <section class="ss-row ss-fb" aria-labelledby="fb-title">
+      <div class="ss-fb-card">
+        <div class="ss-fb-icons" aria-hidden="true"><img src="assets/step-food.png" alt="" width="124" height="74"><img src="assets/step-bev.png" alt="" width="124" height="74"></div>
+        <div class="ss-fb-text">
+          <h2 id="fb-title">Food &amp; Beverage Catering:</h2>
+          <p>Add your food packages and drinks so customers can choose them when they book.</p>
         </div>
-        ${err("s-cap")}
-      </fieldset>
-      <div class="ss-deposit">
-        <span class="ss-legend">Deposit <span class="gs-req" aria-hidden="true">*</span></span>
+        <a class="ss-menu-link" href="venue-setup.html">Enter menu items <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5L13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </section>
+
+    <div class="ss-pair">
+    <section class="ss-row ss-group" aria-labelledby="cap-title">
+      <h2 id="cap-title"><button type="button" class="ss-group-head" aria-expanded="false" aria-controls="cap-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">Capacity <span class="gs-req" aria-hidden="true">*</span></span><span class="ss-group-sum" id="cap-sum">Select an option</span></button></h2>
+      <div class="fold" id="cap-body"><div class="fold-inner"><div class="ss-fold-body">
+        <fieldset class="ss-cap" aria-describedby="s-cap-msg">
+          <legend class="sr-only">Capacity</legend>
+          <div class="ss-cap-fields">
+            <label class="ss-small">Max. guest count standing:<input id="s-standing" type="number" min="1" step="1" inputmode="numeric"></label>
+            <label class="ss-small">Max. guest count seated:<input id="s-seated" type="number" min="1" step="1" inputmode="numeric"></label>
+          </div>
+          ${err("s-cap")}
+        </fieldset>
+      </div></div></div>
+    </section>
+
+    <section class="ss-row ss-group" aria-labelledby="deposit-title">
+      <h2 id="deposit-title"><button type="button" class="ss-group-head" aria-expanded="false" aria-controls="deposit-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">Deposit <span class="gs-req" aria-hidden="true">*</span></span><span class="ss-group-sum" id="deposit-sum">Select an option</span></button></h2>
+      <div class="fold" id="deposit-body"><div class="fold-inner"><div class="ss-fold-body ss-deposit">
         <label class="ss-small" for="s-deposit">Amount required to secure booking:</label>
         ${money("s-deposit", "Deposit amount")}${err("s-deposit")}
-      </div>
+      </div></div></div>
+    </section>
     </div>
 
-    <section class="ss-row" aria-labelledby="buffer-title">
-      <h2 id="buffer-title">Booking Buffer Times</h2>
+    <section class="ss-row ss-group" aria-labelledby="buffer-title">
+      <h2 id="buffer-title"><button type="button" class="ss-group-head" aria-expanded="false" aria-controls="buffer-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">Booking Buffer Times <span class="gs-req" aria-hidden="true">*</span></span><span class="ss-group-sum" id="buffer-sum">Select an option</span></button></h2>
+      <div class="fold" id="buffer-body"><div class="fold-inner"><div class="ss-fold-body">
       <p>These times will automatically be added before and after each booking to allow for venue setup, pack down and cleaning.</p>
       <p class="ss-example" id="ss-example" aria-live="polite"></p>
       <div class="gs-grid ss-buffers">
@@ -103,10 +136,12 @@
           ${bufferSelect("s-packdown")}${err("s-packdown")}
         </div>
       </div>
+      </div></div></div>
     </section>
 
-    <section class="ss-row" aria-labelledby="extras-title">
-      <h2 id="extras-title">Extras</h2>
+    <section class="ss-row ss-group" aria-labelledby="extras-title">
+      <h2 id="extras-title"><button type="button" class="ss-group-head" aria-expanded="false" aria-controls="extras-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">Extras</span><span class="ss-group-sum" id="extras-sum">None</span></button></h2>
+      <div class="fold" id="extras-body"><div class="fold-inner"><div class="ss-fold-body">
       <p class="gs-hint">Enter amounts including GST. Customers see these charges up front, before they book.</p>
       <div class="ss-extras">${D.extras.map((x) => `
         <fieldset class="ss-extra">
@@ -115,25 +150,18 @@
           <label class="check"><input type="radio" name="x-${x.id}" value="yes"><span>Yes</span></label>
           ${money(`x-${x.id}-amount`, `${x.label} amount`)}${err(`x-${x.id}-amount`)}
         </fieldset>`).join("")}</div>
+      </div></div></div>
     </section>
 
     <div class="ss-row ss-sessions">${D.sessions.map(sessionTable).join("")}</div>
 
-    <section class="ss-row ss-fb" aria-labelledby="fb-title">
-      <div class="ss-fb-card">
-        <div class="ss-fb-icons" aria-hidden="true"><img src="assets/step-food.png" alt="" width="124" height="74"><img src="assets/step-bev.png" alt="" width="124" height="74"></div>
-        <div class="ss-fb-text">
-          <h2 id="fb-title">Food &amp; Beverage Catering:</h2>
-          <p>Add your food packages and drinks so customers can choose them when they book.</p>
-        </div>
-        <a class="ss-menu-link" href="venue-setup.html">Enter menu items <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5L13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      </div>
-    </section>
-
     ${D.groups.map((g) => `
     <fieldset class="ss-row ss-group">
-      <legend>${esc(g.label)}</legend>
-      <div class="ss-checks">${g.options.map((o, i) => `<label class="check"><input type="checkbox" name="g-${g.id}" value="${esc(o)}" id="g-${g.id}-${i}"><span>${esc(o)}</span></label>`).join("")}</div>
+      <legend class="sr-only">${esc(g.label)}</legend>
+      <button type="button" class="ss-group-head" aria-expanded="false" aria-controls="g-${g.id}-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">${esc(g.label)}</span><span class="ss-group-sum" id="g-${g.id}-sum">Select an option</span></button>
+      <div class="fold" id="g-${g.id}-body"><div class="fold-inner">
+        <div class="ss-checks">${g.options.map((o, i) => `<label class="check"><input type="checkbox" name="g-${g.id}" value="${esc(o)}" id="g-${g.id}-${i}"><span>${esc(o)}</span></label>`).join("")}</div>
+      </div></div>
     </fieldset>`).join("")}
 
     <section class="ss-row" aria-labelledby="img-title">
@@ -162,7 +190,14 @@
 
   /* ---------- Live bits: word count, buffer example, extras amounts ---------- */
 
+  // The About box starts two lines tall and grows with what's typed (up to a limit, then it scrolls).
+  function fitAbout() {
+    const t = el("s-about");
+    t.style.height = "auto";
+    t.style.height = `${t.scrollHeight + 2}px`;
+  }
   function syncWords() {
+    fitAbout();
     const n = words(el("s-about").value);
     el("s-about-count").textContent = `${n} of ${D.maxWords} words`;
     el("s-about-count").classList.toggle("is-over", n > D.maxWords);
@@ -182,6 +217,108 @@
       if (!yes) { amount.value = ""; el(`x-${x.id}-amount-msg`).textContent = ""; amount.removeAttribute("aria-invalid"); }
     });
   }
+  /* ---------- Available hours: one "Every day" row, or each day separately ---------- */
+
+  const split = { day: false, evening: false };
+  const fields = ["open", "close", "spend"];
+  function setSplit(sid, on) {
+    split[sid] = on;
+    el(`${sid}-same`).hidden = on;
+    el(`${sid}-days`).hidden = !on;
+    el(`${sid}-msg`).textContent = "";
+    $$(`[data-split="${sid}"]`, form).forEach((b) => { b.textContent = on ? "Use the same hours every day" : "Set different hours for each day"; });
+    if (on) {
+      // Start every empty day from the "Every day" times.
+      DAYS.forEach((d, i) => {
+        if (fields.every((f) => !el(`${sid}-${f}-${i}`).value.trim())) fields.forEach((f) => { el(`${sid}-${f}-${i}`).value = el(`${sid}-all-${f}`).value; });
+      });
+    } else {
+      // Back to one row: start it from the first day that has hours.
+      const i = DAYS.findIndex((d, k) => fields.some((f) => el(`${sid}-${f}-${k}`).value.trim()));
+      if (i >= 0) fields.forEach((f) => { el(`${sid}-all-${f}`).value = el(`${sid}-${f}-${i}`).value; });
+    }
+  }
+  form.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-split]");
+    if (!b) return;
+    const sid = b.dataset.split;
+    setSplit(sid, !split[sid]);
+    el(split[sid] ? `${sid}-open-0` : `${sid}-all-open`).focus();
+  });
+
+  /* ---------- Booking Buffer Times and Extras: drop-downs with a summary ---------- */
+
+  const shortTime = (m) => [Math.floor(m / 60) ? `${Math.floor(m / 60)} hr` : "", m % 60 ? `${m % 60} min` : ""].filter(Boolean).join(" ") || "0 min";
+  function syncFoldSums() {
+    // Capacity: "100 standing · 50 seated"; Deposit: "$250".
+    const st = el("s-standing").value.trim(), se = el("s-seated").value.trim();
+    const cap = el("cap-sum");
+    cap.textContent = st || se ? [st && `${st} standing`, se && `${se} seated`].filter(Boolean).join(" · ") : "Select an option";
+    cap.classList.toggle("is-set", !!(st || se));
+    const dep = el("s-deposit").value.trim();
+    const depSum = el("deposit-sum");
+    depSum.textContent = dep ? `$${dep.replace(/^\$/, "")}` : "Select an option";
+    depSum.classList.toggle("is-set", !!dep);
+    const setup = el("s-setup").value;
+    const pack = el("s-packdown").value;
+    const b = el("buffer-sum");
+    b.textContent = setup && pack ? `Setup ${shortTime(Number(setup))} · Pack down ${shortTime(Number(pack))}` : setup || pack ? "Incomplete" : "Select an option";
+    b.classList.toggle("is-set", !!(setup && pack));
+    const on = D.extras.filter((x) => form.querySelector(`input[name="x-${x.id}"][value="yes"]`).checked)
+      .map((x) => { const v = el(`x-${x.id}-amount`).value.trim(); return v ? `${x.label} $${v.replace(/^\$/, "")}` : x.label; });
+    const x = el("extras-sum");
+    x.textContent = on.length ? on.join(", ") : "None";
+    x.classList.toggle("is-set", on.length > 0);
+  }
+  // Hours: "Every day 12:00pm – 4:00pm · $1800", "Different hours each day", "Incomplete" or "Select an option".
+  function syncHours(sid) {
+    const sum = el(`${sid}-sum`);
+    let text = "Select an option";
+    let set = false;
+    if (split[sid]) {
+      const open = DAYS.filter((d, i) => el(`${sid}-open-${i}`).value && el(`${sid}-close-${i}`).value).length;
+      text = open ? `Different hours each day (${open} day${open === 1 ? "" : "s"} open)` : "Different hours each day";
+      set = open > 0;
+    } else {
+      const o = el(`${sid}-all-open`).value, c = el(`${sid}-all-close`).value, m = el(`${sid}-all-spend`).value.trim();
+      if (o && c) { text = `Every day ${timeLabel(toMins(o))} – ${timeLabel(toMins(c))}${m ? ` · $${m.replace(/^\$/, "")}` : ""}`; set = true; }
+      else if (o || c || m) text = "Incomplete";
+    }
+    sum.textContent = text;
+    sum.classList.toggle("is-set", set);
+  }
+  const syncAllHours = () => D.sessions.forEach((s) => syncHours(s.id));
+  form.addEventListener("input", syncAllHours);
+  form.addEventListener("change", syncAllHours);
+  form.addEventListener("click", (e) => { if (e.target.closest("[data-split]")) syncAllHours(); });
+  syncAllHours();
+  form.addEventListener("input", syncFoldSums);
+  form.addEventListener("change", syncFoldSums);
+  syncFoldSums();
+
+  /* ---------- Tick-box groups (Dietary, Additional, Facilities…): drop-downs, closed until clicked ---------- */
+
+  // The summary on each closed group: what's ticked (in green), or "Select an option".
+  function syncGroup(g) {
+    const ticked = $$(`input[name="g-${g.id}"]:checked`, form).map((c) => c.value);
+    const sum = el(`g-${g.id}-sum`);
+    sum.textContent = !ticked.length ? "Select an option" : ticked.length > 2 ? `${ticked.length} selected` : ticked.join(", ");
+    sum.classList.toggle("is-set", ticked.length > 0);
+  }
+  const syncGroups = () => D.groups.forEach(syncGroup);
+  form.addEventListener("click", (e) => {
+    const head = e.target.closest(".ss-group-head");
+    if (!head) return;
+    const open = head.getAttribute("aria-expanded") !== "true";
+    head.setAttribute("aria-expanded", String(open));
+    el(head.getAttribute("aria-controls")).classList.toggle("is-open", open);
+  });
+  form.addEventListener("change", (e) => {
+    const g = e.target.name && D.groups.find((x) => e.target.name === `g-${x.id}`);
+    if (g) syncGroup(g);
+  });
+  syncGroups();
+
   el("s-about").addEventListener("input", syncWords);
   form.addEventListener("change", (e) => {
     if (e.target.matches("#s-setup, #s-packdown")) syncExample();
@@ -239,13 +376,30 @@
       form.querySelector(`input[name="x-${x.id}"][value="${cents === null ? "no" : "yes"}"]`).checked = true;
       el(`x-${x.id}-amount`).value = toDollars(cents);
     });
-    D.sessions.forEach((s) => editing.hours[s.id].forEach((h, i) => {
-      if (!h) return;
-      el(`${s.id}-open-${i}`).value = hhmm(h.open);
-      el(`${s.id}-close-${i}`).value = hhmm(h.close);
-      el(`${s.id}-spend-${i}`).value = toDollars(h.minSpendCents);
-    }));
+    D.sessions.forEach((s) => {
+      const list = editing.hours[s.id];
+      const key = (h) => (h ? `${h.open}-${h.close}-${h.minSpendCents}` : "closed");
+      const same = list.every((h) => key(h) === key(list[0]));
+      if (same) {
+        if (list[0]) {
+          el(`${s.id}-all-open`).value = hhmm(list[0].open);
+          el(`${s.id}-all-close`).value = hhmm(list[0].close);
+          el(`${s.id}-all-spend`).value = toDollars(list[0].minSpendCents);
+        }
+        return;
+      }
+      list.forEach((h, i) => {
+        if (!h) return;
+        el(`${s.id}-open-${i}`).value = hhmm(h.open);
+        el(`${s.id}-close-${i}`).value = hhmm(h.close);
+        el(`${s.id}-spend-${i}`).value = toDollars(h.minSpendCents);
+      });
+      setSplit(s.id, true);
+    });
     D.groups.forEach((g) => $$(`input[name="g-${g.id}"]`, form).forEach((c) => { c.checked = (editing[g.id] || []).includes(c.value); }));
+    syncGroups();
+    syncFoldSums();
+    syncAllHours();
     editing.photos.forEach((src, i) => setPhoto(i, src));
     syncWords(); syncExample();
     D.extras.forEach((x) => { const amount = el(`x-${x.id}-amount`); const v = amount.value; syncExtras(); amount.value = v; });
@@ -303,18 +457,23 @@
     D.sessions.forEach((s) => {
       let problem = "";
       let first = null;
-      hours[s.id] = DAYS.map((d, i) => {
-        const open = el(`${s.id}-open-${i}`);
-        const close = el(`${s.id}-close-${i}`);
-        const spend = el(`${s.id}-spend-${i}`);
+      // In "Every day" mode the one row stands for all seven days; otherwise each day is checked on its own.
+      const rows = split[s.id] ? DAYS.map((d, i) => [d, String(i)]) : [[null, "all"]];
+      const checked = rows.map(([d, key]) => {
+        const id = (f) => (key === "all" ? `${s.id}-all-${f}` : `${s.id}-${f}-${key}`);
+        const open = el(id("open"));
+        const close = el(id("close"));
+        const spend = el(id("spend"));
+        const whose = d ? `${d}’s` : "the";
+        const Whose = d ? `${d}’s` : "The";
         [open, close, spend].forEach((x) => x.removeAttribute("aria-invalid"));
         if (!open.value && !close.value && !spend.value.trim()) return null; // closed
         const spendCents = spend.value.trim() ? parseCents(spend.value) : null;
         let rowProblem = "";
-        if (!open.value || !close.value) rowProblem = `Please give ${d}’s opening and closing times, or leave the whole row blank if closed.`;
-        else if (toMins(close.value) <= toMins(open.value) && !s.overnight) rowProblem = `${d}’s closing time needs to be after its opening time.`;
-        else if (toMins(close.value) === toMins(open.value)) rowProblem = `${d}’s opening and closing times are the same.`;
-        else if (spend.value.trim() && spendCents === null) rowProblem = `Please enter ${d}’s minimum spend in dollars, like 1800.`;
+        if (!open.value || !close.value) rowProblem = `Please give ${whose} opening and closing times, or leave the whole row blank if closed.`;
+        else if (toMins(close.value) <= toMins(open.value) && !s.overnight) rowProblem = `${Whose} closing time needs to be after ${d ? "its" : "the"} opening time.`;
+        else if (toMins(close.value) === toMins(open.value)) rowProblem = `${Whose} opening and closing times are the same.`;
+        else if (spend.value.trim() && spendCents === null) rowProblem = `Please enter ${whose} minimum spend in dollars, like 1800.`;
         if (rowProblem) {
           problem = problem || rowProblem;
           const target = !open.value ? open : !close.value || rowProblem.includes("closing") || rowProblem.includes("same") ? close : spend;
@@ -328,12 +487,13 @@
         if (c <= o) c += 1440; // evening running past midnight
         return { open: o, close: c, minSpendCents: spendCents };
       });
+      hours[s.id] = split[s.id] ? checked : DAYS.map(() => (checked[0] ? { ...checked[0] } : null));
       el(`${s.id}-msg`).textContent = problem;
       if (first) bad.push(first);
     });
     if (!anyOpen && !el("day-msg").textContent && !el("evening-msg").textContent) {
       el("day-msg").textContent = "Please add the hours the space is available on at least one day.";
-      bad.push(el("day-open-0"));
+      bad.push(el(split.day ? "day-open-0" : "day-all-open"));
     }
 
     const ticked = {};
@@ -360,7 +520,13 @@
     e.preventDefault();
     const action = (e.submitter && e.submitter.dataset.action) || "preview";
     const { bad, space } = collect();
-    if (bad.length) { bad[0].focus(); return; }
+    if (bad.length) {
+      const fold = bad[0].closest(".fold");
+      const head = fold && !fold.classList.contains("is-open") && form.querySelector(`[aria-controls="${fold.id}"]`);
+      if (head) { head.setAttribute("aria-expanded", "true"); fold.classList.add("is-open"); }
+      bad[0].focus();
+      return;
+    }
 
     // Same name twice replaces the earlier one; an edited space replaces itself even if renamed.
     const isOld = (s) => s.id === space.id || (editing && s.id === editing.id);

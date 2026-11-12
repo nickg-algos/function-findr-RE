@@ -1,6 +1,6 @@
 /* "Hi …, welcome!" (mockup page 18): set up a function space. Card, fields and photo boxes come from get-started.css. */
 
-.ss h1 { font-size: clamp(1.9rem, 3.4vw, 2.9rem); }
+.ss h1 { font-size: clamp(1.9rem, 3.4vw, 2.9rem); font-weight: 500; }
 .ss-added { margin-top: .75rem; color: var(--ok); font-weight: 600; text-align: center; }
 .ss-added:empty { display: none; }
 .ss-block { margin-top: 1.75rem; }
@@ -119,3 +119,59 @@ fieldset { min-width: 0; }
 @media (prefers-reduced-motion: reduce) {
   .ss-preview, .ss-another { transition: none; }
 }
+
+/* Available hours: "Every day" row first; the per-day table opens from this link. */
+.ss-split { display: inline-flex; align-items: center; min-height: 2.75rem; margin-top: .35rem; padding: 0; border: 0; background: none; color: var(--orange-text); font: inherit; font-size: .92rem; font-weight: 600; cursor: pointer; }
+.ss-split:hover { text-decoration: underline; }
+.ss-split:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+.ss-hours tbody tr:only-child th { white-space: nowrap; }
+
+/* Tick-box groups as drop-downs: chevron, title, and a summary (green once something is ticked). */
+.ss-group { padding-block: .4rem; }
+.ss-group-head { display: flex; align-items: center; gap: .75rem; width: 100%; min-height: 2.75rem; padding: .3rem .25rem; border: 0; background: none; color: #000; font: inherit; font-size: .95rem; text-align: left; cursor: pointer; }
+.ss-group-head:hover { background: #f7f7f8; }
+.ss-group-head:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+.ss-group-head svg { flex: none; width: .55rem; height: .85rem; color: #58595b; transition: transform .25s; }
+.ss-group-head[aria-expanded="true"] svg { transform: rotate(90deg); }
+.ss-group-title { font-weight: 600; }
+.ss-group-sum { min-width: 0; margin-left: auto; overflow: hidden; color: #6d6e71; font-size: .88rem; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
+.ss-group-sum.is-set { color: var(--ok); font-weight: 600; }
+.ss-group .ss-checks { padding: .5rem .25rem 1rem 1.55rem; }
+@media (max-width: 600px) {
+  .ss-group .ss-checks { padding-left: .25rem; }
+  .ss-group-sum { max-width: 40%; white-space: normal; line-height: 1.25; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ss-group-head svg { transition: none; }
+}
+/* The group names are for screen readers only now (the drop-down button shows them), so undo the floated full-width legend. */
+.ss-row.ss-group > legend.sr-only { float: none; width: 1px; margin: 0; }
+
+/* Booking Buffer Times and Extras use the same drop-down head; their heading wraps the button. */
+.ss-group > h2 { margin: 0; font: inherit; }
+.ss-fold-body { padding: .4rem .25rem 1rem 1.55rem; }
+@media (max-width: 600px) {
+  .ss-fold-body { padding-left: .25rem; }
+}
+
+/* The two hours sections are drop-downs too, stacked like the rest. */
+.ss-sessions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2.5rem; align-items: start; }
+.ss-sessions .ss-session { border-top: 1px solid #808285; }
+@media (max-width: 1000px) {
+  .ss-sessions { grid-template-columns: minmax(0, 1fr); }
+}
+.ss-row.ss-sessions { padding-block: 0; border-top: 0; }
+.ss-session.ss-group > legend.sr-only { float: none; width: 1px; margin: 0; }
+
+/* About Your Function Space: small until the venue writes more. */
+.ss .gs-field textarea#s-about { min-height: 3.4rem; max-height: 22rem; overflow-y: auto; resize: none; }
+
+/* Capacity and Deposit side by side (stacked on phones). */
+.ss-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2.5rem; align-items: start; }
+@media (max-width: 700px) {
+  .ss-pair { grid-template-columns: minmax(0, 1fr); }
+}
+/* Side by side the hours tables have half the width, so keep them compact. */
+.ss-sessions .ss-fold-body { padding-left: .25rem; }
+.ss-sessions .ss-hours input[type=time] { min-width: 0; }
+.ss-sessions .ss-hours .ss-money input { width: 4.5rem; }

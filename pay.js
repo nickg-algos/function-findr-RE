@@ -1,4 +1,4 @@
-// "Review & Pay" (mockup page 12): pay.html?venue=…&space=…&date=…&start=…&end=…&guests=…&layout=…
+// "Review & Pay" (mockup page 12): pay.html?venue=…&space=…&date=…&start=…&end=…&guests=…
 // Shows the booking with the contact details from page 11 and takes the deposit.
 // DEMO ONLY: no payment is taken and card details never leave the page (CLAUDE.md §9 asks before
 // any payment flow). TODO(confirm): Stripe (Connect) for real deposits; whether the deposit includes
@@ -32,8 +32,8 @@
   if (example) {
     const d = new Date();
     d.setDate(d.getDate() + 21 + ((6 - d.getDay() + 7) % 7));
-    req = { date: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`, start: 1140, end: Math.min(1380, listing.latest), guests: Math.min(80, space.standing || space.seated), name: "Sam’s 40th Birthday", layout: space.standing ? "standing" : "seated" };
-    draft = { eventName: req.name, contact: "Sam Sample", phone: "0491 570 156", email: "sam.sample@example.com", layout: req.layout };
+    req = { date: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`, start: 1140, end: Math.min(1380, listing.latest), guests: Math.min(80, space.standing || space.seated), name: "Sam’s 40th Birthday" };
+    draft = { eventName: req.name, contact: "Sam Sample", phone: "0491 570 156", email: "sam.sample@example.com" };
   }
 
   const detailsHref = `details.html?${A.toParams(listing.id, space.id, req)}`;
@@ -45,7 +45,7 @@
   };
 
   const found = A.problems(listing, space, req);
-  const problem = Object.values(found).find(Boolean) || (!req.layout && "Please choose seated or standing.");
+  const problem = Object.values(found).find(Boolean);
   const clash = problem ? null : A.clash(CAL, listing, space, req);
   if (problem || clash) { stop("Review & Pay", problem || A.clashText(space, clash), "Go back to your details"); return; }
   if (!draft || !draft.contact || !draft.phone || !draft.email) { stop("Review & Pay", "We need the contact person’s details before you pay the deposit.", "Fill in your details"); return; }
@@ -74,7 +74,7 @@
           ${row("Email:", draft.email)}
           ${row("Function date:", `${A.dayName(req.date)} ${A.longDate(req.date)}`)}
           <div class="pay-pair">${row("Start time:", A.timeLabel(req.start))}${row("End time:", A.timeLabel(req.end))}</div>
-          <div class="pay-pair">${row("Number of guests:", String(req.guests))}${row("Layout:", req.layout === "seated" ? "Seated" : "Standing")}</div>
+          ${row("Number of guests:", String(req.guests))}
         </dl>
         <a class="pay-change" href="${esc(detailsHref)}"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></svg>Make changes</a>
       </section>

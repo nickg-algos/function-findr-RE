@@ -12,7 +12,6 @@
 .dt-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .25rem 1rem; padding: .6rem 0 .75rem; border-top: 1px solid #808285; }
 .dt-row:last-of-type { border-bottom: 1px solid #808285; }
 .dt-three { grid-template-columns: 1.6fr 1fr 1fr; }
-.dt-three .dt-layouts { grid-column: 2 / -1; }
 .dt-wide { grid-column: 1 / -1; }
 .dt-field { display: grid; align-content: start; gap: .3rem; min-width: 0; margin: 0; padding: 0; border: 0; }
 .dt-field label, .dt-label { color: #231f20; font-size: .92rem; font-weight: 600; }
@@ -28,12 +27,6 @@
 .dt-field [aria-invalid]:not([type=radio]) { border-color: var(--error); }
 .dt-err { color: var(--error); font-size: .85rem; }
 .dt-err:empty { display: none; }
-.dt-layouts { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 2.5rem; padding-top: 1.8rem; }
-.dt-layouts .dt-err { flex-basis: 100%; }
-.dt-layout { align-items: center; min-height: 2.75rem; color: #231f20; font-weight: 600; }
-.dt-layout.is-off { color: #6d6e71; cursor: not-allowed; }
-.dt-muted { color: #6d6e71; font-weight: 400; }
-.dt-layout input:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 
 .dt-note { margin-top: .9rem; color: #58595b; font-size: .92rem; }
 .dt-note a { color: inherit; text-decoration: underline; }
@@ -49,6 +42,5 @@
 }
 @media (max-width: 600px) {
   .dt-row, .dt-three { grid-template-columns: minmax(0, 1fr); }
-  .dt-three .dt-layouts { grid-column: auto; padding-top: .25rem; }
   .dt-actions { max-width: none; }
 }

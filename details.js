@@ -43,8 +43,6 @@
       <p class="dt-err" id="d-${id}-msg"></p>
     </div>`;
   const input = (id, type, value, extra = "") => `<input id="d-${id}" type="${type}" value="${esc(value ?? "")}" aria-describedby="d-${id}-msg" ${extra}>`;
-  const layoutChoice = (value, label, cap) => `
-    <label class="check dt-layout${cap ? "" : " is-off"}"><input type="radio" name="layout" value="${value}"${req.layout === value || draft.layout === value ? " checked" : ""}${cap ? "" : " disabled"} aria-describedby="d-layout-msg"><span>${label}${cap ? ` <span class="dt-muted">(up to ${cap})</span>` : ` <span class="dt-muted">(not offered)</span>`}</span></label>`;
 
   $("#details").innerHTML = `
     <div class="dt-top">
@@ -79,12 +77,6 @@
       </div>
       <div class="dt-row dt-three">
         ${field("guests", "Number of guests:", input("guests", "number", req.guests, 'min="1" step="1" inputmode="numeric"'))}
-        <fieldset class="dt-field dt-layouts">
-          <legend class="sr-only">Seated or standing</legend>
-          ${layoutChoice("seated", "Seated", space.seated)}
-          ${layoutChoice("standing", "Standing", space.standing)}
-          <p class="dt-err" id="d-layout-msg"></p>
-        </fieldset>
       </div>
       <p class="dt-note">All fields must be complete to secure booking.<br>Please refer to all <a href="#">Terms &amp; Conditions</a>.</p>
       <div class="dt-result" id="d-result" role="alert"></div>
@@ -105,8 +97,7 @@
   function show(id, text) {
     const msg = $(`#d-${id}-msg`);
     msg.textContent = text;
-    if (id === "layout") form.querySelectorAll('input[name="layout"]').forEach((r) => r.toggleAttribute("aria-invalid", !!text));
-    else el(id).toggleAttribute("aria-invalid", !!text);
+    el(id).toggleAttribute("aria-invalid", !!text);
     return text;
   }
 
@@ -114,8 +105,7 @@
     e.preventDefault();
     $("#d-result").textContent = "";
     const num = (id) => (el(id).value.trim() === "" ? null : Number(el(id).value));
-    const chosen = form.querySelector('input[name="layout"]:checked');
-    const next = { date: el("date").value, start: num("start"), end: num("end"), guests: num("guests"), name: el("name").value.trim(), layout: chosen ? chosen.value : null };
+    const next = { date: el("date").value, start: num("start"), end: num("end"), guests: num("guests"), name: el("name").value.trim() };
     const contact = el("contact").value.trim();
     const phone = el("phone").value.trim();
     const email = el("email").value.trim();
@@ -130,12 +120,10 @@
       ["start", rules.start],
       ["end", rules.end],
       ["guests", rules.guests],
-      ["layout", next.layout ? "" : "Please choose seated or standing."],
     ];
     const bad = order.filter(([id, text]) => show(id, text));
     if (bad.length) {
-      const id = bad[0][0];
-      (id === "layout" ? form.querySelector('input[name="layout"]:not([disabled])') : el(id)).focus();
+      el(bad[0][0]).focus();
       return;
     }
 
@@ -146,7 +134,7 @@
       return;
     }
 
-    saveDraft({ eventName: next.name, contact, phone, email, layout: next.layout });
+    saveDraft({ eventName: next.name, contact, phone, email });
     location.href = `pay.html?${A.toParams(listing.id, space.id, next)}`;
   });
 })();

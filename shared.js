@@ -19,7 +19,6 @@ window.FF_SHARED = (function () {
     { p: 3, title: "Log in or sign up", href: "login.html" },
     { p: 4, title: "Welcome and wishlists", href: "welcome.html" },
     { p: 5, title: "Wishlist venues", href: "wishlist.html" },
-    { p: 6, title: "My Bookings summary", href: "bookings.html" },
     { p: 7, title: "My Bookings", href: "my-bookings.html" },
     { p: 8, title: "Venue page", href: "venue.html" },
     { p: 9, title: "Function space and availability", href: "space.html" },

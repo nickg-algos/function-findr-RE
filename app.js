@@ -114,16 +114,8 @@
   // The animated wrapper for anything that drops down; sync() toggles is-open on it.
   const fold = (attrs, body) => `<div class="fold" ${attrs}><div class="fold-inner">${body}</div></div>`;
 
-  // Line drawings for each step's card (mockup p7).
-  const stepIcons = {
-    function: '<path d="M7 42l9-26 17 17z"/><path d="M12 30l7 7M14 23l11 11"/><path d="M24 11l2-6M30 15l6-5M34 22l7-1M36 6l1 4M41 13l3-2"/><path d="M33 30c3 3 7 2 8-1"/>',
-    food: '<path d="M8 6v11c0 3 2 5 4 5s4-2 4-5V6M12 6v10M12 22v20"/><path d="M24 6c-3 0-4 4-4 8s2 7 4 7 4-3 4-7-1-8-4-8zM24 21v21"/><path d="M38 42V6c3 2 5 8 5 16h-5"/>',
-    dietary: '<path d="M10 44V10"/><path d="M10 16c-3-1-4-4-4-6 3 0 4 2 4 6zM10 16c3-1 4-4 4-6-3 0-4 2-4 6zM10 24c-3-1-4-4-4-6 3 0 4 2 4 6zM10 24c3-1 4-4 4-6-3 0-4 2-4 6zM10 32c-3-1-4-4-4-6 3 0 4 2 4 6zM10 32c3-1 4-4 4-6-3 0-4 2-4 6zM10 10c-1-2 0-4 0-5 0 1 1 3 0 5z"/><path d="M29 43c-6 0-9-4-8-9 1-5 4-7 4-12 0-4 2-8 4-8s4 4 4 8c0 5 3 7 4 12 1 5-2 9-8 9z"/><circle cx="29" cy="34" r="4"/>',
-    bev: '<path d="M14 43l-8-8 17-17c2-2 5-3 7-3l5-5 3 3-5 5c0 2-1 5-3 7z"/><path d="M12 31l5 5M16 27l5 5"/><path d="M38 6l2-2M42 10l2-1M40 2v0"/>',
-    additional: '<ellipse cx="17" cy="16" rx="8" ry="10"/><ellipse cx="31" cy="19" rx="7" ry="9"/><path d="M17 26l-1.5 2h3zM31 28l-1.5 2h3zM17 28c-2 5 2 8 0 14M31 30c2 4-2 7 0 12"/>',
-    notes: '<path d="M15 35l2-6 20-20 4 4-20 20z"/><path d="M33 13l4 4M15 35l6-2"/><path d="M6 43c4-3 6 0 9-1 3-1 4-4 8-3 3 1 4 3 8 2 3-1 5-3 9-2"/>',
-  };
-  const stepIcon = (id) => `<svg class="card-icon" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${stepIcons[id]}</svg>`;
+  // Each step's icon is the line drawing from the mockup (V44-(14)[3]), cut out in brand orange: assets/step-<id>.png.
+  const stepIcon = (id) => `<img class="card-icon" src="assets/step-${id}.png" alt="" width="124" height="74">`;
 
   function card(id, title, body) {
     return `<div class="step">
@@ -720,6 +712,21 @@
 
     const fnBtn = e.target.closest("[data-fn]");
     if (fnBtn) { fnAction(fnBtn.dataset.fn); return; }
+
+    // "Checklist complete - SUBMIT": tell the customer it's gone through.
+    // TODO(confirm): demo only; nothing is sent to the venue yet, and what happens next (email, venue sign-off) is still to decide.
+    const done = $("#submitted");
+    if (e.target.closest("#checklist-pill .pill")) {
+      if (done.showModal) done.showModal(); else done.setAttribute("open", "");
+      $("#submitted-ok").focus();
+      return;
+    }
+    if (e.target === done || e.target.closest("[data-close-submitted]")) {
+      done.close();
+      const pill = $("#checklist-pill .pill");
+      if (pill) pill.focus();
+      return;
+    }
 
     const cardBtn = e.target.closest("[data-card]");
     if (cardBtn) {

@@ -220,3 +220,21 @@
 @media (max-width: 600px) {
   .mb .mb-box.is-editing .fn-edit { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* "Fantastic!" pop-up after Checklist complete - SUBMIT (brand dialog: native <dialog>, 1.1rem radius). */
+.mb-dialog { width: min(26rem, calc(100% - 1rem)); padding: 2rem 2rem 1.75rem; border: 0; border-radius: 1.1rem; background: #fff; box-shadow: 0 12px 40px rgba(0, 0, 0, .3); color: var(--mb-grey, #58595b); text-align: center; }
+.mb-dialog::backdrop { background: rgba(0, 0, 0, .55); }
+.mb-dialog-x { position: absolute; top: .6rem; right: .6rem; width: 2.75rem; height: 2.75rem; border: 0; border-radius: .4rem; background: none; color: #231f20; font: inherit; font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.mb-dialog-x:hover { background: #f1f1f2; }
+.mb-dialog-icon { display: block; width: 4rem; height: 4rem; margin: 0 auto 1rem; color: var(--orange); }
+.mb-dialog h2 { margin: 0 0 .5rem; color: #231f20; font-size: 1.75rem; font-weight: 600; letter-spacing: -.02em; }
+.mb-dialog p { margin: 0 0 1.5rem; font-size: 1.1rem; line-height: 1.4; }
+.mb-dialog .mb-save { min-width: 8rem; }
+.mb-dialog-x:focus-visible, .mb-dialog .mb-save:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+
+/* Step icons are the mockup's drawings (PNG, orange): a 124 x 74 box each, so they keep their relative sizes. */
+.mb .card-icon { width: 5.75rem; height: auto; aspect-ratio: 124 / 74; margin: -.25rem 1.5rem -.25rem -.5rem; object-fit: contain; }
+.mb-dialog-icon { width: 7.5rem; height: auto; aspect-ratio: 124 / 74; }
+@media (max-width: 600px) {
+  .mb .card-icon { width: 4.25rem; height: auto; margin: 0 -.25rem; }
+}

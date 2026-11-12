@@ -53,8 +53,8 @@
   if (!Array.isArray(state.dietary)) state.dietary = []; // saved before dietary moved to this page
   // Drop-downs start closed on every visit, as on the My Bookings page.
   const open = {};
-  // Food Options and Beverage Options start open so the choices are in view.
-  const sectionOpen = { food: true, bev: true, diet: false };
+  // Every section starts closed; the venue opens the ones they want.
+  const sectionOpen = { food: false, bev: false, diet: false };
   const secOpen = {};
   const rowMessages = {};
 
@@ -177,9 +177,9 @@
     const file = state.cats[cat.id].file;
     return `<div class="upload-row">
       <button type="button" class="vs-pill vs-upload" data-upload="${cat.id}">Upload menu ${chevronIcon}</button>
-      <input type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.docx" data-file="${cat.id}" aria-label="Upload a menu for ${esc(cat.label)}">
+      <input type="file" hidden accept=".pdf,.jpg,.jpeg,.png" data-file="${cat.id}" aria-label="Upload a menu for ${esc(cat.label)}">
       <p class="upload-hint">${esc(D.uploadHint)}</p>
-      ${file ? `<p class="upload-file">${tickIcon}<span>${esc(file)}</span> <button type="button" class="vs-remove" data-remove-file="${cat.id}">Remove</button></p>` : ""}
+      ${file ? `<p class="upload-file">${tickIcon}<span>${esc(file)}</span>${window.FF_SHARED.menuFile(cat.id) ? ` <button type="button" class="vs-remove" data-open-file="${cat.id}">View</button>` : ""} <button type="button" class="vs-remove" data-remove-file="${cat.id}">Remove</button></p>` : ""}
       <p class="row-msg" role="alert" data-file-msg="${cat.id}"></p>
     </div>`;
   }
@@ -191,7 +191,8 @@
         <textarea class="vs-field" id="desc-${cat.id}" rows="3" data-desc="${cat.id}" placeholder="${esc(cat.descEg)}">${esc(c.desc)}</textarea>
       </div>` : "";
     const groups = (cat.groups || []).map((g) => {
-      if (!g.collapsible) return groupBody(cat, g);
+      // A lone "Options" list shows straight away under its food choice, with no extra drop-down line.
+      if (!g.collapsible || g.title === "Options") return groupBody(cat, g);
       const key = `${cat.id}.${g.id}`;
       return `<div class="vs-sec">
         <button type="button" class="sec-head" data-sec="${key}" aria-expanded="${!!secOpen[key]}" aria-controls="sec-${cat.id}-${g.id}">
@@ -203,7 +204,7 @@
       </div>`;
     }).join("");
     const note = cat.priceNote ? `<p class="price-note">${esc(cat.priceNote)}</p>` : "";
-    return `${cat.upload ? uploadBlock(cat) : ""}${desc}${note}${groups}`;
+    return `${uploadBlock(cat)}${desc}${note}${groups}`;
   }
 
   function catBlock(cat) {
@@ -246,7 +247,9 @@
       $(`[data-section-toggle="${key}"]`).setAttribute("aria-expanded", String(isOpen));
       $(`#${key}-fold`).classList.toggle("is-open", isOpen);
       const n = sections[key].filter((cat) => state.cats[cat.id].on).length;
-      $(`[data-section-sum="${key}"]`).textContent = n ? `${n} selected` : "";
+      const sum = $(`[data-section-sum="${key}"]`);
+      sum.textContent = n ? `${n} selected` : "Select an option";
+      sum.classList.toggle("is-set", n > 0);
     });
     // Dietary Accommodations: what's ticked, or "Select an option".
     $('[data-section-toggle="diet"]').setAttribute("aria-expanded", String(sectionOpen.diet));
@@ -355,16 +358,32 @@
       const ext = file.name.split(".").pop().toLowerCase();
       if (!D.uploadTypes.includes(ext)) {
         el.value = "";
-        $(`[data-file-msg="${id}"]`).textContent = "Please choose a PDF, JPG, PNG or DOCX file.";
+        $(`[data-file-msg="${id}"]`).textContent = "Please choose a PDF, JPG or PNG file.";
         return;
       }
-      // Mockup only: the file name is kept, the file itself goes nowhere.
-      state.cats[id].file = file.name;
-      state.cats[id].on = true;
-      $(`[data-cat-on="${id}"]`).checked = true;
-      rerenderCat(id);
-      sync();
-      save();
+      if (file.size > 2 * 1024 * 1024) {
+        el.value = "";
+        $(`[data-file-msg="${id}"]`).textContent = "That file is over 2 MB. Please choose a smaller copy of the menu.";
+        return;
+      }
+      // Demo: the file is kept in this browser so customers here can open it (see FF_SHARED.menuFile).
+      const reader = new FileReader();
+      reader.onload = () => {
+        const files = window.FF_SHARED.menuFiles();
+        files[id] = { name: file.name, type: file.type || (ext === "pdf" ? "application/pdf" : `image/${ext === "jpg" ? "jpeg" : ext}`), data: reader.result };
+        let kept = true;
+        try { localStorage.setItem(window.FF_SHARED.MENUS_KEY, JSON.stringify(files)); } catch (err) { kept = false; }
+        if (kept) {
+          state.cats[id].file = file.name;
+          state.cats[id].on = true;
+          $(`[data-cat-on="${id}"]`).checked = true;
+        }
+        rerenderCat(id);
+        if (!kept) $(`[data-file-msg="${id}"]`).textContent = "This menu can’t be saved in this browser. Please try a smaller file.";
+        sync();
+        save();
+      };
+      reader.readAsDataURL(file);
       return;
     }
     if (el.dataset.f === "avail" || el.dataset.f === "tick" || el.dataset.f === "price") onRowField(el);
@@ -435,6 +454,9 @@
     if (removeFile) {
       const id = removeFile.dataset.removeFile;
       state.cats[id].file = null;
+      const files = window.FF_SHARED.menuFiles();
+      delete files[id];
+      try { localStorage.setItem(window.FF_SHARED.MENUS_KEY, JSON.stringify(files)); } catch (err) { /* nothing saved */ }
       rerenderCat(id);
       sync();
       save();

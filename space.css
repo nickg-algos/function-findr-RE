@@ -125,3 +125,7 @@
   .sp-view, .sp-see { transition: none; }
 }
 
+
+/* "Open the venue's menu": the menu the venue uploaded for this option, at the top of its menu dialog. */
+.sp-fullmenu { margin: 0 0 1rem; }
+.sp-fullmenu .sp-view { border-color: var(--orange); color: var(--orange-text); }

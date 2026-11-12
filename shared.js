@@ -143,5 +143,27 @@ window.FF_SHARED = (function () {
 
   // Whole dollars with no thousands comma ($1200), as the founder asked for minimum spends.
   const plainDollars = (cents) => `$${(cents / 100).toFixed(cents % 100 ? 2 : 0)}`;
-  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist, flow, stepHref, logoBoxes, reviewCards, initCarousels, plainDollars };
+  /* ---------- Menus a venue uploads for each food or drink option (p19), shown to customers (p9, p20) ---------- */
+
+  // TODO(confirm): a demo stand-in. Files are kept in this browser (localStorage); a real upload goes to object storage.
+  const MENUS_KEY = "ff.venueMenus.v1"; // { optionId: { name, type, data } }
+  function menuFiles() {
+    try { return JSON.parse(localStorage.getItem(MENUS_KEY)) || {}; } catch (e) { return {}; }
+  }
+  const menuFile = (id) => menuFiles()[id] || null;
+  // Opens the file in a new tab (PDFs in the browser's viewer, images as they are).
+  function openMenuFile(id) {
+    const m = menuFile(id);
+    if (!m) return;
+    const bin = atob(m.data.split(",")[1]);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    window.open(URL.createObjectURL(new Blob([bytes], { type: m.type })), "_blank");
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-open-file]");
+    if (b) openMenuFile(b.dataset.openFile);
+  });
+
+  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist, flow, stepHref, logoBoxes, reviewCards, initCarousels, plainDollars, MENUS_KEY, menuFiles, menuFile };
 })();

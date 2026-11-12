@@ -4,7 +4,7 @@
   const rows = (...names) => names;
   const food = (title, prefix, id, ...names) => ({ id, title, collapsible: true, prefix, avail: true, rows: rows(...names) });
   const glassBottle = [{ id: "glass", label: "Glass" }, { id: "bottle", label: "Bottle" }];
-  const uploadHint = "Upload a copy of your current menu for this catering type. Accepted formats: PDF, JPG, PNG or DOCX";
+  const uploadHint = "Upload a copy of this menu so customers can see what's on offer. PDF, JPG or PNG, up to 2 MB.";
 
   window.FF_SETUP = {
   // Dietary needs the venue caters for (moved here from the space set-up page; one list for the whole venue).
@@ -12,7 +12,7 @@
 
     intro: "Set up your food and beverage packages so customers can choose their catering and drinks options when booking. Selections will flow directly into your venue dashboard making it easy to manage upcoming events and catering requirements.",
     uploadHint,
-    uploadTypes: ["pdf", "jpg", "jpeg", "png", "docx"],
+    uploadTypes: ["pdf", "jpg", "jpeg", "png"],
     availOptions: ["regular", "gluten free", "halal", "vegetarian", "vegan"],
 
     food: [
@@ -76,7 +76,7 @@
         groups: [
           {
             id: "tap", title: "Tap Beer", collapsible: true,
-            sizes: [{ id: "pint", label: "Pint" }, { id: "schooner", label: "Schooner" }, { id: "pot", label: "Pot" }],
+            sizes: [{ id: "pot", label: "Pot" }, { id: "schooner", label: "Schooner" }, { id: "pint", label: "Pint" }],
             rows: rows("Carlton Draught", "Estrella Damm Lager", "Furphy Ale", "Furphy Crisp Lager", "Kirin Lager", "Mountain Goat Steam Ale", "Goat", "Somersby Apple Cider"),
             allRow: { name: "All Tap Beer", conditions: "Excludes Kirin & Estrella" },
           },

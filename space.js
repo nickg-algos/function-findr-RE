@@ -221,7 +221,10 @@
     if (!btn) return;
     const id = btn.dataset.menu;
     $("#menu-title").textContent = pkgLabel([...D.foodPackages, ...D.beveragePackages], id);
-    $("#menu-body").innerHTML = menuHtml(id);
+    // The venue's own copy of this menu, if they uploaded one on the food & beverage set-up page.
+    // TODO(confirm): in this demo uploads stand for The Sample Hotel's; with real accounts they belong to their own venue.
+    const file = listing.id === "sample" && window.FF_SHARED.menuFile(id);
+    $("#menu-body").innerHTML = `${file ? `<p class="sp-fullmenu"><button type="button" class="sp-view" data-open-file="${esc(id)}">Open the venue’s menu ${icon.chevron}</button></p>` : ""}${menuHtml(id)}`;
     menuDialog.showModal();
   });
 

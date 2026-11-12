@@ -49,3 +49,5 @@
 @media (prefers-reduced-motion: reduce) {
   .pv-back, .pv-go { transition: none; }
 }
+
+.pv-pkgs .pv-file { margin-top: .35rem; min-width: 0; border-color: var(--orange); color: var(--orange-text); }

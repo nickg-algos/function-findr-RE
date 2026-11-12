@@ -1,5 +1,5 @@
 /* Venue food and beverage set up (mockup page 19). Shared controls come from styles.css. */
-.vs-main { padding: 4.5rem var(--gutter) 4rem; background: linear-gradient(#333 0 18rem, #dcdcdc 0); }
+.vs-main { padding: 4.5rem var(--gutter) 4rem; background: linear-gradient(#333 0 18rem, #f6f1ec 0); }
 .vs-card { max-width: 76rem; margin-inline: auto; padding: 2.5rem clamp(16px, 5vw, 5rem) 2.5rem; background: #fff; border-radius: 1.2rem; }
 .vs-card h1 { font-size: 1.9rem; letter-spacing: -.025em; line-height: 1.15; margin: 0 0 2.25rem; text-align: center; text-wrap: balance; }
 .vs-group { border-top: 1px solid var(--ink); padding-block: .6rem; }
@@ -100,7 +100,7 @@ textarea.vs-field { display: block; resize: vertical; line-height: 1.4; }
   .vs-price { flex: 1 1 5rem; }
 }
 @media (max-width: 760px) {
-  .vs-main { padding-top: 2rem; background: linear-gradient(#333 0 10rem, #dcdcdc 0); }
+  .vs-main { padding-top: 2rem; background: linear-gradient(#333 0 10rem, #f6f1ec 0); }
   .vs-card { padding-block: 1.5rem; }
   .vs-card h1 { font-size: 1.35rem; margin-bottom: 1.5rem; }
   .opt { grid-template-columns: minmax(0, 1fr); }
@@ -114,7 +114,7 @@ textarea.vs-field { display: block; resize: vertical; line-height: 1.4; }
 #diet-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem 1.5rem; }
 #diet-list .check { display: flex; align-items: center; gap: .6rem; min-height: 2rem; color: #231f20; }
 .card-sum.is-set { color: var(--ok); font-weight: 600; }
-[data-section-sum="diet"]:not(.is-set) { color: #6d6e71; font-weight: 400; }
+[data-section-sum]:not(.is-set) { color: #6d6e71; font-weight: 400; }
 @media (max-width: 600px) {
   #diet-list { grid-template-columns: minmax(0, 1fr); }
 }

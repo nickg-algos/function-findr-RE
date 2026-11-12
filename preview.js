@@ -32,8 +32,8 @@
     venue = { name: s.name, address: `${s.street}, ${s.suburb}`, photo: null };
     const label = (list, id) => (list.find((p) => p.id === id) || {}).label;
     packages = {
-      food: v.foodPackages.map((id) => ({ label: label(DATA.foodPackages, id), desc: "" })),
-      bev: v.beveragePackages.map((id) => ({ label: label(DATA.beveragePackages, id), desc: "" })),
+      food: v.foodPackages.map((id) => ({ id, label: label(DATA.foodPackages, id), desc: "" })),
+      bev: v.beveragePackages.map((id) => ({ id, label: label(DATA.beveragePackages, id), desc: "" })),
     };
     spaces = [{
       id: fr.id, name: fr.name, type: "Private Room", about: fr.about, seated: fr.seated, standing: fr.standing, depositCents: fr.depositCents,
@@ -50,7 +50,7 @@
     }];
   } else {
     const cats = (readL("ff.venueSetup.v1", {}).cats) || {};
-    const on = (list) => list.filter((c) => cats[c.id] && cats[c.id].on).map((c) => ({ label: c.label, desc: cats[c.id].desc || "" }));
+    const on = (list) => list.filter((c) => cats[c.id] && cats[c.id].on).map((c) => ({ id: c.id, label: c.label, desc: cats[c.id].desc || "" }));
     packages = { food: on(SETUP.food), bev: on(SETUP.beverage) };
   }
 
@@ -71,7 +71,7 @@
   const bullets = (items, cls = "") => (items.length ? `<ul class="sp-bullets ${cls}">${items.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : '<p class="pv-none">None selected</p>');
   const row = (title, body) => `<section class="sp-row"><h2>${esc(title)}</h2><div>${body}</div></section>`;
   const pkgs = (list) => (list.length
-    ? `<ul class="pv-pkgs">${list.map((p) => `<li><strong>${esc(p.label)}</strong>${p.desc ? `<span>${esc(p.desc)}</span>` : ""}</li>`).join("")}</ul>`
+    ? `<ul class="pv-pkgs">${list.map((p) => `<li><strong>${esc(p.label)}</strong>${p.desc ? `<span>${esc(p.desc)}</span>` : ""}${p.id && window.FF_SHARED.menuFile(p.id) ? `<button type="button" class="sp-view pv-file" data-open-file="${esc(p.id)}">Open menu</button>` : ""}</li>`).join("")}</ul>`
     : '<p class="pv-none">None yet. <a href="venue-setup.html">Enter menu items</a></p>');
 
   function render() {

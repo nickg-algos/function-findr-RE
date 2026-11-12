@@ -54,9 +54,30 @@ fieldset { min-width: 0; }
 .ss-hours .ss-money input { width: 5.5rem; }
 
 /* Menus and checkbox groups */
-.ss-menu-link { display: inline-flex; align-items: center; gap: .6rem; min-height: 2.5rem; margin-top: .75rem; padding: .3rem 1.6rem; border: 1px solid #231f20; border-radius: 999px; color: #231f20; font-weight: 600; }
-.ss-menu-link svg { width: .55rem; height: .9rem; }
-.ss-menu-link:hover { border-color: var(--orange); background: #fdf7f2; text-decoration: none; }
+/* Food & Beverage Catering: a call-to-action panel (orange wash, the step icons, a primary button). */
+.ss-fb-card { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; padding: 1.25rem 1.5rem; border: 1px solid #e4b896; border-radius: .9rem; background: #fdf7f2; }
+.ss-fb-icons { display: flex; flex: none; gap: .25rem; }
+.ss-fb-icons img { width: 4.25rem; height: auto; }
+.ss-fb-text { flex: 1 1 16rem; min-width: 0; }
+.ss-fb .ss-fb-text h2 { color: #231f20; font-size: 1.2rem; font-weight: 600; }
+.ss-fb .ss-fb-text p { margin-top: .3rem; color: var(--text); font-size: .95rem; }
+.ss-menu-link { display: inline-flex; flex: none; align-items: center; gap: .6rem; min-height: 2.75rem; padding: .4rem 1.5rem; border: 2px solid var(--orange); border-radius: .35rem; background: var(--orange); color: #fff; font-weight: 600; transition: background-color .12s, color .12s; }
+.ss-menu-link svg { width: 1.1rem; height: 1.1rem; }
+.ss-menu-link:hover { background: #fff; color: var(--orange-text); text-decoration: none; }
+@media (max-width: 600px) {
+  /* Hours on phones: the day on its own line, then Open, Close and Min Spend side by side, so nothing runs off the screen. */
+  .ss-hours, .ss-hours thead, .ss-hours tbody { display: block; }
+  .ss-hours tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; align-items: center; column-gap: .4rem; padding: .4rem 0; border-bottom: 1px solid var(--line); }
+  .ss-hours th, .ss-hours td { padding: 0; border: 0; }
+  .ss-hours thead th:first-child { display: none; }
+  .ss-hours tbody th { grid-column: 1 / -1; padding-bottom: .25rem; font-weight: 500; }
+  .ss-hours input[type=time] { width: 100%; min-width: 0; }
+  .ss-fb-card { padding: 1.1rem; }
+  .ss-menu-link { width: 100%; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ss-menu-link { transition: none; }
+}
 .ss-checks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .9rem 1.5rem; clear: both; color: #231f20; font-size: .95rem; }
 
 /* Photos */

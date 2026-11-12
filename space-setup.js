@@ -119,9 +119,15 @@
 
     <div class="ss-row ss-sessions">${D.sessions.map(sessionTable).join("")}</div>
 
-    <section class="ss-row" aria-labelledby="fb-title">
-      <h2 id="fb-title">Food &amp; Beverage Catering:</h2>
-      <a class="ss-menu-link" href="venue-setup.html">Enter menu items <svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <section class="ss-row ss-fb" aria-labelledby="fb-title">
+      <div class="ss-fb-card">
+        <div class="ss-fb-icons" aria-hidden="true"><img src="assets/step-food.png" alt="" width="124" height="74"><img src="assets/step-bev.png" alt="" width="124" height="74"></div>
+        <div class="ss-fb-text">
+          <h2 id="fb-title">Food &amp; Beverage Catering:</h2>
+          <p>Add your food packages and drinks so customers can choose them when they book.</p>
+        </div>
+        <a class="ss-menu-link" href="venue-setup.html">Enter menu items <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5L13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
     </section>
 
     ${D.groups.map((g) => `

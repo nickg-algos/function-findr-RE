@@ -175,3 +175,7 @@ fieldset { min-width: 0; }
 .ss-sessions .ss-fold-body { padding-left: .25rem; }
 .ss-sessions .ss-hours input[type=time] { min-width: 0; }
 .ss-sessions .ss-hours .ss-money input { width: 4.5rem; }
+
+/* Warm stone under the dark band, matching the food & beverage set-up page (the grey stays on sign-up). */
+.gs.ss-page { background: linear-gradient(#231f20 0 20rem, #f6f1ec 20rem); }
+@media (max-width: 700px) { .gs.ss-page { background: linear-gradient(#231f20 0 10rem, #f6f1ec 10rem); } }

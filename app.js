@@ -279,7 +279,7 @@
     const dietary = D.dietary.map((d) => `
       <div class="diet">
         ${check(`diet.${d.id}.on`, esc(d.label))}
-        <div class="qty"><label for="qty-${d.id}">Qty:</label><input id="qty-${d.id}" type="number" inputmode="numeric" min="0" max="${D.booking.guests}" data-qty="${d.id}"></div>
+        <div class="qty"><label for="qty-${d.id}">No. of guests:</label><input id="qty-${d.id}" type="number" inputmode="numeric" min="0" max="${D.booking.guests}" data-qty="${d.id}"></div>
       </div>`).join("");
     const list = (items) => items.map((html) => `<div class="line">${html}</div>`).join("");
 

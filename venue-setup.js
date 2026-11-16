@@ -236,7 +236,9 @@
       </div>`;
     }).join("");
     const note = cat.priceNote ? `<p class="price-note">${esc(cat.priceNote)}</p>` : "";
-    return `${uploadBlock(cat)}${desc}${note}${groups}`;
+    // Food options end with their own Done, which closes the option (drinks lists have one under each list).
+    const done = D.food.includes(cat) ? `<div class="drink-done"><button type="button" class="vs-btn is-solid" data-done-cat="${cat.id}" aria-label="Done with ${esc(cat.label)}">Done</button></div>` : "";
+    return `${uploadBlock(cat)}${desc}${note}${groups}${done}`;
   }
 
   function catBlock(cat) {
@@ -473,6 +475,17 @@
       sync();
       save();
       const head = group.collapsible ? $(`[data-sec="${key}"]`) : $(`[data-cat-toggle="${catId}"]`);
+      if (head) head.focus();
+      return;
+    }
+
+    const doneCat = e.target.closest("[data-done-cat]");
+    if (doneCat) {
+      const catId = doneCat.dataset.doneCat;
+      open[catId] = false;
+      sync();
+      save();
+      const head = $(`[data-cat-toggle="${catId}"]`);
       if (head) head.focus();
       return;
     }

@@ -75,29 +75,29 @@
         priceNote: "Enter prices including GST.",
         groups: [
           {
-            id: "tap", title: "Tap Beer", collapsible: true, pageSize: 3, // three at a time, with Back and Next
+            id: "tap", title: "Tap Beer", collapsible: true, pageSize: 1, // one at a time, with Back and Next
             sizes: [{ id: "pot", label: "Pot" }, { id: "schooner", label: "Schooner" }, { id: "pint", label: "Pint" }],
             rows: rows("Carlton Draught", "Estrella Damm Lager", "Furphy Ale", "Furphy Crisp Lager", "Kirin Lager", "Mountain Goat Steam Ale", "Goat", "Somersby Apple Cider"),
             allRow: { name: "All Tap Beer", conditions: "Excludes Kirin & Estrella" },
           },
           {
-            id: "bottles", title: "Bottles & Cans", collapsible: true, pageSize: 3,
+            id: "bottles", title: "Bottles & Cans", collapsible: true, pageSize: 1,
             sizes: [{ id: "each", label: "Price", noTick: true }],
             rows: rows("Great Northern - mid strength", "Carlton Dry", "Corona", "Somersby Pear", "Peroni Nastro"),
           },
-          { id: "bubbles", title: "Bubbles", collapsible: true, pageSize: 3, sizes: glassBottle, rows: rows("Rothbury estate sparkling cuvee", "Bandini Prosecco", "Chandon nv") },
-          { id: "white", title: "White", collapsible: true, pageSize: 3, sizes: glassBottle, rows: rows("Deakin Estate Moscato") },
-          { id: "rose", title: "Rosé", collapsible: true, pageSize: 3, sizes: glassBottle, rows: rows("Tellurian Rose") },
-          { id: "red", title: "Red", collapsible: true, pageSize: 3, sizes: glassBottle, rows: rows("First Creek ‘Botanica’ Pinot Noir") },
+          { id: "bubbles", title: "Bubbles", collapsible: true, pageSize: 1, sizes: glassBottle, rows: rows("Rothbury estate sparkling cuvee", "Bandini Prosecco", "Chandon nv") },
+          { id: "white", title: "White", collapsible: true, pageSize: 1, sizes: glassBottle, rows: rows("Deakin Estate Moscato") },
+          { id: "rose", title: "Rosé", collapsible: true, pageSize: 1, sizes: glassBottle, rows: rows("Tellurian Rose") },
+          { id: "red", title: "Red", collapsible: true, pageSize: 1, sizes: glassBottle, rows: rows("First Creek ‘Botanica’ Pinot Noir") },
         ],
       },
       {
         id: "drinks", label: "Drink packages", upload: true, priceNote: "Enter prices including GST.",
-        groups: [{ id: "packages", sizes: [{ id: "each", label: "Price", suffix: "per guest" }], rows: rows("Drink Package – Option 1", "Drink Package – Option 2") }],
+        groups: [{ id: "packages", pageSize: 1, sizes: [{ id: "each", label: "Price", suffix: "per guest" }], rows: rows("Drink Package – Option 1", "Drink Package – Option 2") }],
       },
       {
         id: "cocktails", label: "Cocktail options", upload: true, priceNote: "Enter prices including GST.",
-        groups: [{ id: "packages", sizes: [{ id: "each", label: "Price" }], rows: rows("Cocktail Package – Option 1", "Cocktail Package – Option 2") }],
+        groups: [{ id: "packages", pageSize: 1, sizes: [{ id: "each", label: "Price" }], rows: rows("Cocktail Package – Option 1", "Cocktail Package – Option 2") }],
       },
       { id: "payg", label: "Pay-As-You-Go", upload: true },
     ],

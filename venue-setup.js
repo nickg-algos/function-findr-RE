@@ -162,23 +162,26 @@
     return `<div class="drink-table" style="--sizes:${group.sizes.length}">
       ${head}
       ${list.map((row) => drinkRow(cat, group, row, group.sizes)).join("")}
-      ${group.pageSize ? pager(cat, group) : ""}
-      ${addOption(cat, group)}
+      ${group.pageSize ? pager(cat, group) : addOption(cat, group)}
       ${all ? `${drinkRow(cat, group, all, allSizes, true)}
         <div class="conditions">
           <label for="cond-${all.id}">Any exclusions or conditions:</label>
           <input class="vs-field" id="cond-${all.id}" type="text" data-conditions="${cat.id}.${group.id}" value="${esc(all.conditions)}">
         </div>` : ""}
+      <div class="drink-done"><button type="button" class="vs-btn is-solid" data-done="${cat.id}.${group.id}" aria-label="Done with ${esc(group.title || cat.label)}">Done</button></div>
     </div>`;
   }
 
-  /* ---------- Paged lists (Tap Beer): a few rows at a time, with Back and Next ---------- */
+  /* ---------- Paged drinks lists: one row at a time (pageSize in the data), with Back and Next ---------- */
 
   const pages = {}; // "catId.groupId" -> page number (this visit only)
   const pager = (cat, group) => `<div class="drink-pager" data-pager="${cat.id}.${group.id}">
-      <p class="drink-pager-count" aria-live="polite"></p>
-      <button type="button" class="vs-pill" data-page="${cat.id}.${group.id}" data-dir="-1">‹ Back</button>
-      <button type="button" class="vs-pill" data-page="${cat.id}.${group.id}" data-dir="1">Next ›</button>
+      <button type="button" class="vs-pill" data-add-option="${cat.id}.${group.id}">Add another option</button>
+      <div class="drink-pager-nav">
+        <p class="drink-pager-count" aria-live="polite"></p>
+        <button type="button" class="vs-pill" data-page="${cat.id}.${group.id}" data-dir="-1">‹ Back</button>
+        <button type="button" class="vs-pill" data-page="${cat.id}.${group.id}" data-dir="1">Next ›</button>
+      </div>
     </div>`;
   // Shows only the current page of rows; every row stays in the page (just hidden), so saving works as before.
   function applyPages() {
@@ -193,8 +196,8 @@
       rows.forEach((r, i) => { r.hidden = i < page * size || i >= (page + 1) * size; });
       const from = rows.length ? page * size + 1 : 0;
       const to = Math.min((page + 1) * size, rows.length);
-      p.hidden = rows.length <= size; // nothing to page through yet
-      $(".drink-pager-count", p).textContent = `Showing ${from}–${to} of ${rows.length}`;
+      $(".drink-pager-nav", p).hidden = rows.length <= size; // nothing to page through yet; Add another option stays
+      $(".drink-pager-count", p).textContent = from === to ? `Showing ${from} of ${rows.length}` : `Showing ${from}–${to} of ${rows.length}`;
       $('[data-dir="-1"]', p).disabled = page === 0;
       $('[data-dir="1"]', p).disabled = page === last;
     });
@@ -455,6 +458,22 @@
     if (sec) {
       secOpen[sec.dataset.sec] = !secOpen[sec.dataset.sec];
       sync();
+      return;
+    }
+
+    // Done under a drinks list: closes that list (or, for a single-list option, the whole option) and
+    // moves focus to its heading, so the venue lands back where they can open the next one.
+    const done = e.target.closest("[data-done]");
+    if (done) {
+      const key = done.dataset.done;
+      const [catId, groupId] = key.split(".");
+      const group = groupById(catById(catId), groupId);
+      if (group.collapsible) secOpen[key] = false;
+      else open[catId] = false;
+      sync();
+      save();
+      const head = group.collapsible ? $(`[data-sec="${key}"]`) : $(`[data-cat-toggle="${catId}"]`);
+      if (head) head.focus();
       return;
     }
 

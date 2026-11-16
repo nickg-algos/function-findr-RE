@@ -119,10 +119,29 @@ textarea.vs-field { display: block; resize: vertical; line-height: 1.4; }
   #diet-list { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* Drinks lists (Tap Beer, Bottles & Cans, wines): three at a time, with Back and Next. */
-.drink-pager[hidden] { display: none; }
-.drink-pager { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; padding: .75rem 0; border-bottom: 1px solid var(--line); }
+/* Drinks lists: one at a time, with Back and Next. */
+.drink-pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem 1rem; padding: .75rem 0; border-bottom: 1px solid var(--line); }
 .drink-pager-count { margin: 0 auto 0 0; color: #6d6e71; font-size: .92rem; }
 .drink-pager .vs-pill:disabled { opacity: .4; cursor: default; }
 .drink-pager .vs-pill:disabled:hover { background: #fff; color: #231f20; }
 .drink-opt[hidden] { display: none; }
+
+/* Done under each drinks list: closes the list. */
+.drink-done { display: flex; justify-content: flex-end; padding: 1rem 0 .5rem; }
+.drink-done .vs-btn { min-width: 8rem; min-height: 2.75rem; }
+@media (max-width: 600px) {
+  .drink-done .vs-btn { width: 100%; }
+}
+
+/* The pager line: Add another option on the left; the count and smaller Back / Next on the right. */
+.drink-pager-nav { display: flex; align-items: center; gap: .5rem; margin-left: auto; }
+.drink-pager-nav[hidden] { display: none; }
+.drink-pager-nav .drink-pager-count { margin: 0 .35rem 0 0; }
+.drink-pager-nav .vs-pill { width: auto; min-width: 0; min-height: 2rem; padding: .1rem .75rem; font-size: .85rem; }
+
+/* Add to menu and Add another option: burnt orange outline and text (by request), filling burnt orange on hover. */
+.vs-add:not(.is-added), .vs-pill[data-add-option] { border-color: var(--orange-text); color: var(--orange-text); }
+.vs-add:not(.is-added):hover, .vs-pill[data-add-option]:hover { border-color: var(--orange-text); background: var(--orange-text); color: #fff; }
+@media (max-width: 600px) {
+  .drink-pager-nav { margin-left: 0; }
+}

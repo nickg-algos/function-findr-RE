@@ -118,3 +118,10 @@ textarea.vs-field { display: block; resize: vertical; line-height: 1.4; }
 @media (max-width: 600px) {
   #diet-list { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Tap Beer: three at a time, with Back and Next. */
+.drink-pager { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; padding: .75rem 0; border-bottom: 1px solid var(--line); }
+.drink-pager-count { margin: 0 auto 0 0; color: #6d6e71; font-size: .92rem; }
+.drink-pager .vs-pill:disabled { opacity: .4; cursor: default; }
+.drink-pager .vs-pill:disabled:hover { background: #fff; color: #231f20; }
+.drink-opt[hidden] { display: none; }

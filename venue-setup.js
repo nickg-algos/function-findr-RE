@@ -162,6 +162,7 @@
     return `<div class="drink-table" style="--sizes:${group.sizes.length}">
       ${head}
       ${list.map((row) => drinkRow(cat, group, row, group.sizes)).join("")}
+      ${group.pageSize ? pager(cat, group) : ""}
       ${addOption(cat, group)}
       ${all ? `${drinkRow(cat, group, all, allSizes, true)}
         <div class="conditions">
@@ -169,6 +170,33 @@
           <input class="vs-field" id="cond-${all.id}" type="text" data-conditions="${cat.id}.${group.id}" value="${esc(all.conditions)}">
         </div>` : ""}
     </div>`;
+  }
+
+  /* ---------- Paged lists (Tap Beer): a few rows at a time, with Back and Next ---------- */
+
+  const pages = {}; // "catId.groupId" -> page number (this visit only)
+  const pager = (cat, group) => `<div class="drink-pager" data-pager="${cat.id}.${group.id}">
+      <p class="drink-pager-count" aria-live="polite"></p>
+      <button type="button" class="vs-pill" data-page="${cat.id}.${group.id}" data-dir="-1">‹ Back</button>
+      <button type="button" class="vs-pill" data-page="${cat.id}.${group.id}" data-dir="1">Next ›</button>
+    </div>`;
+  // Shows only the current page of rows; every row stays in the page (just hidden), so saving works as before.
+  function applyPages() {
+    $$("[data-pager]").forEach((p) => {
+      const key = p.dataset.pager;
+      const [catId, groupId] = key.split(".");
+      const size = groupById(catById(catId), groupId).pageSize;
+      const rows = $$(`[data-cat="${catId}"][data-group="${groupId}"]:not([data-all])`);
+      const last = Math.max(0, Math.ceil(rows.length / size) - 1);
+      const page = Math.min(Math.max(pages[key] || 0, 0), last);
+      pages[key] = page;
+      rows.forEach((r, i) => { r.hidden = i < page * size || i >= (page + 1) * size; });
+      const from = rows.length ? page * size + 1 : 0;
+      const to = Math.min((page + 1) * size, rows.length);
+      $(".drink-pager-count", p).textContent = `Showing ${from}–${to} of ${rows.length}`;
+      $('[data-dir="-1"]', p).disabled = page === 0;
+      $('[data-dir="1"]', p).disabled = page === last;
+    });
   }
 
   const addOption = (cat, group) => `<div class="add-row"><button type="button" class="vs-pill" data-add-option="${cat.id}.${group.id}">Add another option</button></div>`;
@@ -281,6 +309,7 @@
       btn.setAttribute("aria-expanded", String(isOpen));
       $(`#sec-${catId}-${groupId}`).classList.toggle("is-open", isOpen);
     });
+    applyPages();
   }
 
   function refreshRowUi(el, cat, group, row, isAll) {
@@ -428,10 +457,21 @@
       return;
     }
 
+    const pageBtn = e.target.closest("[data-page]");
+    if (pageBtn) {
+      const key = pageBtn.dataset.page;
+      pages[key] = (pages[key] || 0) + Number(pageBtn.dataset.dir);
+      applyPages();
+      // If Back or Next is now switched off, keep focus on the other one.
+      if (pageBtn.disabled) $(`[data-page="${key}"]:not([disabled])`)?.focus();
+      return;
+    }
+
     const addOpt = e.target.closest("[data-add-option]");
     if (addOpt) {
       const [catId, groupId] = addOpt.dataset.addOption.split(".");
       const group = groupById(catById(catId), groupId);
+      if (group.pageSize) pages[`${catId}.${groupId}`] = Infinity; // show the page the new row lands on
       const list = state.cats[catId].groups[groupId];
       const shown = group.sizes ? list.length : shownCount(catId, group);
       if (shown === list.length) list.push(newRow("", true));

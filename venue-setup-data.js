@@ -75,7 +75,7 @@
         priceNote: "Enter prices including GST.",
         groups: [
           {
-            id: "tap", title: "Tap Beer", collapsible: true,
+            id: "tap", title: "Tap Beer", collapsible: true, pageSize: 3, // three at a time, with Back and Next
             sizes: [{ id: "pot", label: "Pot" }, { id: "schooner", label: "Schooner" }, { id: "pint", label: "Pint" }],
             rows: rows("Carlton Draught", "Estrella Damm Lager", "Furphy Ale", "Furphy Crisp Lager", "Kirin Lager", "Mountain Goat Steam Ale", "Goat", "Somersby Apple Cider"),
             allRow: { name: "All Tap Beer", conditions: "Excludes Kirin & Estrella" },

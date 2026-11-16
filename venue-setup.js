@@ -193,6 +193,7 @@
       rows.forEach((r, i) => { r.hidden = i < page * size || i >= (page + 1) * size; });
       const from = rows.length ? page * size + 1 : 0;
       const to = Math.min((page + 1) * size, rows.length);
+      p.hidden = rows.length <= size; // nothing to page through yet
       $(".drink-pager-count", p).textContent = `Showing ${from}–${to} of ${rows.length}`;
       $('[data-dir="-1"]', p).disabled = page === 0;
       $('[data-dir="1"]', p).disabled = page === last;

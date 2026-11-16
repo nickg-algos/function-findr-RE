@@ -18,6 +18,9 @@
   // Editing an existing booking locks each package behind Edit Menu Selection. Adding a booking (mode=add)
   // works exactly as the customer's own checklist, because the venue fills it in for them.
   const LOCKED = EMBED && params.get("mode") !== "add";
+  // The venue's Add Booking pop-up also ends each step with a Done that closes it (by request; not on the customer's page).
+  const ADDING = EMBED && params.get("mode") === "add";
+  if (ADDING) document.body.classList.add("mb-adding");
   const STORE_KEY = OWN ? `ff.myBookings.v4.${seed.id}` : "ff.myBookings.v4";
   const STATUS_KEY = OWN ? `${window.FF_SHARED.CHECKLIST_KEY}.${seed.id}` : window.FF_SHARED.CHECKLIST_KEY;
   if (OWN) D.booking = { ...D.booking, eventName: seed.title || D.booking.eventName, guests: Number(seed.guests) || D.booking.guests };
@@ -159,7 +162,7 @@
         <span class="card-sum" data-sum="${id}"></span>
         ${chevronIcon}
       </button></h3>
-      ${fold(`id="card-${id}"`, `<div class="card-body">${body}</div>`)}
+      ${fold(`id="card-${id}"`, `<div class="card-body">${body}${ADDING ? `<div class="step-done"><button type="button" class="step-done-btn" data-card-done="${id}" aria-label="Done with ${esc(title)}">Done</button></div>` : ""}</div>`)}
       </section>
     </div>`;
   }
@@ -513,7 +516,9 @@
     });
     const pill = $("#checklist-pill");
     const wasComplete = pill.childElementCount > 0;
-    if (reached !== wasComplete) pill.innerHTML = reached ? `<button type="button" class="pill">${tickIcon}Checklist complete - SUBMIT</button>` : "";
+    // In the venue's Add Booking pop-up the button is Confirm, which adds the booking (see calendar.js).
+    const pillHtml = ADDING ? '<button type="button" class="pill pill-confirm" data-add-confirm>Confirmed</button>' : `<button type="button" class="pill">${tickIcon}Checklist complete - SUBMIT</button>`;
+    if (reached !== wasComplete) pill.innerHTML = reached ? pillHtml : "";
     publishChecklist();
   }
 
@@ -767,6 +772,10 @@
     // "Checklist complete - SUBMIT": tell the customer it's gone through.
     // TODO(confirm): demo only; nothing is sent to the venue yet, and what happens next (email, venue sign-off) is still to decide.
     const done = $("#submitted");
+    if (e.target.closest("[data-add-confirm]")) {
+      window.parent.postMessage({ type: "ff-checklist-confirm" }, location.origin);
+      return;
+    }
     if (e.target.closest("#checklist-pill .pill")) {
       if (done.showModal) done.showModal(); else done.setAttribute("open", "");
       $("#submitted-ok").focus();
@@ -776,6 +785,16 @@
       done.close();
       const pill = $("#checklist-pill .pill");
       if (pill) pill.focus();
+      return;
+    }
+
+    const cardDone = e.target.closest("[data-card-done]");
+    if (cardDone) {
+      const id = cardDone.dataset.cardDone;
+      state.cards[id] = false;
+      sync();
+      save();
+      $(`[data-card="${id}"]`).focus();
       return;
     }
 

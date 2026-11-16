@@ -35,7 +35,7 @@
 
   const spacesHtml = venue.spaces.length
     ? venue.spaces.map((s, i) => `
-      <article class="vp-space" aria-labelledby="space-${i}">
+      <article class="vp-space" id="space-${i}-card" aria-labelledby="space-${i}">
         <div class="vp-space-text">
           <h3 id="space-${i}">${esc(s.name)}</h3>
           <p class="vp-cap">${capacity(s)}</p>
@@ -53,12 +53,21 @@
       </div>`
     : "";
 
+  // Two spaces sit beside the main photo, each linking to its space below. The outer column of
+  // four was removed by request, leaving the first and third (Function Room and Bar/Pool Room on the sample).
+  const thumbs = venue.spaces.map((s, i) => ({ ...s, i })).filter((s) => s.i === 0 || s.i === 2);
+
   $("#venue").innerHTML = `
     <h1>${esc(venue.name)}</h1>
     <p class="vp-address">${pinIcon}<span>${esc(venue.address)}</span></p>
 
-    <div class="vp-hero">
-      <img src="${esc(venue.photo.src)}" alt="${esc(venue.photo.alt)}" width="1268" height="633">
+    <div class="vp-hero${thumbs.length ? " has-thumbs" : ""}">
+      <img class="vp-hero-main" src="${esc(venue.photo.src)}" alt="${esc(venue.photo.alt)}" width="1268" height="633">
+      ${thumbs.length ? `<ul class="vp-thumbs" aria-label="Function spaces">${thumbs.map((s) => `
+        <li><a href="#space-${s.i}-card" aria-label="${esc(s.name)}: see this space">
+          <img src="${esc(s.photo)}" alt="" loading="lazy" width="300" height="300">
+          <span class="vp-thumb-name">${esc(s.name)}</span>
+        </a></li>`).join("")}</ul>` : ""}
       ${venue.verified ? '<span class="vp-badge">Verified Venue</span>' : ""}
       <button type="button" class="vp-gallery-btn" id="gallery-open" aria-haspopup="dialog">${dotsIcon}Photo gallery</button>
     </div>

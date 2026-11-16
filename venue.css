@@ -71,5 +71,26 @@
   .vp-gallery { width: calc(100vw - 1rem); padding: 1.25rem 1rem 1.5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .vp-gallery-btn { transition: none; }
+  .vp-gallery-btn, .vp-thumbs img { transition: none; }
+}
+
+/* Main photo with two spaces stacked beside it (by request; the outer two were removed). */
+/* Same width as the function spaces below, so the right-hand photos end in line with theirs (by request). */
+.vp-hero.has-thumbs { max-width: 60rem; display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; gap: .6rem; aspect-ratio: 2.6 / 1; }
+.vp-hero.has-thumbs .vp-hero-main { grid-row: 1 / -1; height: 100%; aspect-ratio: auto; }
+.vp-thumbs { display: contents; list-style: none; }
+.vp-thumbs li { position: relative; min-height: 0; overflow: hidden; border-radius: .9rem; }
+.vp-thumbs a { display: block; height: 100%; color: #fff; }
+.vp-thumbs img { display: block; width: 100%; height: 100%; aspect-ratio: auto; border-radius: 0; object-fit: cover; background: var(--field); transition: transform .15s; }
+.vp-thumbs a:hover img { transform: scale(1.03); }
+.vp-thumbs a:focus-visible { outline: 2px solid var(--orange); outline-offset: -4px; }
+.vp-thumb-name { position: absolute; left: .6rem; bottom: .6rem; padding: .15rem .55rem; border-radius: .35rem; background: rgba(35, 31, 32, .78); font-size: .9rem; font-weight: 500; }
+.vp-hero.has-thumbs .vp-gallery-btn { right: auto; left: 1.6rem; }
+.vp-space { scroll-margin-top: 1rem; }
+@media (max-width: 600px) {
+  .vp-hero.has-thumbs { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto auto; aspect-ratio: auto; gap: .4rem; }
+  .vp-hero.has-thumbs .vp-hero-main { grid-row: auto; grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+  .vp-hero.has-thumbs .vp-gallery-btn { left: auto; right: .75rem; bottom: auto; top: .75rem; }
+  .vp-thumbs li { aspect-ratio: 3 / 2; border-radius: .6rem; }
+  .vp-thumb-name { left: .35rem; right: .35rem; bottom: .35rem; padding: .1rem .3rem; font-size: .8rem; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }

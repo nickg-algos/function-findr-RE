@@ -236,8 +236,10 @@
       </div>`;
     }).join("");
     const note = cat.priceNote ? `<p class="price-note">${esc(cat.priceNote)}</p>` : "";
-    // Food options end with their own Done, which closes the option (drinks lists have one under each list).
-    const done = D.food.includes(cat) ? `<div class="drink-done"><button type="button" class="vs-btn is-solid" data-done-cat="${cat.id}" aria-label="Done with ${esc(cat.label)}">Done</button></div>` : "";
+    // Every option ends with its own Done, which closes the option. Drink packages and Cocktail options
+    // skip it: their single list already ends with a Done that closes the whole option.
+    const endsWithListDone = (cat.groups || []).some((g) => g.sizes && !g.collapsible);
+    const done = !endsWithListDone ? `<div class="drink-done"><button type="button" class="vs-btn is-solid" data-done-cat="${cat.id}" aria-label="Done with ${esc(cat.label)}">Done</button></div>` : "";
     return `${uploadBlock(cat)}${desc}${note}${groups}${done}`;
   }
 

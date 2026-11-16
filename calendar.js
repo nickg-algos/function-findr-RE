@@ -214,7 +214,11 @@
     frame.src = `my-bookings.html?embed=venue&booking=${encodeURIComponent(draft.id)}${box.dataset.mode === "add" ? "&mode=add" : ""}`;
   }
   window.addEventListener("message", (e) => {
-    if (e.origin === location.origin && e.data && e.data.type === "ff-checklist-height") frame.style.height = `${Math.ceil(e.data.h)}px`;
+    if (e.origin !== location.origin || !e.data) return;
+    if (e.data.type === "ff-checklist-height") frame.style.height = `${Math.ceil(e.data.h)}px`;
+    // Confirm at the bottom of Add Booking's checklist (shown once all five steps are done) adds the booking,
+    // exactly as Add Function does: it checks the details on the left first.
+    if (e.data.type === "ff-checklist-confirm" && box.open && box.dataset.mode === "add") save();
   });
 
   // Side by side, the details stretch so the line under No. of guests lines up with the bottom of the
@@ -237,15 +241,15 @@
   }
   frame.addEventListener("load", () => setTimeout(alignDetails, 150));
 
-  // "3 of 6 done" above the checklist: Function Details from the details on the left, the rest from the checklist.
+  // "3 of 5 done" above the checklist: just the five step cards in the checklist (by request). Function
+  // Details is the form on the left, which Add Function / Save Changes checks on its own.
+  const cardSteps = checklistSteps.filter((s) => s.id !== "function");
   function syncSteps() {
     const status = draft.live ? liveStatus() : savedStatus(draft.id);
-    const done = checklistSteps.map((s) => s.id).filter((id) => (id === "function"
-      ? stepDone(id, draft)
-      : status ? status.done.includes(id) : stepDone(id, draft)));
-    const count = done.length;
-    $("#bk-check-sum").innerHTML = count === checklistSteps.length ? `${tickIcon}Checklist complete` : `${count} of ${checklistSteps.length} done`;
-    $("#bk-check-sum").classList.toggle("is-complete", count === checklistSteps.length);
+    const count = cardSteps.filter((s) => (status ? status.done.includes(s.id) : stepDone(s.id, draft))).length;
+    const complete = count === cardSteps.length;
+    $("#bk-check-sum").innerHTML = complete ? `${tickIcon}Checklist complete` : `${count} of ${cardSteps.length} done`;
+    $("#bk-check-sum").classList.toggle("is-complete", complete);
   }
 
   function syncErrors() {

@@ -251,3 +251,17 @@ body.mb-embed { background: #fff; }
 .mb-embed .is-locked input:disabled { background: #fff; border-color: #808285; cursor: default; }
 .mb-embed .is-locked input:disabled + span, .mb-embed .is-locked .check { color: inherit; cursor: default; }
 .mb-embed .is-locked textarea:disabled { cursor: default; }
+
+/* Done at the bottom of each step, on the venue's Add Booking pop-up only: closes the step. */
+.step-done { display: flex; justify-content: flex-end; padding-top: .75rem; }
+.step-done-btn {
+  min-height: 2rem; padding: .15rem 1rem; border: 2px solid var(--orange); border-radius: .4rem; /* compact, by request */
+  background: var(--orange); color: #fff; font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer; transition: background-color .12s, color .12s;
+}
+.step-done-btn:hover { background: #fff; color: var(--orange-text); }
+.step-done-btn:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .step-done-btn { transition: none; } }
+
+/* Add Booking: Confirm appears under the steps once all five are done, and adds the booking. */
+.mb-embed.mb-adding #checklist-pill { display: flex; justify-content: flex-end; }
+.mb .pill-confirm { min-width: 9rem; justify-content: center; }

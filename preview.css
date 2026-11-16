@@ -54,3 +54,13 @@
   .pv-pkgs li { flex-wrap: wrap; }
   .pv-pkgs .sp-view { min-width: 0; }
 }
+
+/* Smaller photos on the preview (by request): a shorter, wider strip than the function space page's. */
+.pv .sp-photos:not(.is-single) { height: clamp(16rem, 26vw, 22rem); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
+.pv .sp-photo-main img { min-height: 0; aspect-ratio: auto; }
+.pv .sp-photos.is-single .sp-photo-main img { aspect-ratio: 2.2 / 1; }
+.pv .sp-photo-side { min-height: 0; }
+@media (max-width: 600px) {
+  .pv .sp-photos:not(.is-single) { height: auto; grid-template-rows: auto; }
+  .pv .sp-photo-main img, .pv .sp-photos.is-single .sp-photo-main img { aspect-ratio: 16 / 10; }
+}

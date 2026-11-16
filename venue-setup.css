@@ -145,3 +145,6 @@ textarea.vs-field { display: block; resize: vertical; line-height: 1.4; }
 @media (max-width: 600px) {
   .drink-pager-nav { margin-left: 0; }
 }
+
+/* Back (left) and Done (right) at the foot of the page. */
+.vs-actions .vs-btn { min-width: 9rem; text-decoration: none; }

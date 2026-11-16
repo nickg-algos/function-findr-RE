@@ -441,6 +441,16 @@
   function onClick(e) {
     if (e.target.closest('a[href="#"]')) { e.preventDefault(); return; }
 
+    // Back and Done both return to the function space set-up form (p18). Menus save as they go, so if the
+    // venue came from that form, going back in history keeps what they'd already filled in there.
+    const ret = e.target.closest("[data-return]");
+    if (ret && document.referrer && new URL(document.referrer).pathname.endsWith("/space-setup.html")) {
+      e.preventDefault();
+      save();
+      history.back();
+      return;
+    }
+
     const sectionToggle = e.target.closest("[data-section-toggle]");
     if (sectionToggle) {
       const key = sectionToggle.dataset.sectionToggle;

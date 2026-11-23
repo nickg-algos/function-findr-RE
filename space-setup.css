@@ -10,7 +10,7 @@
 .ss-row h2, .ss-row > legend, .ss-legend, .ss-cap legend, .ss-session legend, .ss-extra legend { color: #000; font-size: .95rem; font-weight: 600; }
 .ss-row > legend { float: left; width: 100%; margin-bottom: .75rem; padding: 0; }
 .ss-row > p:not(.gs-hint):not(.gs-err) { margin-top: .4rem; color: #000; font-size: .92rem; }
-.ss-block + .ss-row { margin-top: 1.5rem; }
+.ss-block + .ss-row, .ss-block + .ss-pair { margin-top: 1.5rem; }
 fieldset { min-width: 0; }
 
 /* Capacity and deposit */
@@ -54,7 +54,7 @@ fieldset { min-width: 0; }
 .ss-hours .ss-money input { width: 5.5rem; }
 
 /* Menus and checkbox groups */
-/* Food & Beverage Catering: a call-to-action panel (orange wash, the step icons, a primary button). */
+/* Food & Beverage Options: a call-to-action panel (orange wash, the step icons, a primary button). */
 .ss-fb-card { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; padding: 1.25rem 1.5rem; border: 1px solid #e4b896; border-radius: .9rem; background: #fdf7f2; }
 .ss-fb-icons { display: flex; flex: none; gap: .25rem; }
 .ss-fb-icons img { width: 4.25rem; height: auto; }

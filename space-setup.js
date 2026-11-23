@@ -84,17 +84,6 @@
       </div>
     </div>
 
-    <section class="ss-row ss-fb" aria-labelledby="fb-title">
-      <div class="ss-fb-card">
-        <div class="ss-fb-icons" aria-hidden="true"><img src="assets/step-food.png" alt="" width="124" height="74"><img src="assets/step-bev.png" alt="" width="124" height="74"></div>
-        <div class="ss-fb-text">
-          <h2 id="fb-title">Food &amp; Beverage Catering:</h2>
-          <p>Add your food packages and drinks so customers can choose them when they book.</p>
-        </div>
-        <a class="ss-menu-link" href="venue-setup.html">Enter menu items <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5L13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      </div>
-    </section>
-
     <div class="ss-pair">
     <section class="ss-row ss-group" aria-labelledby="cap-title">
       <h2 id="cap-title"><button type="button" class="ss-group-head" aria-expanded="false" aria-controls="cap-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">Capacity <span class="gs-req" aria-hidden="true">*</span></span><span class="ss-group-sum" id="cap-sum">Select an option</span></button></h2>
@@ -176,6 +165,17 @@
           <input id="p-${i}" class="gs-file" type="file" accept="image/jpeg,image/png,image/webp" aria-labelledby="img-title p-label-${i}">
         </div>`).join("")}</div>
       <p class="gs-err" id="p-msg"></p>
+    </section>
+
+    <section class="ss-row ss-fb" aria-labelledby="fb-title">
+      <div class="ss-fb-card">
+        <div class="ss-fb-icons" aria-hidden="true"><img src="assets/step-food.png" alt="" width="124" height="74"><img src="assets/step-bev.png" alt="" width="124" height="74"></div>
+        <div class="ss-fb-text">
+          <h2 id="fb-title">Food &amp; Beverage Options</h2>
+          <p>Add your food packages and drinks so customers can choose them when they book.</p>
+        </div>
+        <a class="ss-menu-link" href="venue-setup.html">Enter menu items <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5L13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
     </section>
 
     <div class="ss-actions">

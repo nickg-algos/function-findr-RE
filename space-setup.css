@@ -1,6 +1,6 @@
 /* "Hi …, welcome!" (mockup page 18): set up a function space. Card, fields and photo boxes come from get-started.css. */
 
-.ss h1 { max-width: 50rem; margin-inline: auto; font-size: clamp(1.6rem, 2.6vw, 2.3rem); font-weight: 500; line-height: 1.2; text-wrap: balance; }
+.ss h1 { font-size: clamp(1.9rem, 3.4vw, 2.9rem); font-weight: 500; }
 .ss-added { margin-top: .75rem; color: var(--ok); font-weight: 600; text-align: center; }
 .ss-added:empty { display: none; }
 .ss-block { margin-top: 1.75rem; }
@@ -98,10 +98,6 @@ fieldset { min-width: 0; }
 .ss-another:hover { background: #fff; color: var(--orange-text); }
 .ss-another svg { width: .55rem; height: .9rem; }
 .ss-preview:focus-visible, .ss-another:focus-visible, .ss-menu-link:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
-/* Save & Finish Later: right-aligned under Cancellation and under Images (mockup p12) */
-.ss-save-row { display: flex; justify-content: flex-end; padding: 0 0 1.4rem; }
-.ss-row .ss-save-row { padding: 1.25rem 0 0; }
-.ss-toast { position: fixed; z-index: 30; left: 50%; bottom: 3.5rem; max-width: calc(100vw - 2rem); padding: .6rem 1.1rem; border-radius: 999px; background: var(--ok); color: #fff; font-weight: 500; text-align: center; transform: translateX(-50%); }
 .ss-terms { margin-top: 1.5rem; font-size: .9rem; }
 .ss-terms a { color: #000; font-weight: 500; text-decoration: underline; }
 
@@ -119,9 +115,6 @@ fieldset { min-width: 0; }
   .ss-photo-wrap .gs-photo { width: 100%; }
   .ss-photo-wrap { flex: 1 1 9rem; }
   .ss-preview, .ss-another { width: 100%; justify-content: center; }
-}
-@media (max-width: 600px) {
-  .ss h1 { font-size: 1.5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ss-preview, .ss-another { transition: none; }

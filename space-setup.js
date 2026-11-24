@@ -1,5 +1,4 @@
-// "Hi …, let’s set up your function space…" (mockup page 18): a venue describes a function space. DEMO ONLY: nothing is sent.
-// Save & Finish Later keeps a draft in localStorage (ff.spaceDraft.v1) and brings it back next visit.
+// "Hi …, welcome!" (mockup page 18): a venue describes a function space. DEMO ONLY: nothing is sent.
 // Spaces are kept in this tab (sessionStorage ff.venueSpaces.v1) in the same shape venue-data.js uses,
 // ready for the listing preview (page 20). The venue name comes from sign-up (ff.venueSignup.v1).
 (function () {
@@ -25,11 +24,7 @@
 
   /* ---------- The form ---------- */
 
-  // Greets the person by first name from sign-up (the mockup's "Hi Sadie, …").
-  const firstName = (signup.name || "").trim().split(/\s+/)[0];
-  const greeting = `Hi ${firstName || "there"}, let’s set up your function space and show customers what your venue has to offer`;
-  const DRAFT_KEY = "ff.spaceDraft.v1";
-  const saveRow = (id) => `<div class="ss-save-row"><button type="button" class="ss-preview ss-save" data-save id="${id}">Save &amp; Finish Later</button></div>`;
+  const greeting = signup.venue ? `Hi ${signup.venue}, welcome!` : "Hi there, welcome!";
   document.title = `Set up a function space | FunctionFindr`;
   const err = (id) => `<p class="gs-err" id="${id}-msg"></p>`;
   const money = (id, label) => `<span class="ss-money"><span aria-hidden="true">$</span><input id="${id}" type="text" inputmode="decimal" aria-label="${label}" aria-describedby="${id}-msg"></span>`;
@@ -157,18 +152,6 @@
         <div class="ss-checks">${g.options.map((o, i) => `<label class="check"><input type="checkbox" name="g-${g.id}" value="${esc(o)}" id="g-${g.id}-${i}"><span>${esc(o)}</span></label>`).join("")}</div>
       </div></div>
     </fieldset>`).join("")}
-    ${saveRow("ss-save-1")}
-
-    <section class="ss-row ss-fb" aria-labelledby="fb-title">
-      <div class="ss-fb-card">
-        <div class="ss-fb-icons" aria-hidden="true"><img src="assets/step-food.png" alt="" width="124" height="74"><img src="assets/step-bev.png" alt="" width="124" height="74"></div>
-        <div class="ss-fb-text">
-          <h2 id="fb-title">Food &amp; Beverage Options</h2>
-          <p>Add your food packages and drinks so customers can choose them when they book.</p>
-        </div>
-        <a class="ss-menu-link" href="venue-setup.html">Enter menu items <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5L13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      </div>
-    </section>
 
     <section class="ss-row" aria-labelledby="img-title">
       <h2 id="img-title">Images</h2>
@@ -182,7 +165,17 @@
           <input id="p-${i}" class="gs-file" type="file" accept="image/jpeg,image/png,image/webp" aria-labelledby="img-title p-label-${i}">
         </div>`).join("")}</div>
       <p class="gs-err" id="p-msg"></p>
-      ${saveRow("ss-save-2")}
+    </section>
+
+    <section class="ss-row ss-fb" aria-labelledby="fb-title">
+      <div class="ss-fb-card">
+        <div class="ss-fb-icons" aria-hidden="true"><img src="assets/step-food.png" alt="" width="124" height="74"><img src="assets/step-bev.png" alt="" width="124" height="74"></div>
+        <div class="ss-fb-text">
+          <h2 id="fb-title">Food &amp; Beverage Options</h2>
+          <p>Add your food packages and drinks so customers can choose them when they book.</p>
+        </div>
+        <a class="ss-menu-link" href="venue-setup.html">Enter menu items <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5L13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
     </section>
 
     <div class="ss-actions">
@@ -413,66 +406,6 @@
     el("ss-added").textContent = `Editing ${editing.name}. Your changes replace the saved version.`;
   }
 
-  /* ---------- Save & Finish Later: keep the half-done form in this browser, no checks ---------- */
-
-  // DEMO ONLY: a stand-in for saving a draft to the venue's account. TODO(confirm): where drafts live once there's a backend.
-  const fieldKey = (f) => (f.type === "radio" || (f.type === "checkbox" && !f.id) ? `${f.name}=${f.value}` : f.id);
-  const draftFields = () => [...form.elements].filter((f) => f.matches("input, select, textarea") && f.type !== "file" && fieldKey(f));
-  function saveDraft() {
-    const values = {};
-    draftFields().forEach((f) => { values[fieldKey(f)] = f.type === "checkbox" || f.type === "radio" ? f.checked : f.value; });
-    const draft = { values, split: { ...split }, photos: photos.slice(), editId: editing ? editing.id : null, savedAt: Date.now() };
-    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); return true; } catch (e) {
-      try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draft, photos: [] })); return "no-photos"; } catch (e2) { return false; }
-    }
-  }
-  function restoreDraft() {
-    let draft = null;
-    try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY)); } catch (e) { return false; }
-    if (!draft || !draft.values) return false;
-    draftFields().forEach((f) => {
-      const v = draft.values[fieldKey(f)];
-      if (v === undefined) return;
-      if (f.type === "checkbox" || f.type === "radio") f.checked = !!v; else f.value = v;
-    });
-    D.sessions.forEach((s) => { if (draft.split && draft.split[s.id]) setSplit(s.id, true); });
-    (draft.photos || []).forEach((src, i) => { if (src && i < D.maxPhotos) setPhoto(i, src); });
-    syncWords(); syncExample();
-    D.extras.forEach((x) => { const amount = el(`x-${x.id}-amount`); const v = amount.value; syncExtras(); amount.value = v; });
-    syncGroups(); syncFoldSums(); syncAllHours();
-    return true;
-  }
-  const clearDraft = () => { try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* nothing to clear */ } };
-
-  const toast = document.createElement("p");
-  toast.className = "ss-toast";
-  toast.setAttribute("role", "status");
-  toast.hidden = true;
-  document.body.append(toast);
-  let toastTimer = 0;
-  function showToast(text) {
-    toast.textContent = text;
-    toast.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { toast.hidden = true; }, 2600);
-  }
-  form.addEventListener("click", (e) => {
-    if (!e.target.closest("[data-save]")) return;
-    const kept = saveDraft();
-    showToast(kept === true ? "Saved. You can come back and finish this later."
-      : kept === "no-photos" ? "Saved, except the photos (too big for this browser)."
-      : "Sorry, this browser couldn’t save your progress.");
-  });
-
-  // Coming back: bring the saved draft back (unless they're editing a different space from the preview).
-  {
-    let draft = null;
-    try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY)); } catch (e) { /* no draft */ }
-    if (draft && (editing ? draft.editId === editing.id : !draft.editId) && restoreDraft()) {
-      el("ss-added").textContent = "Welcome back. We’ve brought back the details you saved.";
-    }
-  }
-
   /* ---------- Check and keep ---------- */
 
   function showAdded() {
@@ -480,7 +413,7 @@
       ? `You’ve added ${spaces.length === 1 ? "1 space" : `${spaces.length} spaces`}: ${spaces.map((s) => s.name).join(", ")}.`
       : "";
   }
-  if (!editing && !el("ss-added").textContent) showAdded();
+  if (!editing) showAdded();
 
   function setMsg(id, text, input) {
     el(`${id}-msg`).textContent = text;
@@ -603,7 +536,6 @@
     let kept = write(SPACES_KEY, spaces);
     if (!kept) kept = write(SPACES_KEY, spaces.map((s) => ({ ...s, photos: [] }))); // photos too big for the tab
     write(SIGNUP_KEY, { ...signup, venue: el("s-venue").value.trim() });
-    clearDraft(); // the space is saved properly now
 
     if (action === "another") {
       const venueName = el("s-venue").value;

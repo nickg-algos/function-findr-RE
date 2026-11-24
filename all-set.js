@@ -1,4 +1,4 @@
-// "Congratulations, your listing is now live" (mockup page 21): the end of venue sign-up.
+// "Success! You're all set" (mockup page 21): the end of venue sign-up.
 // The mockup has no way on from here, so it offers the dashboard. DEMO ONLY: no email is sent.
 (function () {
   "use strict";
@@ -12,8 +12,8 @@
 
   document.getElementById("all-set").innerHTML = `
     <div class="cf-box">
-      <h1>Congratulations,</h1>
-      <p class="cf-sub">your listing is now live</p>
+      <h1>Success!</h1>
+      <p class="cf-sub">You’re all set</p>
       ${signup.venue ? `<p class="cf-what">${esc(signup.venue)} is ready to take function bookings.</p>` : ""}
       <p class="cf-email">${emailLine}</p>
       <p class="cf-demo">Demo only: nothing has been published and no email has been sent.</p>

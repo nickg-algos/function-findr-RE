@@ -28,7 +28,7 @@
 
   // Greets the person by first name from sign-up (the mockup's "Hi Sadie, …").
   const firstName = (signup.name || "").trim().split(/\s+/)[0];
-  const greetName = firstName || "there";
+  const greetName = firstName || "Sadie"; // the PDF's example name, until sign-up gives a real one (by request)
   document.title = `Set up a function space | FunctionFindr`;
   const req = '<span class="gs-req" aria-hidden="true">*</span>';
   const err = (id) => `<p class="gs-err" id="${id}-msg"></p>`;

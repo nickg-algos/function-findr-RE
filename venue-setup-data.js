@@ -10,7 +10,7 @@
   // Dietary needs the venue caters for (moved here from the space set-up page; one list for the whole venue).
   dietary: ["Vegetarian", "Vegan", "Gluten-Free", "Allergy-Friendly", "Halal"],
 
-    intro: "Set up your food and beverage packages so customers can choose their catering and drinks options when booking. Selections will flow directly into your venue dashboard making it easy to manage upcoming events and catering requirements.",
+    intro: "Set up your food and beverage options so customers can choose their catering and drinks options when booking. Selections will flow directly into your venue dashboard making it easy to manage upcoming events and catering requirements.",
     uploadHint,
     uploadTypes: ["pdf", "jpg", "jpeg", "png"],
     availOptions: ["regular", "gluten free", "halal", "vegetarian", "vegan"],

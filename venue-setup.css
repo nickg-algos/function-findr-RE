@@ -148,3 +148,14 @@ textarea.vs-field { display: block; resize: vertical; line-height: 1.4; }
 
 /* Back (left) and Done (right) at the foot of the page. */
 .vs-actions .vs-btn { min-width: 9rem; text-decoration: none; }
+
+/* Heading "You’re Almost There! One Final Step" (by request 2026-11-24); the old heading sentence sits under it. */
+.vs-card h1.vs-title { margin-bottom: .75rem; }
+.vs-intro { max-width: 46rem; margin: 0 auto 2.25rem; color: var(--text); font-size: 1.05rem; text-align: center; text-wrap: balance; }
+@media (max-width: 600px) { .vs-intro { margin-bottom: 1.5rem; font-size: .95rem; } }
+
+/* "FINISHED!! MY LISTING CAN GO LIVE NOW!" replaces Done (by request 2026-11-24): a large burnt orange box across
+   the bottom, under Back. It goes on to p21. */
+.vs-actions { flex-wrap: wrap; }
+.vs-actions .vs-finish { flex: 1 0 100%; min-height: 4.5rem; padding: .8rem 1.5rem; font-size: 1.5rem; font-weight: 600; letter-spacing: -.01em; text-align: center; }
+@media (max-width: 600px) { .vs-actions .vs-finish { min-height: 4rem; font-size: 1.2rem; } }

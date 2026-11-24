@@ -87,3 +87,11 @@
 .pv-actions { justify-content: center; }
 .pv-actions-now { margin-top: 1.5rem; }
 .pv-go.pv-now { min-height: 3.5rem; padding: .6rem 2.25rem; font-size: 1.2rem; }
+/* Finish Now is as wide as the two buttons above it (by request): both lines share a box sized to the top line. */
+.pv-buttons { width: fit-content; max-width: 100%; margin-inline: auto; }
+.pv-buttons .pv-actions { flex-wrap: nowrap; }
+.pv-actions-now .pv-now { width: 100%; }
+@media (max-width: 900px) { .pv-buttons { width: auto; } .pv-buttons .pv-actions { flex-wrap: wrap; } }
+/* Finish Up Set-Up Now: a little bigger again, box and text (by request). Capitals come from .pv-go's text-transform. */
+.pv-go.pv-now { min-height: 4rem; padding: .75rem 2.25rem; font-size: 1.4rem; }
+@media (max-width: 600px) { .pv-go.pv-now { font-size: 1.25rem; } }

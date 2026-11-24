@@ -1,21 +1,25 @@
-/* "Hi …, welcome!" (mockup page 18): set up a function space. Card, fields and photo boxes come from get-started.css. */
+/* "Hi …, let’s set up your function space…" (V42 mockup page 12, the site's p18): every section open.
+   Card, fields and photo boxes come from get-started.css. */
 
-.ss h1 { font-size: clamp(1.9rem, 3.4vw, 2.9rem); font-weight: 500; }
+.ss h1 { max-width: 52rem; margin-inline: auto; font-size: clamp(1.6rem, 2.4vw, 2.1rem); font-weight: 700; line-height: 1.2; letter-spacing: -.025em; text-wrap: balance; }
 .ss-added { margin-top: .75rem; color: var(--ok); font-weight: 600; text-align: center; }
 .ss-added:empty { display: none; }
-.ss-block { margin-top: 1.75rem; }
+.ss-block { margin-top: 2.25rem; }
 .ss-count.is-over { color: var(--error); font-weight: 600; }
 
 .ss-row { margin: 0; padding: 1.4rem 0; border: 0; border-top: 1px solid #808285; }
-.ss-row h2, .ss-row > legend, .ss-legend, .ss-cap legend, .ss-session legend, .ss-extra legend { color: #000; font-size: .95rem; font-weight: 600; }
+.ss-row h2, .ss-row > legend, .ss-legend, .ss-cap legend, .ss-session legend, .ss-extra legend, .ss-dietary legend { color: #000; font-size: .95rem; font-weight: 600; }
 .ss-row > legend { float: left; width: 100%; margin-bottom: .75rem; padding: 0; }
 .ss-row > p:not(.gs-hint):not(.gs-err) { margin-top: .4rem; color: #000; font-size: .92rem; }
-.ss-block + .ss-row, .ss-block + .ss-pair { margin-top: 1.5rem; }
+.ss-block + .ss-row { margin-top: 1.5rem; }
 fieldset { min-width: 0; }
 
-/* Capacity and deposit */
+/* About Your Function Space: grows as the venue writes. */
+.ss .gs-field textarea#s-about { min-height: 4.5rem; max-height: 22rem; overflow-y: auto; resize: none; }
+
+/* Capacity and deposit, side by side */
 .ss-cap-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.25rem 3.25rem; }
-.ss-cap, .ss-extra, .ss-session { margin: 0; padding: 0; border: 0; }
+.ss-cap, .ss-extra, .ss-session, .ss-dietary { margin: 0; padding: 0; border: 0; }
 .ss-cap legend { padding: 0; }
 .ss-cap-fields { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; margin-top: .5rem; }
 .ss-small { display: grid; gap: .4rem; color: #000; font-size: .92rem; }
@@ -33,7 +37,11 @@ fieldset { min-width: 0; }
 .ss-money.is-off { opacity: .45; }
 
 /* Buffer times */
-.ss-example { padding: .6rem .9rem; border-left: 4px solid var(--orange); border-radius: .3rem; background: #fdf7f2; }
+/* The mockup's example: "Example:" then four label/value lines */
+.ss-example { display: grid; grid-template-columns: auto auto minmax(0, 1fr); column-gap: 1.5rem; row-gap: .1rem; margin-top: .4rem; color: #000; font-size: .92rem; }
+.ss-ex-lead { grid-row: 1 / span 4; }
+.ss-example dt { grid-column: 2; }
+.ss-example dd { grid-column: 3; margin: 0; }
 .ss-buffers { margin-top: 1.25rem; }
 
 /* Extras */
@@ -41,43 +49,40 @@ fieldset { min-width: 0; }
 .ss-extra { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; }
 .ss-extra legend { float: left; width: 100%; padding: 0; font-weight: 500; }
 .ss-extra .check { align-items: center; }
+.ss-extra .ss-money { flex-basis: 100%; }
+/* No / Yes are square tick boxes in the mockup (still one-or-the-other radios underneath) */
+.ss-extra input[type=radio] { border-radius: 3px !important; border-color: #808285; }
+.ss-extra input[type=radio]:checked::after { inset: -.15rem -.1rem .05rem .1rem; border-radius: 0; clip-path: polygon(12% 52%, 28% 42%, 42% 66%, 84% 4%, 100% 12%, 44% 96%, 34% 96%); }
 .ss-extra .gs-err { flex-basis: 100%; }
 
-/* Available hours */
+/* Available hours: Monday to Sunday, day and evening side by side */
 .ss-sessions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem 3rem; }
 .ss-session legend { margin-bottom: .6rem; padding: 0; }
 .ss-hours { width: 100%; border-collapse: collapse; }
 .ss-hours th, .ss-hours td { padding: .3rem .35rem .3rem 0; border-bottom: 1px solid var(--line); text-align: left; font-weight: 400; }
 .ss-hours thead th { color: #231f20; font-size: .88rem; }
 .ss-hours tbody th { color: #231f20; font-size: .92rem; }
-.ss-hours input[type=time] { width: 100%; min-width: 6.5rem; padding-inline: .4rem !important; }
-.ss-hours .ss-money input { width: 5.5rem; }
+.ss-hours input[type=time] { width: 100%; min-width: 0; padding-inline: .4rem !important; }
+.ss-hours .ss-money input { width: 4.5rem; }
 
-/* Menus and checkbox groups */
-/* Food & Beverage Options: a call-to-action panel (orange wash, the step icons, a primary button). */
-.ss-fb-card { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; padding: 1.25rem 1.5rem; border: 1px solid #e4b896; border-radius: .9rem; background: #fdf7f2; }
-.ss-fb-icons { display: flex; flex: none; gap: .25rem; }
-.ss-fb-icons img { width: 4.25rem; height: auto; }
-.ss-fb-text { flex: 1 1 16rem; min-width: 0; }
-.ss-fb .ss-fb-text h2 { color: #231f20; font-size: 1.2rem; font-weight: 600; }
-.ss-fb .ss-fb-text p { margin-top: .3rem; color: var(--text); font-size: .95rem; }
-.ss-menu-link { display: inline-flex; flex: none; align-items: center; gap: .6rem; min-height: 2.75rem; padding: .4rem 1.5rem; border: 2px solid var(--orange); border-radius: .35rem; background: var(--orange); color: #fff; font-weight: 600; transition: background-color .12s, color .12s; }
-.ss-menu-link svg { width: 1.1rem; height: 1.1rem; }
-.ss-menu-link:hover { background: #fff; color: var(--orange-text); text-decoration: none; }
-@media (max-width: 600px) {
-  /* Hours on phones: the day on its own line, then Open, Close and Min Spend side by side, so nothing runs off the screen. */
-  .ss-hours, .ss-hours thead, .ss-hours tbody { display: block; }
-  .ss-hours tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; align-items: center; column-gap: .4rem; padding: .4rem 0; border-bottom: 1px solid var(--line); }
-  .ss-hours th, .ss-hours td { padding: 0; border: 0; }
-  .ss-hours thead th:first-child { display: none; }
-  .ss-hours tbody th { grid-column: 1 / -1; padding-bottom: .25rem; font-weight: 500; }
-  .ss-hours input[type=time] { width: 100%; min-width: 0; }
-  .ss-fb-card { padding: 1.1rem; }
-  .ss-menu-link { width: 100%; justify-content: center; }
+/* Food Catering Type and Beverage Options: tick box, Upload menu, then the hint or the file's name */
+.ss-menus h2 { font-weight: 400; }
+.ss-menus h2 strong { font-weight: 600; }
+.ss-menu-list { margin-top: .5rem; }
+.ss-menu-row { display: grid; grid-template-columns: minmax(12rem, 1.1fr) auto minmax(0, 2.4fr); align-items: center; gap: .5rem 1.5rem; padding: .6rem 0; border-bottom: 1px solid var(--line); color: #231f20; font-size: .95rem; }
+.ss-menu-row > .check:only-child { grid-column: 1 / -1; }
+.ss-upload {
+  display: inline-flex; align-items: center; justify-content: center; gap: .75rem; min-height: 2.25rem; padding: .25rem 1.75rem; border: 1px solid #231f20; border-radius: 999px;
+  background: #fff; color: #231f20; font-weight: 600; white-space: nowrap; cursor: pointer; transition: background-color .12s, color .12s;
 }
-@media (prefers-reduced-motion: reduce) {
-  .ss-menu-link { transition: none; }
-}
+.ss-upload svg { width: .5rem; height: .8rem; }
+.ss-upload:hover { background: #231f20; color: #fff; }
+.ss-up-file:focus-visible + .ss-up-note, .ss-upload:focus-within { outline: 2px solid var(--orange); outline-offset: 2px; }
+.ss-up-file { position: absolute; width: 1px; height: 1px; min-height: 0; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); opacity: 0; }
+.ss-up-note { color: #231f20; font-size: .82rem; line-height: 1.3; }
+.ss-up-note.has-file { color: var(--ok); }
+.ss-dietary { margin-top: 1rem; }
+.ss-dietary legend { float: left; width: 100%; margin-bottom: .75rem; padding: 0 0 .6rem; border-bottom: 1px solid var(--line); font-weight: 500; }
 .ss-checks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .9rem 1.5rem; clear: both; color: #231f20; font-size: .95rem; }
 
 /* Photos */
@@ -97,7 +102,7 @@ fieldset { min-width: 0; }
 .ss-another { background: var(--orange); color: #fff; }
 .ss-another:hover { background: #fff; color: var(--orange-text); }
 .ss-another svg { width: .55rem; height: .9rem; }
-.ss-preview:focus-visible, .ss-another:focus-visible, .ss-menu-link:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+.ss-preview:focus-visible, .ss-another:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
 .ss-terms { margin-top: 1.5rem; font-size: .9rem; }
 .ss-terms a { color: #000; font-weight: 500; text-decoration: underline; }
 
@@ -105,76 +110,37 @@ fieldset { min-width: 0; }
   .ss-sessions { grid-template-columns: minmax(0, 1fr); }
   .ss-checks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ss-extras { grid-template-columns: minmax(0, 1fr); }
+  .ss-menu-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .ss-up-note { grid-column: 1 / -1; }
 }
 @media (max-width: 700px) {
   .ss-cap-row { grid-template-columns: minmax(0, 1fr); }
   .ss-checks { grid-template-columns: minmax(0, 1fr); }
-  .ss-hours input[type=time] { min-width: 0; }
   .ss-hours .ss-money input { width: 4.25rem; }
   .ss-hours th, .ss-hours td { padding-right: .2rem; }
   .ss-photo-wrap .gs-photo { width: 100%; }
   .ss-photo-wrap { flex: 1 1 9rem; }
   .ss-preview, .ss-another { width: 100%; justify-content: center; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .ss-preview, .ss-another { transition: none; }
-}
-
-/* Available hours: "Every day" row first; the per-day table opens from this link. */
-.ss-split { display: inline-flex; align-items: center; min-height: 2.75rem; margin-top: .35rem; padding: 0; border: 0; background: none; color: var(--orange-text); font: inherit; font-size: .92rem; font-weight: 600; cursor: pointer; }
-.ss-split:hover { text-decoration: underline; }
-.ss-split:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
-.ss-hours tbody tr:only-child th { white-space: nowrap; }
-
-/* Tick-box groups as drop-downs: chevron, title, and a summary (green once something is ticked). */
-.ss-group { padding-block: .4rem; }
-.ss-group-head { display: flex; align-items: center; gap: .75rem; width: 100%; min-height: 2.75rem; padding: .3rem .25rem; border: 0; background: none; color: #000; font: inherit; font-size: .95rem; text-align: left; cursor: pointer; }
-.ss-group-head:hover { background: #f7f7f8; }
-.ss-group-head:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
-.ss-group-head svg { flex: none; width: .55rem; height: .85rem; color: #58595b; transition: transform .25s; }
-.ss-group-head[aria-expanded="true"] svg { transform: rotate(90deg); }
-.ss-group-title { font-weight: 600; }
-.ss-group-sum { min-width: 0; margin-left: auto; overflow: hidden; color: #6d6e71; font-size: .88rem; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
-.ss-group-sum.is-set { color: var(--ok); font-weight: 600; }
-.ss-group .ss-checks { padding: .5rem .25rem 1rem 1.55rem; }
 @media (max-width: 600px) {
-  .ss-group .ss-checks { padding-left: .25rem; }
-  .ss-group-sum { max-width: 40%; white-space: normal; line-height: 1.25; }
+  .ss h1 { font-size: 1.5rem; }
+  .ss-br { display: none; }
+  .ss-example { grid-template-columns: auto minmax(0, 1fr); }
+  .ss-ex-lead { grid-row: auto; grid-column: 1 / -1; }
+  .ss-example dt { grid-column: 1; }
+  .ss-example dd { grid-column: 2; }
+  /* Hours on phones: the day on its own line, then Open, Close and Min Spend side by side, so nothing runs off the screen. */
+  .ss-hours, .ss-hours thead, .ss-hours tbody { display: block; }
+  .ss-hours tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; align-items: center; column-gap: .4rem; padding: .4rem 0; border-bottom: 1px solid var(--line); }
+  .ss-hours th, .ss-hours td { padding: 0; border: 0; }
+  .ss-hours thead th:first-child { display: none; }
+  .ss-hours tbody th { grid-column: 1 / -1; padding-bottom: .25rem; font-weight: 500; }
+  .ss-menu-row { grid-template-columns: minmax(0, 1fr); }
+  .ss-upload { justify-self: start; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ss-group-head svg { transition: none; }
+  .ss-preview, .ss-another, .ss-upload { transition: none; }
 }
-/* The group names are for screen readers only now (the drop-down button shows them), so undo the floated full-width legend. */
-.ss-row.ss-group > legend.sr-only { float: none; width: 1px; margin: 0; }
-
-/* Booking Buffer Times and Extras use the same drop-down head; their heading wraps the button. */
-.ss-group > h2 { margin: 0; font: inherit; }
-.ss-fold-body { padding: .4rem .25rem 1rem 1.55rem; }
-@media (max-width: 600px) {
-  .ss-fold-body { padding-left: .25rem; }
-}
-
-/* The two hours sections are drop-downs too, stacked like the rest. */
-.ss-sessions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2.5rem; align-items: start; }
-.ss-sessions .ss-session { border-top: 1px solid #808285; }
-@media (max-width: 1000px) {
-  .ss-sessions { grid-template-columns: minmax(0, 1fr); }
-}
-.ss-row.ss-sessions { padding-block: 0; border-top: 0; }
-.ss-session.ss-group > legend.sr-only { float: none; width: 1px; margin: 0; }
-
-/* About Your Function Space: small until the venue writes more. */
-.ss .gs-field textarea#s-about { min-height: 3.4rem; max-height: 22rem; overflow-y: auto; resize: none; }
-
-/* Capacity and Deposit side by side (stacked on phones). */
-.ss-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2.5rem; align-items: start; }
-@media (max-width: 700px) {
-  .ss-pair { grid-template-columns: minmax(0, 1fr); }
-}
-/* Side by side the hours tables have half the width, so keep them compact. */
-.ss-sessions .ss-fold-body { padding-left: .25rem; }
-.ss-sessions .ss-hours input[type=time] { min-width: 0; }
-.ss-sessions .ss-hours .ss-money input { width: 4.5rem; }
 
 /* Warm stone under the dark band, matching the food & beverage set-up page (the grey stays on sign-up). */
 .gs.ss-page { background: linear-gradient(#231f20 0 20rem, #f6f1ec 20rem); }

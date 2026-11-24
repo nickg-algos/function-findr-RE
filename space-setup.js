@@ -1,6 +1,8 @@
-// "Hi …, welcome!" (mockup page 18): a venue describes a function space. DEMO ONLY: nothing is sent.
+// "Hi …, let’s set up your function space…" (V42 mockup page 12, the site's p18): a venue describes a
+// function space, with every section open down the page as in the mockup. DEMO ONLY: nothing is sent.
 // Spaces are kept in this tab (sessionStorage ff.venueSpaces.v1) in the same shape venue-data.js uses,
 // ready for the listing preview (page 20). The venue name comes from sign-up (ff.venueSignup.v1).
+// Menus uploaded here are kept like p19's (localStorage ff.venueMenus.v1, see FF_SHARED.menuFile).
 (function () {
   "use strict";
 
@@ -24,27 +26,21 @@
 
   /* ---------- The form ---------- */
 
-  const greeting = signup.venue ? `Hi ${signup.venue}, welcome!` : "Hi there, welcome!";
+  // Greets the person by first name from sign-up (the mockup's "Hi Sadie, …").
+  const firstName = (signup.name || "").trim().split(/\s+/)[0];
+  const greetName = firstName || "there";
   document.title = `Set up a function space | FunctionFindr`;
+  const req = '<span class="gs-req" aria-hidden="true">*</span>';
   const err = (id) => `<p class="gs-err" id="${id}-msg"></p>`;
   const money = (id, label) => `<span class="ss-money"><span aria-hidden="true">$</span><input id="${id}" type="text" inputmode="decimal" aria-label="${label}" aria-describedby="${id}-msg"></span>`;
   const bufferSelect = (id) => `<select id="${id}" aria-describedby="${id}-msg ${id}-hint"><option value="">Choose a time</option>${D.bufferSteps.map((m) => `<option value="${m}">${duration(m)}</option>`).join("")}</select>`;
+  const chev = '<svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const uploadHint = "Upload a copy of your current menu for this catering type. Accepted formats: PDF, JPG, PNG or DOCX";
 
   const sessionTable = (s) => `
-    <fieldset class="ss-session ss-group" aria-describedby="${s.id}-msg">
-      <legend class="sr-only">${esc(s.label)}</legend>
-      <button type="button" class="ss-group-head" aria-expanded="false" aria-controls="${s.id}-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">${esc(s.label)} <span class="gs-req" aria-hidden="true">*</span></span><span class="ss-group-sum" id="${s.id}-sum">Select an option</span></button>
-      <div class="fold" id="${s.id}-body"><div class="fold-inner"><div class="ss-fold-body">
-      <table class="ss-hours" id="${s.id}-same">
-        <thead><tr><th scope="col"><span class="sr-only">Days</span></th><th scope="col">Open</th><th scope="col">Close</th><th scope="col">Min Spend</th></tr></thead>
-        <tbody><tr>
-          <th scope="row">Every day</th>
-          <td><input type="time" step="900" id="${s.id}-all-open" aria-label="Every day ${s.id === "day" ? "day time" : "evening"} opening time"></td>
-          <td><input type="time" step="900" id="${s.id}-all-close" aria-label="Every day ${s.id === "day" ? "day time" : "evening"} closing time"></td>
-          <td>${money(`${s.id}-all-spend`, `Every day ${s.id === "day" ? "day time" : "evening"} minimum spend`)}</td>
-        </tr></tbody>
-      </table>
-      <table class="ss-hours" id="${s.id}-days" hidden>
+    <fieldset class="ss-session" aria-describedby="${s.id}-msg">
+      <legend>${esc(s.label)} ${req}</legend>
+      <table class="ss-hours">
         <thead><tr><th scope="col"><span class="sr-only">Day</span></th><th scope="col">Open</th><th scope="col">Close</th><th scope="col">Min Spend</th></tr></thead>
         <tbody>${DAYS.map((d, i) => `<tr>
           <th scope="row">${d}</th>
@@ -53,105 +49,112 @@
           <td>${money(`${s.id}-spend-${i}`, `${d} ${s.id === "day" ? "day time" : "evening"} minimum spend`)}</td>
         </tr>`).join("")}</tbody>
       </table>
-      <button type="button" class="ss-split" data-split="${s.id}" aria-controls="${s.id}-same ${s.id}-days">Set different hours for each day</button>
       ${err(s.id)}
-      </div></div></div>
+    </fieldset>`;
+
+  // One food or drink option: its tick box, then (most of them) Upload menu and what's been uploaded.
+  const menuRow = (kind, o) => `
+    <div class="ss-menu-row">
+      <label class="check"><input type="checkbox" name="${kind}" value="${o.id}" id="${kind}-${o.id}"><span>${esc(o.label)}</span></label>
+      ${o.upload ? `
+      <label class="ss-upload" for="up-${o.id}">Upload menu ${chev}<span class="sr-only"> for ${esc(o.label)}</span></label>
+      <input class="gs-file ss-up-file" type="file" id="up-${o.id}" data-upload="${o.id}" data-kind="${kind}" accept=".pdf,.jpg,.jpeg,.png,.docx" aria-describedby="up-${o.id}-note">
+      <p class="ss-up-note" id="up-${o.id}-note" aria-live="polite"></p>` : ""}
+    </div>`;
+
+  const checksGroup = (g) => `
+    <fieldset class="ss-row ss-open-group">
+      <legend>${esc(g.label)}</legend>
+      <div class="ss-checks">${g.options.map((o, i) => `<label class="check"><input type="checkbox" name="g-${g.id}" value="${esc(o)}" id="g-${g.id}-${i}"><span>${esc(o)}</span></label>`).join("")}</div>
     </fieldset>`;
 
   $("#setup").innerHTML = `
-    <h1>${esc(greeting)}</h1>
-    <p class="gs-demo">Demo only: nothing here is sent anywhere yet. Fields marked <span class="gs-req" aria-hidden="true">*</span> are required.</p>
+    <h1>Hi ${esc(greetName)}, let’s set up your function space<br class="ss-br"> and show customers what your venue has to offer</h1>
     <p class="ss-added" id="ss-added" aria-live="polite"></p>
 
     <div class="gs-grid ss-block">
       <div class="gs-field">
-        <label for="s-venue">Venue Name <span class="gs-req" aria-hidden="true">*</span></label>
+        <label for="s-venue">Venue Name ${req}</label>
         <input id="s-venue" type="text" maxlength="80" value="${esc(signup.venue || "")}" aria-required="true" aria-describedby="s-venue-msg">${err("s-venue")}
       </div>
       <div></div>
       <div class="gs-field">
-        <label for="s-name">Function Space Name <span class="gs-req" aria-hidden="true">*</span></label>
+        <label for="s-name">Function Space Name ${req}</label>
         <input id="s-name" type="text" maxlength="60" aria-required="true" aria-describedby="s-name-msg">${err("s-name")}
       </div>
       <div class="gs-field">
-        <label for="s-type">Function Space – Type <span class="gs-eg">(eg. Pub, Private Room, Restaurant, Rooftop, Bar, other)</span> <span class="gs-req" aria-hidden="true">*</span></label>
+        <label for="s-type">Function Space – Type <span class="gs-eg">(eg. Pub, Private Room, Restaurant, Rooftop, Bar, other)</span> ${req}</label>
         <input id="s-type" type="text" maxlength="60" aria-required="true" aria-describedby="s-type-msg">${err("s-type")}
       </div>
       <div class="gs-field gs-wide">
-        <label for="s-about">About Your Function Space <span class="gs-eg">(max ${D.maxWords} words. Capture the atmosphere, style and feel that make your space special. Describe the extras that WOW)</span> <span class="gs-req" aria-hidden="true">*</span></label>
-        <textarea id="s-about" rows="2" aria-required="true" aria-describedby="s-about-count s-about-msg"></textarea>
-        <p class="gs-hint ss-count" id="s-about-count">0 of ${D.maxWords} words</p>${err("s-about")}
+        <label for="s-about">About Your Function Space <span class="gs-eg">(max ${D.maxWords} words. Capture the atmosphere, style and feel that make your space special. Describe the extras that WOW)</span> ${req}</label>
+        <textarea id="s-about" rows="3" aria-required="true" aria-describedby="s-about-count s-about-msg"></textarea>
+        <p class="gs-hint ss-count" id="s-about-count" aria-live="polite"></p>${err("s-about")}
       </div>
     </div>
 
-    <div class="ss-pair">
-    <section class="ss-row ss-group" aria-labelledby="cap-title">
-      <h2 id="cap-title"><button type="button" class="ss-group-head" aria-expanded="false" aria-controls="cap-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">Capacity <span class="gs-req" aria-hidden="true">*</span></span><span class="ss-group-sum" id="cap-sum">Select an option</span></button></h2>
-      <div class="fold" id="cap-body"><div class="fold-inner"><div class="ss-fold-body">
-        <fieldset class="ss-cap" aria-describedby="s-cap-msg">
-          <legend class="sr-only">Capacity</legend>
-          <div class="ss-cap-fields">
-            <label class="ss-small">Max. guest count standing:<input id="s-standing" type="number" min="1" step="1" inputmode="numeric"></label>
-            <label class="ss-small">Max. guest count seated:<input id="s-seated" type="number" min="1" step="1" inputmode="numeric"></label>
-          </div>
-          ${err("s-cap")}
-        </fieldset>
-      </div></div></div>
-    </section>
-
-    <section class="ss-row ss-group" aria-labelledby="deposit-title">
-      <h2 id="deposit-title"><button type="button" class="ss-group-head" aria-expanded="false" aria-controls="deposit-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">Deposit <span class="gs-req" aria-hidden="true">*</span></span><span class="ss-group-sum" id="deposit-sum">Select an option</span></button></h2>
-      <div class="fold" id="deposit-body"><div class="fold-inner"><div class="ss-fold-body ss-deposit">
+    <div class="ss-row ss-cap-row">
+      <fieldset class="ss-cap" aria-describedby="s-cap-msg">
+        <legend>Capacity ${req}</legend>
+        <div class="ss-cap-fields">
+          <label class="ss-small">Max. guest count standing:<input id="s-standing" type="number" min="1" step="1" inputmode="numeric"></label>
+          <label class="ss-small">Max. guest count sitting:<input id="s-seated" type="number" min="1" step="1" inputmode="numeric"></label>
+        </div>
+        ${err("s-cap")}
+      </fieldset>
+      <div class="ss-deposit">
+        <span class="ss-legend">Deposit ${req}</span>
         <label class="ss-small" for="s-deposit">Amount required to secure booking:</label>
         ${money("s-deposit", "Deposit amount")}${err("s-deposit")}
-      </div></div></div>
-    </section>
+      </div>
     </div>
 
-    <section class="ss-row ss-group" aria-labelledby="buffer-title">
-      <h2 id="buffer-title"><button type="button" class="ss-group-head" aria-expanded="false" aria-controls="buffer-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">Booking Buffer Times <span class="gs-req" aria-hidden="true">*</span></span><span class="ss-group-sum" id="buffer-sum">Select an option</span></button></h2>
-      <div class="fold" id="buffer-body"><div class="fold-inner"><div class="ss-fold-body">
+    <section class="ss-row" aria-labelledby="buffer-title">
+      <h2 id="buffer-title">Booking Buffer Times</h2>
       <p>These times will automatically be added before and after each booking to allow for venue setup, pack down and cleaning.</p>
-      <p class="ss-example" id="ss-example" aria-live="polite"></p>
+      <dl class="ss-example" id="ss-example" aria-live="polite"></dl>
       <div class="gs-grid ss-buffers">
         <div class="gs-field">
-          <label for="s-setup">Setup Time <span class="gs-req" aria-hidden="true">*</span></label>
+          <label for="s-setup">Setup Time ${req}</label>
           <p class="gs-hint" id="s-setup-hint">Time required before a booking commences to allow for venue preparation and event setup.</p>
           ${bufferSelect("s-setup")}${err("s-setup")}
         </div>
         <div class="gs-field">
-          <label for="s-packdown">Pack Down &amp; Cleaning Time <span class="gs-req" aria-hidden="true">*</span></label>
+          <label for="s-packdown">Pack Down &amp; Cleaning Time ${req}</label>
           <p class="gs-hint" id="s-packdown-hint">Time required after a booking concludes to allow for pack down, cleaning, and venue reset.</p>
           ${bufferSelect("s-packdown")}${err("s-packdown")}
         </div>
       </div>
-      </div></div></div>
     </section>
 
-    <section class="ss-row ss-group" aria-labelledby="extras-title">
-      <h2 id="extras-title"><button type="button" class="ss-group-head" aria-expanded="false" aria-controls="extras-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">Extras</span><span class="ss-group-sum" id="extras-sum">None</span></button></h2>
-      <div class="fold" id="extras-body"><div class="fold-inner"><div class="ss-fold-body">
-      <p class="gs-hint">Enter amounts including GST. Customers see these charges up front, before they book.</p>
+    <section class="ss-row" aria-labelledby="extras-title">
+      <h2 id="extras-title">Extras</h2>
       <div class="ss-extras">${D.extras.map((x) => `
         <fieldset class="ss-extra">
           <legend>${esc(x.label)}:</legend>
-          <label class="check"><input type="radio" name="x-${x.id}" value="no" checked><span>No</span></label>
+          <label class="check"><input type="radio" name="x-${x.id}" value="no"><span>No</span></label>
           <label class="check"><input type="radio" name="x-${x.id}" value="yes"><span>Yes</span></label>
           ${money(`x-${x.id}-amount`, `${x.label} amount`)}${err(`x-${x.id}-amount`)}
         </fieldset>`).join("")}</div>
-      </div></div></div>
     </section>
 
     <div class="ss-row ss-sessions">${D.sessions.map(sessionTable).join("")}</div>
 
-    ${D.groups.map((g) => `
-    <fieldset class="ss-row ss-group">
-      <legend class="sr-only">${esc(g.label)}</legend>
-      <button type="button" class="ss-group-head" aria-expanded="false" aria-controls="g-${g.id}-body"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="ss-group-title">${esc(g.label)}</span><span class="ss-group-sum" id="g-${g.id}-sum">Select an option</span></button>
-      <div class="fold" id="g-${g.id}-body"><div class="fold-inner">
-        <div class="ss-checks">${g.options.map((o, i) => `<label class="check"><input type="checkbox" name="g-${g.id}" value="${esc(o)}" id="g-${g.id}-${i}"><span>${esc(o)}</span></label>`).join("")}</div>
-      </div></div>
-    </fieldset>`).join("")}
+    <section class="ss-row ss-menus" aria-labelledby="food-title">
+      <h2 id="food-title"><strong>Food</strong> Catering Type:</h2>
+      <div class="ss-menu-list">${D.food.map((o) => menuRow("food", o)).join("")}</div>
+      <fieldset class="ss-dietary">
+        <legend>Dietary Accommodations:</legend>
+        <div class="ss-checks">${D.dietary.map((o, i) => `<label class="check"><input type="checkbox" name="g-dietary" value="${esc(o)}" id="g-dietary-${i}"><span>${esc(o)}</span></label>`).join("")}</div>
+      </fieldset>
+    </section>
+
+    <section class="ss-row ss-menus" aria-labelledby="bev-title">
+      <h2 id="bev-title"><strong>Beverage Options</strong></h2>
+      <div class="ss-menu-list">${D.beverage.map((o) => menuRow("bev", o)).join("")}</div>
+    </section>
+
+    ${D.groups.map(checksGroup).join("")}
 
     <section class="ss-row" aria-labelledby="img-title">
       <h2 id="img-title">Images</h2>
@@ -160,28 +163,17 @@
         <div class="ss-photo-wrap">
           <label class="gs-photo" id="p-box-${i}" for="p-${i}">
             <span class="gs-photo-preview" id="p-preview-${i}"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.500a2 2 0 0 1 2-2h4l2-3h8l2 3h4a2 2 0 0 1 2 2V24a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="16" cy="16.500" r="5"/><circle cx="24" cy="12" r=".8" fill="currentColor"/></svg></span>
-            <span class="gs-photo-label" id="p-label-${i}">Photo ${i + 1}</span>
+            <span class="gs-photo-label sr-only" id="p-label-${i}">Photo ${i + 1}</span>
           </label>
           <input id="p-${i}" class="gs-file" type="file" accept="image/jpeg,image/png,image/webp" aria-labelledby="img-title p-label-${i}">
         </div>`).join("")}</div>
       <p class="gs-err" id="p-msg"></p>
     </section>
 
-    <section class="ss-row ss-fb" aria-labelledby="fb-title">
-      <div class="ss-fb-card">
-        <div class="ss-fb-icons" aria-hidden="true"><img src="assets/step-food.png" alt="" width="124" height="74"><img src="assets/step-bev.png" alt="" width="124" height="74"></div>
-        <div class="ss-fb-text">
-          <h2 id="fb-title">Food &amp; Beverage Options</h2>
-          <p>Add your food packages and drinks so customers can choose them when they book.</p>
-        </div>
-        <a class="ss-menu-link" href="venue-setup.html">Enter menu items <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 3.5L13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      </div>
-    </section>
-
     <div class="ss-actions">
       <button type="submit" class="ss-preview" data-action="preview">Preview function listing</button>
       <hr>
-      <button type="submit" class="ss-another" data-action="another">Add another space <svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button type="submit" class="ss-another" data-action="another">Add another space ${chev}</button>
       <p class="ss-terms"><a href="#">Disclaimer and T&amp;C’s</a></p>
     </div>`;
 
@@ -190,7 +182,7 @@
 
   /* ---------- Live bits: word count, buffer example, extras amounts ---------- */
 
-  // The About box starts two lines tall and grows with what's typed (up to a limit, then it scrolls).
+  // The About box grows with what's typed (up to a limit, then it scrolls).
   function fitAbout() {
     const t = el("s-about");
     t.style.height = "auto";
@@ -199,14 +191,16 @@
   function syncWords() {
     fitAbout();
     const n = words(el("s-about").value);
-    el("s-about-count").textContent = `${n} of ${D.maxWords} words`;
+    el("s-about-count").textContent = n > D.maxWords ? `${n} of ${D.maxWords} words` : "";
     el("s-about-count").classList.toggle("is-over", n > D.maxWords);
   }
   function syncExample() {
     const before = Number(el("s-setup").value) || 60;
     const after = Number(el("s-packdown").value) || 60;
     const chosen = el("s-setup").value && el("s-packdown").value;
-    el("ss-example").textContent = `${chosen ? "With your times" : "Example"}: a 1:00pm – 6:00pm booking makes the space unavailable from ${timeLabel(780 - before)} to ${timeLabel(1080 + after)}.`;
+    const short = (m) => duration(m).replace(" 00 min", "");
+    const rows = [["Booking:", "1:00pm – 6:00pm"], ["Setup Time:", short(before)], ["Pack Down &amp; Cleaning Time:", short(after)], ["Venue unavailable:", `${timeLabel(780 - before)} – ${timeLabel(1080 + after)}`]];
+    el("ss-example").innerHTML = `<span class="ss-ex-lead">${chosen ? "With your times:" : "Example:"}</span>${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}`;
   }
   function syncExtras() {
     D.extras.forEach((x) => {
@@ -217,114 +211,50 @@
       if (!yes) { amount.value = ""; el(`x-${x.id}-amount-msg`).textContent = ""; amount.removeAttribute("aria-invalid"); }
     });
   }
-  /* ---------- Available hours: one "Every day" row, or each day separately ---------- */
-
-  const split = { day: false, evening: false };
-  const fields = ["open", "close", "spend"];
-  function setSplit(sid, on) {
-    split[sid] = on;
-    el(`${sid}-same`).hidden = on;
-    el(`${sid}-days`).hidden = !on;
-    el(`${sid}-msg`).textContent = "";
-    $$(`[data-split="${sid}"]`, form).forEach((b) => { b.textContent = on ? "Use the same hours every day" : "Set different hours for each day"; });
-    if (on) {
-      // Start every empty day from the "Every day" times.
-      DAYS.forEach((d, i) => {
-        if (fields.every((f) => !el(`${sid}-${f}-${i}`).value.trim())) fields.forEach((f) => { el(`${sid}-${f}-${i}`).value = el(`${sid}-all-${f}`).value; });
-      });
-    } else {
-      // Back to one row: start it from the first day that has hours.
-      const i = DAYS.findIndex((d, k) => fields.some((f) => el(`${sid}-${f}-${k}`).value.trim()));
-      if (i >= 0) fields.forEach((f) => { el(`${sid}-all-${f}`).value = el(`${sid}-${f}-${i}`).value; });
-    }
-  }
-  form.addEventListener("click", (e) => {
-    const b = e.target.closest("[data-split]");
-    if (!b) return;
-    const sid = b.dataset.split;
-    setSplit(sid, !split[sid]);
-    el(split[sid] ? `${sid}-open-0` : `${sid}-all-open`).focus();
-  });
-
-  /* ---------- Booking Buffer Times and Extras: drop-downs with a summary ---------- */
-
-  const shortTime = (m) => [Math.floor(m / 60) ? `${Math.floor(m / 60)} hr` : "", m % 60 ? `${m % 60} min` : ""].filter(Boolean).join(" ") || "0 min";
-  function syncFoldSums() {
-    // Capacity: "100 standing · 50 seated"; Deposit: "$250".
-    const st = el("s-standing").value.trim(), se = el("s-seated").value.trim();
-    const cap = el("cap-sum");
-    cap.textContent = st || se ? [st && `${st} standing`, se && `${se} seated`].filter(Boolean).join(" · ") : "Select an option";
-    cap.classList.toggle("is-set", !!(st || se));
-    const dep = el("s-deposit").value.trim();
-    const depSum = el("deposit-sum");
-    depSum.textContent = dep ? `$${dep.replace(/^\$/, "")}` : "Select an option";
-    depSum.classList.toggle("is-set", !!dep);
-    const setup = el("s-setup").value;
-    const pack = el("s-packdown").value;
-    const b = el("buffer-sum");
-    b.textContent = setup && pack ? `Setup ${shortTime(Number(setup))} · Pack down ${shortTime(Number(pack))}` : setup || pack ? "Incomplete" : "Select an option";
-    b.classList.toggle("is-set", !!(setup && pack));
-    const on = D.extras.filter((x) => form.querySelector(`input[name="x-${x.id}"][value="yes"]`).checked)
-      .map((x) => { const v = el(`x-${x.id}-amount`).value.trim(); return v ? `${x.label} $${v.replace(/^\$/, "")}` : x.label; });
-    const x = el("extras-sum");
-    x.textContent = on.length ? on.join(", ") : "None";
-    x.classList.toggle("is-set", on.length > 0);
-  }
-  // Hours: "Every day 12:00pm – 4:00pm · $1800", "Different hours each day", "Incomplete" or "Select an option".
-  function syncHours(sid) {
-    const sum = el(`${sid}-sum`);
-    let text = "Select an option";
-    let set = false;
-    if (split[sid]) {
-      const open = DAYS.filter((d, i) => el(`${sid}-open-${i}`).value && el(`${sid}-close-${i}`).value).length;
-      text = open ? `Different hours each day (${open} day${open === 1 ? "" : "s"} open)` : "Different hours each day";
-      set = open > 0;
-    } else {
-      const o = el(`${sid}-all-open`).value, c = el(`${sid}-all-close`).value, m = el(`${sid}-all-spend`).value.trim();
-      if (o && c) { text = `Every day ${timeLabel(toMins(o))} – ${timeLabel(toMins(c))}${m ? ` · $${m.replace(/^\$/, "")}` : ""}`; set = true; }
-      else if (o || c || m) text = "Incomplete";
-    }
-    sum.textContent = text;
-    sum.classList.toggle("is-set", set);
-  }
-  const syncAllHours = () => D.sessions.forEach((s) => syncHours(s.id));
-  form.addEventListener("input", syncAllHours);
-  form.addEventListener("change", syncAllHours);
-  form.addEventListener("click", (e) => { if (e.target.closest("[data-split]")) syncAllHours(); });
-  syncAllHours();
-  form.addEventListener("input", syncFoldSums);
-  form.addEventListener("change", syncFoldSums);
-  syncFoldSums();
-
-  /* ---------- Tick-box groups (Dietary, Additional, Facilities…): drop-downs, closed until clicked ---------- */
-
-  // The summary on each closed group: what's ticked (in green), or "Select an option".
-  function syncGroup(g) {
-    const ticked = $$(`input[name="g-${g.id}"]:checked`, form).map((c) => c.value);
-    const sum = el(`g-${g.id}-sum`);
-    sum.textContent = !ticked.length ? "Select an option" : ticked.length > 2 ? `${ticked.length} selected` : ticked.join(", ");
-    sum.classList.toggle("is-set", ticked.length > 0);
-  }
-  const syncGroups = () => D.groups.forEach(syncGroup);
-  form.addEventListener("click", (e) => {
-    const head = e.target.closest(".ss-group-head");
-    if (!head) return;
-    const open = head.getAttribute("aria-expanded") !== "true";
-    head.setAttribute("aria-expanded", String(open));
-    el(head.getAttribute("aria-controls")).classList.toggle("is-open", open);
-  });
-  form.addEventListener("change", (e) => {
-    const g = e.target.name && D.groups.find((x) => e.target.name === `g-${x.id}`);
-    if (g) syncGroup(g);
-  });
-  syncGroups();
-
   el("s-about").addEventListener("input", syncWords);
   form.addEventListener("change", (e) => {
     if (e.target.matches("#s-setup, #s-packdown")) syncExample();
     if (e.target.name && e.target.name.startsWith("x-")) syncExtras();
   });
   syncWords(); syncExample(); syncExtras();
+
+  /* ---------- Upload menu (kept in this browser, like p19's) ---------- */
+
+  // The note beside each option: the uploaded file's name, or the mockup's hint.
+  function syncUploadNote(id) {
+    const note = el(`up-${id}-note`);
+    if (!note) return;
+    const file = window.FF_SHARED.menuFile(id);
+    note.classList.toggle("has-file", !!file);
+    note.innerHTML = file ? `Uploaded: <strong>${esc(file.name)}</strong>` : esc(uploadHint);
+  }
+  [...D.food, ...D.beverage].filter((o) => o.upload).forEach((o) => syncUploadNote(o.id));
+  form.addEventListener("change", (e) => {
+    const input = e.target.closest("[data-upload]");
+    if (!input) return;
+    const id = input.dataset.upload;
+    const file = input.files[0];
+    input.value = "";
+    if (!file) return;
+    const note = el(`up-${id}-note`);
+    const ext = file.name.split(".").pop().toLowerCase();
+    if (!D.uploadTypes.includes(ext)) { note.textContent = "Please choose a PDF, JPG, PNG or DOCX file."; return; }
+    if (file.size > D.uploadMaxBytes) { note.textContent = "That file is over 2 MB. Please choose a smaller copy of the menu."; return; }
+    // Demo: the file is kept in this browser so the preview can open it (see FF_SHARED.menuFile).
+    const reader = new FileReader();
+    reader.onload = () => {
+      const files = window.FF_SHARED.menuFiles();
+      const types = { pdf: "application/pdf", jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" };
+      files[id] = { name: file.name, type: file.type || types[ext], data: reader.result };
+      try { localStorage.setItem(window.FF_SHARED.MENUS_KEY, JSON.stringify(files)); } catch (er) {
+        note.textContent = "This menu can’t be saved in this browser. Please try a smaller file.";
+        return;
+      }
+      el(`${input.dataset.kind}-${id}`).checked = true; // uploading a menu ticks its option
+      syncUploadNote(id);
+    };
+    reader.readAsDataURL(file);
+  });
 
   /* ---------- Photos (downsized, kept in the tab) ---------- */
 
@@ -335,6 +265,7 @@
     el(`p-preview-${i}`).innerHTML = `<img src="${src}" alt="Function space photo ${i + 1}">`;
     el(`p-box-${i}`).classList.add("has-photo");
     el(`p-label-${i}`).textContent = "Change photo";
+    el(`p-label-${i}`).classList.remove("sr-only");
   }
   for (let i = 0; i < D.maxPhotos; i++) {
     el(`p-${i}`).addEventListener("change", () => {
@@ -361,6 +292,7 @@
 
   const hhmm = (mins) => { const m = mins % 1440; return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`; };
   const toDollars = (c) => (c === null || c === undefined ? "" : c % 100 ? (c / 100).toFixed(2) : String(c / 100));
+  const tickAll = (name, values) => $$(`input[name="${name}"]`, form).forEach((c) => { c.checked = (values || []).includes(c.value); });
   const editing = spaces.find((s) => s.id === new URLSearchParams(location.search).get("edit"));
   if (editing) {
     el("s-name").value = editing.name;
@@ -376,30 +308,16 @@
       form.querySelector(`input[name="x-${x.id}"][value="${cents === null ? "no" : "yes"}"]`).checked = true;
       el(`x-${x.id}-amount`).value = toDollars(cents);
     });
-    D.sessions.forEach((s) => {
-      const list = editing.hours[s.id];
-      const key = (h) => (h ? `${h.open}-${h.close}-${h.minSpendCents}` : "closed");
-      const same = list.every((h) => key(h) === key(list[0]));
-      if (same) {
-        if (list[0]) {
-          el(`${s.id}-all-open`).value = hhmm(list[0].open);
-          el(`${s.id}-all-close`).value = hhmm(list[0].close);
-          el(`${s.id}-all-spend`).value = toDollars(list[0].minSpendCents);
-        }
-        return;
-      }
-      list.forEach((h, i) => {
-        if (!h) return;
-        el(`${s.id}-open-${i}`).value = hhmm(h.open);
-        el(`${s.id}-close-${i}`).value = hhmm(h.close);
-        el(`${s.id}-spend-${i}`).value = toDollars(h.minSpendCents);
-      });
-      setSplit(s.id, true);
-    });
-    D.groups.forEach((g) => $$(`input[name="g-${g.id}"]`, form).forEach((c) => { c.checked = (editing[g.id] || []).includes(c.value); }));
-    syncGroups();
-    syncFoldSums();
-    syncAllHours();
+    D.sessions.forEach((s) => (editing.hours[s.id] || []).forEach((h, i) => {
+      if (!h) return;
+      el(`${s.id}-open-${i}`).value = hhmm(h.open);
+      el(`${s.id}-close-${i}`).value = hhmm(h.close);
+      el(`${s.id}-spend-${i}`).value = toDollars(h.minSpendCents);
+    }));
+    tickAll("food", editing.food);
+    tickAll("bev", editing.bev);
+    tickAll("g-dietary", editing.dietary);
+    D.groups.forEach((g) => tickAll(`g-${g.id}`, editing[g.id]));
     editing.photos.forEach((src, i) => setPhoto(i, src));
     syncWords(); syncExample();
     D.extras.forEach((x) => { const amount = el(`x-${x.id}-amount`); const v = amount.value; syncExtras(); amount.value = v; });
@@ -457,23 +375,18 @@
     D.sessions.forEach((s) => {
       let problem = "";
       let first = null;
-      // In "Every day" mode the one row stands for all seven days; otherwise each day is checked on its own.
-      const rows = split[s.id] ? DAYS.map((d, i) => [d, String(i)]) : [[null, "all"]];
-      const checked = rows.map(([d, key]) => {
-        const id = (f) => (key === "all" ? `${s.id}-all-${f}` : `${s.id}-${f}-${key}`);
-        const open = el(id("open"));
-        const close = el(id("close"));
-        const spend = el(id("spend"));
-        const whose = d ? `${d}’s` : "the";
-        const Whose = d ? `${d}’s` : "The";
+      hours[s.id] = DAYS.map((d, i) => {
+        const open = el(`${s.id}-open-${i}`);
+        const close = el(`${s.id}-close-${i}`);
+        const spend = el(`${s.id}-spend-${i}`);
         [open, close, spend].forEach((x) => x.removeAttribute("aria-invalid"));
         if (!open.value && !close.value && !spend.value.trim()) return null; // closed
         const spendCents = spend.value.trim() ? parseCents(spend.value) : null;
         let rowProblem = "";
-        if (!open.value || !close.value) rowProblem = `Please give ${whose} opening and closing times, or leave the whole row blank if closed.`;
-        else if (toMins(close.value) <= toMins(open.value) && !s.overnight) rowProblem = `${Whose} closing time needs to be after ${d ? "its" : "the"} opening time.`;
-        else if (toMins(close.value) === toMins(open.value)) rowProblem = `${Whose} opening and closing times are the same.`;
-        else if (spend.value.trim() && spendCents === null) rowProblem = `Please enter ${whose} minimum spend in dollars, like 1800.`;
+        if (!open.value || !close.value) rowProblem = `Please give ${d}’s opening and closing times, or leave the whole row blank if closed.`;
+        else if (toMins(close.value) <= toMins(open.value) && !s.overnight) rowProblem = `${d}’s closing time needs to be after its opening time.`;
+        else if (toMins(close.value) === toMins(open.value)) rowProblem = `${d}’s opening and closing times are the same.`;
+        else if (spend.value.trim() && spendCents === null) rowProblem = `Please enter ${d}’s minimum spend in dollars, like 1800.`;
         if (rowProblem) {
           problem = problem || rowProblem;
           const target = !open.value ? open : !close.value || rowProblem.includes("closing") || rowProblem.includes("same") ? close : spend;
@@ -487,17 +400,17 @@
         if (c <= o) c += 1440; // evening running past midnight
         return { open: o, close: c, minSpendCents: spendCents };
       });
-      hours[s.id] = split[s.id] ? checked : DAYS.map(() => (checked[0] ? { ...checked[0] } : null));
       el(`${s.id}-msg`).textContent = problem;
       if (first) bad.push(first);
     });
     if (!anyOpen && !el("day-msg").textContent && !el("evening-msg").textContent) {
       el("day-msg").textContent = "Please add the hours the space is available on at least one day.";
-      bad.push(el(split.day ? "day-open-0" : "day-all-open"));
+      bad.push(el("day-open-0"));
     }
 
-    const ticked = {};
-    D.groups.forEach((g) => { ticked[g.id] = $$(`input[name="g-${g.id}"]:checked`, form).map((c) => c.value); });
+    const ticked = (name) => $$(`input[name="${name}"]:checked`, form).map((c) => c.value);
+    const groups = {};
+    D.groups.forEach((g) => { groups[g.id] = ticked(`g-${g.id}`); });
 
     return {
       bad,
@@ -510,7 +423,10 @@
         bufferMinutes: { setup: Number(el("s-setup").value), packDown: Number(el("s-packdown").value) },
         extrasCents: extras,
         hours,
-        ...ticked,
+        food: ticked("food"),
+        bev: ticked("bev"),
+        dietary: ticked("g-dietary"),
+        ...groups,
         photos: photos.filter(Boolean),
       },
     };
@@ -520,13 +436,7 @@
     e.preventDefault();
     const action = (e.submitter && e.submitter.dataset.action) || "preview";
     const { bad, space } = collect();
-    if (bad.length) {
-      const fold = bad[0].closest(".fold");
-      const head = fold && !fold.classList.contains("is-open") && form.querySelector(`[aria-controls="${fold.id}"]`);
-      if (head) { head.setAttribute("aria-expanded", "true"); fold.classList.add("is-open"); }
-      bad[0].focus();
-      return;
-    }
+    if (bad.length) { bad[0].focus(); return; }
 
     // Same name twice replaces the earlier one; an edited space replaces itself even if renamed.
     const isOld = (s) => s.id === space.id || (editing && s.id === editing.id);
@@ -546,6 +456,7 @@
         el(`p-preview-${i}`).innerHTML = emptyPreview;
         el(`p-box-${i}`).classList.remove("has-photo");
         el(`p-label-${i}`).textContent = `Photo ${i + 1}`;
+        el(`p-label-${i}`).classList.add("sr-only");
       }
       syncWords(); syncExample(); syncExtras(); showAdded();
       el("ss-added").textContent += kept ? " Now add the next one." : " (Photos couldn’t be kept in this browser.)";

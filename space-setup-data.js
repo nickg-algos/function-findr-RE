@@ -14,6 +14,25 @@ window.FF_SPACE_SETUP = {
     { id: "security", label: "Security Fee" },
   ],
 
+  // Food Catering Type and Beverage Options (V42 mockup p12): a tick box each, most with an Upload menu.
+  food: [
+    { id: "canapes", label: "Canapés/ Finger food", upload: true },
+    { id: "private", label: "Private Dining", upload: true },
+    { id: "alacarte", label: "À la carte", upload: true },
+    { id: "course", label: "2 or 3 course menu", upload: true },
+    { id: "kids", label: "Kids Menu", upload: true },
+    { id: "onTheDay", label: "Will order food on the day" },
+  ],
+  dietary: ["Vegetarian", "Vegan", "Gluten-Free", "Allergy-Friendly", "Halal"],
+  beverage: [
+    { id: "barTab", label: "Bar tab", upload: true },
+    { id: "drinks", label: "Drink packages", upload: true },
+    { id: "cocktails", label: "Cocktail options", upload: true },
+    { id: "payg", label: "Pay-As-You-Go", upload: true },
+  ],
+  uploadTypes: ["pdf", "jpg", "jpeg", "png", "docx"],
+  uploadMaxBytes: 2 * 1024 * 1024,
+
   groups: [
     { id: "additional", label: "Additional", options: ["Own Decorations Welcome (please avoid adhesives or confetti)", "BYO Celebration Cake permitted ($1pp venue cutting fee applies)", "BYO Celebration Cake - guest to cut. No cakeage"] },
     { id: "facilities", label: "Facilities", options: ["AV Equipment: TV, projector, screen, microphone, speakers", "Air conditioning / Heating", "Wi-Fi Access", "Dance Floor", "Smoking Area", "Pool Table", "High and Low Tables"] },

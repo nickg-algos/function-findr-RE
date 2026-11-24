@@ -64,3 +64,14 @@
   .pv .sp-photos:not(.is-single) { height: auto; grid-template-rows: auto; }
   .pv .sp-photo-main img, .pv .sp-photos.is-single .sp-photo-main img { aspect-ratio: 16 / 10; }
 }
+
+/* Page 13 of the V42 PDF: the customer's availability box beside the listing (shown, not usable), then Location. */
+.pv .sp-layout .pv-main { max-width: none; margin-top: 0; }
+.pv .sp-layout { margin-top: 2.5rem; }
+.pv .sp-report { cursor: default; }
+.pv-card .vp-location { margin-top: 3rem; }
+.pv .sp-layout { grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem); gap: 2rem; }
+.pv .sp-layout .sp-sub { grid-template-columns: 4rem 8.5rem minmax(0, 1fr); }
+.pv .sp-layout .pv-pkgs .sp-view { min-width: 7.5rem; }
+@media (max-width: 960px) { .pv .sp-layout { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 700px) { .pv .sp-layout .sp-sub { grid-template-columns: 3.75rem minmax(0, 1fr); } }

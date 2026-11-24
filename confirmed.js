@@ -1,4 +1,4 @@
-// "Success! Booking Confirmation" (mockup page 13): confirmed.html?venue=…&space=…&date=…&start=…&end=…
+// "Congratulations, your function is booked!!" (mockup page 13; wording changed by request 2026-11-24): confirmed.html?venue=…&space=…&date=…&start=…&end=…
 // The last step of the booking flow. Choosing event details goes to My Bookings (page 14);
 // logging out clears the booking details kept in this tab.
 (function () {
@@ -28,8 +28,8 @@
 
   $("#confirmed").innerHTML = `
     <div class="cf-box">
-      <h1>Success!</h1>
-      <p class="cf-sub">Booking Confirmation</p>
+      <svg class="cf-popper" viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><path d="M4 28l5.500-15.500 10 10z"/><path d="M7.500 18.500l6 6M15 8.500c1-2 0-4-1.500-4.500M19.500 12.500c2.500-1.500 5-1 6.500.500M18 10l4-5M25 18l3-1M21 7l1-3M24 11l4-2"/><circle cx="21" cy="2.500" r=".9"/><circle cx="28.500" cy="13" r=".9"/><circle cx="12" cy="5" r=".9"/></svg>
+      <h1 class="cf-party"><span class="cf-big">Congratulations,</span> <span class="cf-line">your function is booked!!</span></h1>
       ${hasBooking ? `<p class="cf-what">${esc(space.name)} at ${esc(listing.name)}<br>${A.dayName(req.date)} ${A.longDate(req.date)}, ${A.timeLabel(req.start)}${req.end !== null ? ` – ${A.timeLabel(req.end)}` : ""}</p>` : ""}
       <p class="cf-email">${emailLine}</p>
       <p class="cf-demo">Demo only: no booking has been made and no email has been sent.</p>

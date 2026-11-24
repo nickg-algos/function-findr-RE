@@ -443,10 +443,11 @@
   function onClick(e) {
     if (e.target.closest('a[href="#"]')) { e.preventDefault(); return; }
 
-    // Back and Done both return to the function space set-up form (p18). Menus save as they go, so if the
-    // venue came from that form, going back in history keeps what they'd already filled in there.
+    // Back returns to the listing preview (the page before this one); Done goes on to "your listing is now live" (p21).
+    // Menus save as they go; if the venue came from the preview, going back in history keeps it as they left it.
+    if (e.target.closest("[data-finish]")) save();
     const ret = e.target.closest("[data-return]");
-    if (ret && document.referrer && new URL(document.referrer).pathname.endsWith("/space-setup.html")) {
+    if (ret && document.referrer && new URL(document.referrer).pathname.endsWith("/preview.html")) {
       e.preventDefault();
       save();
       history.back();

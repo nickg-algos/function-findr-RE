@@ -31,8 +31,8 @@ window.FF_SHARED = (function () {
     { p: 16, title: "Venue sign-up", href: "get-started.html" },
     { p: 17, title: "90 days free", href: "trial.html" },
     { p: 18, title: "Function space setup", href: "space-setup.html" },
+    { p: 20, title: "Preview your listing", href: "preview.html" }, // V42 PDF p13, moved between p18 and p19 by request
     { p: 19, title: "Food and beverage setup", href: "venue-setup.html" },
-    { p: 20, title: "Preview your listing", href: "preview.html" },
     { p: 21, title: "You’re all set", href: "all-set.html" },
     { p: null, title: "Venue dashboard (no mockup)", href: "dashboard.html" },
     { p: 22, title: "Booking calendar: add or edit", href: "calendar.html" },
@@ -166,4 +166,54 @@ window.FF_SHARED = (function () {
   });
 
   return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist, flow, stepHref, logoBoxes, reviewCards, initCarousels, plainDollars, MENUS_KEY, menuFiles, menuFile };
+})();
+
+/* ---------- Zoom like a PDF: Cmd + scroll (Ctrl + scroll on Windows, or pinch on a trackpad) ---------- */
+// Zooms the whole page around the pointer, from 50% to 200%. The level is kept across pages
+// (localStorage ff.zoom.v1). Cmd/Ctrl + 0 puts it back to 100%. Pages shown inside another page
+// (the calendar's embedded checklist) follow the page around them, so they don't zoom on their own.
+(function () {
+  "use strict";
+  if (window.top !== window) return;
+  const KEY = "ff.zoom.v1";
+  const MIN = 0.5, MAX = 2;
+  const root = document.documentElement;
+  let z = 1;
+  try { z = Math.min(MAX, Math.max(MIN, Number(localStorage.getItem(KEY)) || 1)); } catch (e) { /* 100% */ }
+
+  const badge = document.createElement("p");
+  badge.setAttribute("role", "status");
+  badge.style.cssText = "position:fixed;z-index:9999;right:1rem;bottom:3.25rem;margin:0;padding:.35rem .8rem;border-radius:999px;background:#231f20;color:#fff;font:500 .9rem/1.3 'Instrument Sans',Helvetica,Arial,sans-serif;pointer-events:none;opacity:0;transition:opacity .15s";
+  document.body.append(badge);
+  let hideTimer = 0;
+  function show() {
+    badge.textContent = `${Math.round(z * 100)}%`;
+    badge.style.opacity = "1";
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => { badge.style.opacity = "0"; }, 900);
+  }
+
+  // Sets the zoom, keeping the point under (x, y) in the same place on screen.
+  function setZoom(next, x = innerWidth / 2, y = innerHeight / 2) {
+    next = Math.min(MAX, Math.max(MIN, Math.round(next * 100) / 100));
+    if (next === z) { show(); return; }
+    const sx = (scrollX + x) / z, sy = (scrollY + y) / z;
+    z = next;
+    root.style.zoom = z === 1 ? "" : String(z);
+    scrollTo(sx * z - x, sy * z - y);
+    try { localStorage.setItem(KEY, String(z)); } catch (e) { /* this page only */ }
+    show();
+  }
+  if (z !== 1) root.style.zoom = String(z);
+
+  addEventListener("wheel", (e) => {
+    if (!e.metaKey && !e.ctrlKey) return;
+    e.preventDefault();
+    const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY; // lines → pixels
+    setZoom(z * Math.exp(-Math.max(-50, Math.min(50, dy)) * 0.002), e.clientX, e.clientY); // about 10% per wheel click
+  }, { passive: false });
+
+  addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "0" && z !== 1) { e.preventDefault(); setZoom(1); }
+  });
 })();

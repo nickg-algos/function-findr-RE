@@ -28,7 +28,7 @@
     const s = window.FF_SEARCH.venues.find((v) => v.id === "sample");
     const v = window.FF_VENUES.sample;
     const fr = v.spaces[0];
-    venue = { name: s.name, address: `${s.street}, ${s.suburb}`, photo: null };
+    venue = { name: s.name, address: `${s.street}, ${s.suburb}`, photo: null, pin: s.pin };
     const label = (list, id) => (list.find((p) => p.id === id) || {}).label;
     packages = {
       food: v.foodPackages.map((id) => ({ id, label: label(DATA.foodPackages, id), desc: "" })),
@@ -53,6 +53,7 @@
     packages = { food: on(SETUP.food), bev: on(SETUP.beverage) };
   }
 
+  const mapPin = venue.pin || null; // only the example has a map; a new venue shows its address
   const allAccess = window.FF_SPACE_SETUP.groups.find((g) => g.id === "accessibility").options;
   // Open on the space just saved (preview.html?space=<id>), or the first.
   let current = Math.max(0, spaces.findIndex((s) => s.id === new URLSearchParams(location.search).get("space")));
@@ -62,6 +63,7 @@
   const icon = {
     pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s-7-6.600-7-12a7 7 0 0 1 14 0c0 5.400-7 12-7 12z" fill="currentColor"/><circle cx="12" cy="10" r="2.600" fill="#fff"/></svg>',
     seated: '<svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6v13h9v9M4 19l-1 9M13 19h3"/><rect x="15" y="12" width="14" height="4" rx="1"/><path d="M18 16v12M26 16v12"/><circle cx="22" cy="5" r="2"/><path d="M22 7v5"/></svg>',
+    flag: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22V3M5 4h13l-3 4.500 3 4.500H5"/></svg>',
     standing: '<svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.300" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6" r="2.500"/><circle cx="22" cy="6" r="2.500"/><path d="M6 29v-8l-1-6c0-2 2-3 4-3h2c2 0 4 1 4 3M26 29v-8l1-6c0-2-2-3-4-3h-2c-2 0-4 1-4 3M10 29v-7M22 29v-7"/></svg>',
   };
   // Dietary Accommodations are set once for the venue on the food & beverage page (localStorage ff.venueSetup.v1).
@@ -84,7 +86,7 @@
       return rows.length ? `${g.title && g.title !== "Options" ? `<h3>${esc(g.title)}</h3>` : ""}<ul class="sp-menu-list">${rows.map((r) => `<li>${esc(r.name)}</li>`).join("")}</ul>` : "";
     }).join("");
     const desc = saved.desc ? `<p>${esc(saved.desc)}</p>` : "";
-    return open + desc + groups || '<p>No menu items added yet. <a href="venue-setup.html">Enter menu items</a>.</p>';
+    return open + desc + groups || '<p>No menu uploaded yet.</p>';
   }
   const menuDialog = document.getElementById("menu");
   document.addEventListener("click", (e) => {
@@ -93,7 +95,8 @@
       const id = b.dataset.pvMenu;
       const cat = [...SETUP.food, ...SETUP.beverage].find((c) => c.id === id);
       const fromData = [...DATA.foodPackages, ...DATA.beveragePackages].find((p) => p.id === id);
-      document.getElementById("menu-title").textContent = (cat && cat.label) || (fromData && fromData.label) || "Menu";
+      const ss = [...window.FF_SPACE_SETUP.food, ...window.FF_SPACE_SETUP.beverage].find((o) => o.id === id);
+      document.getElementById("menu-title").textContent = (ss && ss.label) || (cat && cat.label) || (fromData && fromData.label) || "Menu";
       document.getElementById("menu-body").innerHTML = menuBody(id);
       menuDialog.showModal();
       return;
@@ -101,9 +104,14 @@
     if (e.target === menuDialog || e.target.closest("#menu [data-close]")) menuDialog.close();
   });
 
+  // Food and drinks ticked on p18 for this space (V42 mockup p12); spaces saved before that use p19's choices.
+  const SS = window.FF_SPACE_SETUP;
+  const fromSetup = (opts, ids) => opts.filter((o) => ids.includes(o.id)).map((o) => ({ id: o.upload ? o.id : null, label: o.label, desc: "" }));
+  const packagesFor = (s) => (!example && Array.isArray(s.food) ? { food: fromSetup(SS.food, s.food), bev: fromSetup(SS.beverage, s.bev || []) } : packages);
+  const dietaryFor = (s) => (!example && Array.isArray(s.food) ? s.dietary || [] : venueDietary.length ? venueDietary : s.dietary || []);
   const pkgs = (list) => (list.length
     ? `<ul class="pv-pkgs">${list.map((p) => `<li><div><strong>${esc(p.label)}</strong>${p.desc ? `<span>${esc(p.desc)}</span>` : ""}</div>${p.id ? `<button type="button" class="sp-view" data-pv-menu="${esc(p.id)}" aria-haspopup="dialog" aria-label="View the ${esc(p.label)} menu">View menu ${chev}</button>` : ""}</li>`).join("")}</ul>`
-    : '<p class="pv-none">None yet. <a href="venue-setup.html">Enter menu items</a></p>');
+    : '<p class="pv-none">None selected yet.</p>');
 
   function render() {
     const s = spaces[current];
@@ -120,7 +128,7 @@
           return `<td>${h ? `<strong>${timeLabel(h.open)} – ${timeLabel(h.close)}</strong><br>${h.minSpendCents !== null ? `${window.FF_SHARED.plainDollars(h.minSpendCents)} min spend` : "No minimum spend"}` : '<span class="pv-none">Closed</span>'}</td>`;
         }).join("")}</tr>`).join("")}</tbody>
       </table>
-      <p class="sp-note">Minimum spends include GST.</p>` : '<p class="pv-none">No hours yet.</p>';
+` : '<p class="pv-none">No hours yet.</p>';
 
     $("#pv-space").innerHTML = `
       <div class="sp-top">
@@ -140,23 +148,43 @@
         ${photos.length > 2 ? photos.slice(1, 3).map((p, i) => `<img class="sp-photo-side" src="${esc(p)}" alt="${esc(s.name)}, photo ${i + 2}">`).join("") : ""}
       </div>` : '<p class="pv-nophoto">No photos yet. Customers see listings with photos first.</p>'}
 
+      <div class="sp-layout">
       <div class="sp-main pv-main">
         ${row("About this space", `<div class="sp-about">${s.about.map((p) => `<p>${esc(p)}</p>`).join("")}</div>`)}
         <section class="sp-row"><h2>Event options</h2><div class="sp-options">
-          <div class="sp-sub"><img class="sp-icon" src="assets/step-food.png" alt="" width="124" height="74"><h3>Food Packages</h3>${pkgs(packages.food)}</div>
-          <div class="sp-sub"><img class="sp-icon" src="assets/step-dietary.png" alt="" width="124" height="74"><h3>Dietary Accommodations</h3>${bullets(venueDietary.length ? venueDietary : s.dietary || [], "sp-two")}</div>
-          <div class="sp-sub"><img class="sp-icon" src="assets/step-bev.png" alt="" width="124" height="74"><h3>Beverage Options</h3>${pkgs(packages.bev)}</div>
+          <div class="sp-sub"><img class="sp-icon" src="assets/step-food.png" alt="" width="124" height="74"><h3>Food Packages</h3>${pkgs(packagesFor(s).food)}</div>
+          <div class="sp-sub"><img class="sp-icon" src="assets/step-dietary.png" alt="" width="124" height="74"><h3>Dietary Accommodations</h3>${bullets(dietaryFor(s), "sp-two")}</div>
+          <div class="sp-sub"><img class="sp-icon" src="assets/step-bev.png" alt="" width="124" height="74"><h3>Beverage Options</h3>${pkgs(packagesFor(s).bev)}</div>
           <div class="sp-sub"><img class="sp-icon" src="assets/step-additional.png" alt="" width="124" height="74"><h3>Additional</h3>${bullets(s.additional)}</div>
         </div></section>
         ${row("Minimum spend", hoursTable)}
         ${row("Capacity", `<p class="sp-cap">${cap}</p>`)}
         ${row("Facilities", bullets(s.facilities, "sp-two"))}
         ${row("Accessibility", `<ul class="sp-bullets">${allAccess.map((a) => (s.accessibility.includes(a) ? `<li>${esc(a)}</li>` : `<li class="is-no"><s>${esc(a)}</s> <span class="sp-no">Not available</span></li>`)).join("")}</ul>`)}
-        ${row("Parking and transport", bullets(s.transport, "sp-two"))}
-        ${row("Music and sound", bullets(s.music, "sp-two"))}
         ${row("Age restrictions", bullets(s.age))}
         ${row("Cancellation and booking flexibility", bullets(s.cancellation, "sp-two"))}
       </div>
+
+      <aside class="sp-aside" aria-label="Check availability (what customers will see)" inert>
+        <div class="sp-card">
+          <div class="sp-field"><label>Function date:</label><select><option>–</option></select></div>
+          <div class="sp-pair">
+            <div class="sp-field"><label>Start time:</label><select><option>–</option></select></div>
+            <div class="sp-field"><label>End time:</label><select><option>–</option></select></div>
+          </div>
+          <div class="sp-field"><label>Number of guests:</label><select><option>–</option></select></div>
+          <button type="button" class="sp-see">See availability</button>
+        </div>
+        <span class="sp-report">${icon.flag}Report Listing</span>
+      </aside>
+      </div>
+
+      <section class="vp-location" aria-labelledby="location-title">
+        <h2 id="location-title">Location</h2>
+        ${mapPin ? `<div class="vp-map" style="background-position:${mapPin[0]}% ${mapPin[1]}%" role="img" aria-label="Map showing ${esc(venue.name)}">
+          <span class="vp-map-pin" style="left:${mapPin[0]}%;top:${mapPin[1]}%">${icon.pin}</span></div>` : ""}
+        ${venue.address ? `<p class="vp-map-address">${esc(venue.address)}</p>` : ""}
+      </section>
 `;
     document.title = `Preview: ${s.name} | FunctionFindr`;
     $("#pv-edit").href = example ? "space-setup.html" : `space-setup.html?edit=${encodeURIComponent(s.id)}`;
@@ -181,7 +209,7 @@
 
   $("#pv-approve").addEventListener("click", () => {
     if (!example) { try { sessionStorage.setItem("ff.venueSignup.v1", JSON.stringify({ ...signup, approved: "demo" })); } catch (err) { /* fine */ } }
-    location.href = "all-set.html";
+    location.href = "venue-setup.html"; // next in the order the founder chose: p18 → preview → p19 → p21
   });
 
   render();

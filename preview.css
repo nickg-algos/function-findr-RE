@@ -75,3 +75,15 @@
 .pv .sp-layout .pv-pkgs .sp-view { min-width: 7.5rem; }
 @media (max-width: 960px) { .pv .sp-layout { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 700px) { .pv .sp-layout .sp-sub { grid-template-columns: 3.75rem minmax(0, 1fr); } }
+
+/* Approve Function Listing & Finish Set-Up Later: white with an orange outline, like Go back; full orange on hover. */
+.pv-go { border-color: var(--orange); background: #fff; color: var(--orange-text); text-align: center; } /* white, by request (was a pale #e8b897) */
+.pv-go:hover { border-color: var(--orange); background: var(--orange); color: #fff; }
+/* Approve Listing & Finish Set-up Now: dark orange (the brand's burnt orange) with white text; inverts on hover. */
+.pv-go.pv-now { border-color: var(--orange-text); background: var(--orange-text); color: #fff; }
+.pv-go.pv-now:hover { background: #fff; color: var(--orange-text); }
+/* Layout of the buttons (by request): Go back and Finish Later centred on one line, then the burnt orange
+   Finish Now centred on its own line underneath, with bigger text. */
+.pv-actions { justify-content: center; }
+.pv-actions-now { margin-top: 1.5rem; }
+.pv-go.pv-now { min-height: 3.5rem; padding: .6rem 2.25rem; font-size: 1.2rem; }

@@ -207,10 +207,11 @@
     if (e.target.closest('a[href="#"]')) e.preventDefault();
   });
 
-  $("#pv-approve").addEventListener("click", () => {
+  // Two ways to approve: finish set-up now (on to food & drinks, p19) or later (straight to "your listing is now live", p21).
+  document.querySelectorAll("#pv-approve, #pv-approve-now").forEach((b) => b.addEventListener("click", () => {
     if (!example) { try { sessionStorage.setItem("ff.venueSignup.v1", JSON.stringify({ ...signup, approved: "demo" })); } catch (err) { /* fine */ } }
-    location.href = "venue-setup.html"; // next in the order the founder chose: p18 → preview → p19 → p21
-  });
+    location.href = b.dataset.next;
+  }));
 
   render();
 })();

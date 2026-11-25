@@ -416,7 +416,7 @@
       bad,
       space: {
         id: slug(el("s-name").value),
-        name: el("s-name").value.trim(),
+        name: el("s-name").value.trim() || "Untitled space",
         type: el("s-type").value.trim(),
         about: about.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean),
         seated, standing, depositCents,
@@ -436,7 +436,10 @@
     e.preventDefault();
     const action = (e.submitter && e.submitter.dataset.action) || "preview";
     const { bad, space } = collect();
-    if (bad.length) { bad[0].focus(); return; }
+    if (!window.FF_SHARED.requiredOn()) { // dev bar: carry on with blanks, and clear the messages
+      $$(".gs-err", form).forEach((m) => { m.textContent = ""; });
+      $$("[aria-invalid]", form).forEach((x) => x.toggleAttribute("aria-invalid", false));
+    } else if (bad.length) { bad[0].focus(); return; }
 
     // Same name twice replaces the earlier one; an edited space replaces itself even if renamed.
     const isOld = (s) => s.id === space.id || (editing && s.id === editing.id);

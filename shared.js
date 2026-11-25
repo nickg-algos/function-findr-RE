@@ -50,6 +50,11 @@ window.FF_SHARED = (function () {
     return here.find((s) => s.p === p) || (file === "mockup.html" ? null : here[0]) || null;
   }
 
+  // Dev bar "Required fields" switch: Off lets forms go on with fields left blank, to click through the demo
+  // quickly. Kept across pages (localStorage ff.devRequired.v1). Forms ask FF_SHARED.requiredOn().
+  const REQ_KEY = "ff.devRequired.v1";
+  const requiredOn = () => { try { return localStorage.getItem(REQ_KEY) !== "off"; } catch (e) { return true; } };
+
   function renderDevTabs() {
     const cur = currentStep();
     const i = flow.indexOf(cur);
@@ -66,7 +71,15 @@ window.FF_SHARED = (function () {
     nav.innerHTML = `<span class="dev-tabs-label">Dev</span>
       ${step(prev, "‹ Previous", "dev-prev")}
       <label class="dev-jump"><span class="sr-only">Go to page</span><select>${cur ? "" : '<option value="" selected>Go to page…</option>'}${flow.map((s) => `<option value="${stepHref(s)}"${s === cur ? " selected" : ""}>${esc(name(s))} · ${kind(s)}</option>`).join("")}</select></label>
-      ${step(next, "Next ›", "dev-next")}`;
+      ${step(next, "Next ›", "dev-next")}
+      <button type="button" class="dev-req" aria-pressed="${requiredOn()}" title="Off lets forms continue with blank fields">Required fields <span class="dev-req-state">${requiredOn() ? "On" : "Off"}</span></button>`;
+    const reqBtn = nav.querySelector(".dev-req");
+    reqBtn.addEventListener("click", () => {
+      const on = !requiredOn();
+      try { localStorage.setItem(REQ_KEY, on ? "on" : "off"); } catch (e) { /* this page only */ }
+      reqBtn.setAttribute("aria-pressed", String(on));
+      reqBtn.querySelector(".dev-req-state").textContent = on ? "On" : "Off";
+    });
     nav.querySelector("select").addEventListener("change", (e) => { if (e.target.value) location.href = e.target.value; });
     document.body.append(nav);
     document.body.classList.add("has-dev-tabs");
@@ -165,7 +178,7 @@ window.FF_SHARED = (function () {
     if (b) openMenuFile(b.dataset.openFile);
   });
 
-  return { esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist, flow, stepHref, logoBoxes, reviewCards, initCarousels, plainDollars, MENUS_KEY, menuFiles, menuFile };
+  return { requiredOn, esc, money, parseCents, CHECKLIST_KEY, checklistSteps, tickIcon, selStepDone, miniChecklist, flow, stepHref, logoBoxes, reviewCards, initCarousels, plainDollars, MENUS_KEY, menuFiles, menuFile };
 })();
 
 /* ---------- Zoom like a PDF: Cmd + scroll (Ctrl + scroll on Windows, or pinch on a trackpad) ---------- */

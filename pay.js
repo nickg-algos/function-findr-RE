@@ -104,6 +104,7 @@
     e.preventDefault();
     $("#c-result").textContent = "";
     const checks = window.FF_CARD.problems({ number: el("number").value, name: el("name").value, expiry: el("expiry").value, cvc: el("cvc").value });
+    if (!window.FF_SHARED.requiredOn()) checks.forEach((c) => { c[1] = ""; }); // dev bar can switch this off
     const bad = checks.filter(([id, text]) => {
       $(`#c-${id}-msg`).textContent = text;
       el(id).toggleAttribute("aria-invalid", !!text);

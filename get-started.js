@@ -73,6 +73,7 @@
       ["type", v("type") ? "" : "Please describe your venue type, like Gastro Pub."],
       ["photo", photo ? "" : "Please add a street view photo of your venue."],
     ];
+    if (!window.FF_SHARED.requiredOn()) checks.forEach((c) => { c[1] = ""; }); // dev bar can switch this off
     const bad = checks.filter(([id, text]) => {
       $(`#g-${id}-msg`).textContent = text;
       if (id === "photo") $("#g-photo-box").classList.toggle("is-bad", !!text);

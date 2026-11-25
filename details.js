@@ -121,6 +121,7 @@
       ["end", rules.end],
       ["guests", rules.guests],
     ];
+    if (!window.FF_SHARED.requiredOn()) order.slice(0, 4).forEach((o) => { o[1] = ""; }); // dev bar: skip the contact checks
     const bad = order.filter(([id, text]) => show(id, text));
     if (bad.length) {
       el(bad[0][0]).focus();

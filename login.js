@@ -14,7 +14,7 @@
     let first = null;
     rules.forEach(([name, test]) => {
       const input = form.elements[name];
-      const text = test(input.value.trim());
+      const text = window.FF_SHARED.requiredOn() ? test(input.value.trim()) : ""; // dev bar can switch this off
       $(`#${form.id}-${name}-msg`).textContent = text;
       input.closest(".av-field").classList.toggle("is-bad", !!text);
       input.toggleAttribute("aria-invalid", !!text);

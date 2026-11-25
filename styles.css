@@ -284,4 +284,8 @@ input:disabled { background: #f1f1f2; border-color: #c7c8ca; cursor: not-allowed
   appearance: none; max-width: 22rem; padding: .2rem 1.6rem .2rem .6rem; border: 0; border-radius: .3rem; font: inherit; color: #fff; text-overflow: ellipsis;
   background: #58595b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10'%3E%3Cpath d='M2 2l6 6 6-6' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right .5rem center / .6rem;
 }
-.dev-jump select:focus-visible, .dev-tabs a:focus-visible { outline: 2px solid var(--orange); outline-offset: 1px; }
+.dev-req { display: inline-flex; align-items: center; gap: .45rem; margin-left: .5rem; padding: .15rem .3rem .15rem .6rem; border: 0; border-radius: .3rem; background: none; color: #fff; font: inherit; cursor: pointer; }
+.dev-req:hover { background: #58595b; }
+.dev-req-state { min-width: 2.2rem; padding: .05rem .45rem; border-radius: 999px; background: #2e6b34; color: #fff; font-weight: 700; text-align: center; }
+.dev-req[aria-pressed="false"] .dev-req-state { background: var(--orange); }
+.dev-req:focus-visible, .dev-jump select:focus-visible, .dev-tabs a:focus-visible { outline: 2px solid var(--orange); outline-offset: 1px; }

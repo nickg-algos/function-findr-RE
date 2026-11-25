@@ -132,7 +132,7 @@
       let first = null;
       ["username", "password"].forEach((name) => {
         const input = form.elements[name];
-        const empty = !input.value.trim();
+        const empty = window.FF_SHARED.requiredOn() && !input.value.trim(); // dev bar can switch this off
         const text = empty ? (name === "username" ? "Please enter your username." : "Please enter your password.") : "";
         $(`#${id}-${name}-msg`).textContent = text;
         input.closest(".av-field").classList.toggle("is-bad", empty);
